@@ -5,7 +5,7 @@
    - Resto de recursos → cache-first (para funcionar offline)
    ===================================================== */
 
-const CACHE_VERSION = 'minegocito-v1.0.0';
+const CACHE_VERSION = 'minegocito-v1.5.3';
 const CACHE_NAME = 'minegocito-' + CACHE_VERSION;
 
 const ASSETS = [
