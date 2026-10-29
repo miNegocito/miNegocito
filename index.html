@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>miNegocito v1.53</title>
+<title>miNegocito v1.54</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1a4d80">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -139,6 +139,7 @@
   #modalCantidadPOS .tecla:hover { background: #d5e3f0; }
   #modalCantidadPOS .tecla.borrar { background: #fdecea; color: #c0392b; }
   #modalCantidadPOS .tecla.limpiar { background: #fff8e1; color: #b56b0d; }
+  #modalCantidadPOS .tecla.coma { background: #e8f5e9; color: #217a44; }
   #modalCantidadPOS .subtotal-info { background: #f0f8f4; border-radius: 10px; padding: 12px; text-align: center; margin-bottom: 14px; }
   #modalCantidadPOS .subtotal-info .lbl { font-size: 11px; color: #6b7a90; font-weight: 700; letter-spacing: .5px; }
   #modalCantidadPOS .subtotal-info .val { font-size: 24px; font-weight: 800; color: #217a44; margin-top: 2px; }
@@ -198,12 +199,15 @@
   #modalActivacion .error { color: #c0392b; font-size: 13px; margin-top: 10px; min-height: 18px; font-weight: 600; }
   #modalActivacion .separador { display: flex; align-items: center; gap: 10px; color: #999; font-size: 12px; margin: 14px 0 12px 0; }
   #modalActivacion .separador::before, #modalActivacion .separador::after { content: ''; flex: 1; height: 1px; background: #e3e9f2; }
+  #modalActivacion .estado-verif { font-size: 12px; margin-top: 8px; min-height: 16px; font-weight: 600; }
   .licencia-activa { background: linear-gradient(135deg, #2e9e5b, #217a44); color: #fff; border-radius: 14px; padding: 22px; margin-bottom: 18px; box-shadow: 0 6px 20px rgba(46,158,91,.25); }
   .licencia-activa h3 { margin: 0 0 6px 0; font-size: 20px; display: flex; align-items: center; gap: 10px; }
   .licencia-activa .fecha { font-size: 13px; opacity: .9; margin-bottom: 16px; }
   .licencia-activa label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; opacity: .9; margin-bottom: 6px; margin-top: 14px; }
   .licencia-activa .valor { background: rgba(255,255,255,.18); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 14px; font-weight: 700; user-select: all; cursor: pointer; word-break: break-all; border: 1px solid rgba(255,255,255,.25); }
   .licencia-activa .valor.llave { font-size: 16px; letter-spacing: 2px; }
+  .licencia-activa .valor.mi-codigo { background: #fff; color: #217a44; font-size: 18px; letter-spacing: 2px; margin-top: 4px; border: 2px dashed rgba(255,255,255,.5); }
+  .licencia-activa .info-extra { font-size: 12px; opacity: .9; margin-top: 10px; line-height: 1.5; }
   .licencia-invitacion { background: linear-gradient(135deg, #7b3fa0, #2d7ac0); color: #fff; border-radius: 14px; padding: 22px; margin-bottom: 18px; box-shadow: 0 6px 20px rgba(123,63,160,.25); text-align: center; }
   .licencia-invitacion h3 { margin: 0 0 8px 0; font-size: 20px; display: flex; align-items: center; justify-content: center; gap: 10px; }
   .licencia-invitacion p { margin: 0 0 16px 0; font-size: 14px; opacity: .95; }
@@ -480,9 +484,9 @@
     <form id="formProducto" class="card form-grid">
       <label>Nombre del producto <input id="pNombre" required></label>
       <label>Precio de venta <input id="pPrecio" type="number" step="0.01" min="0" required></label>
-      <label>Stock inicial <input id="pStock" type="number" step="1" min="0" value="0"></label>
+      <label>Stock inicial <input id="pStock" type="number" step="0.01" min="0" value="0"></label>
       <label>Costo unitario inicial <input id="pCosto" type="number" step="0.01" min="0" value="0"></label>
-      <label>Stock mínimo (alerta) <input id="pMinimo" type="number" step="1" min="0" value="0"></label>
+      <label>Stock mínimo (alerta) <input id="pMinimo" type="number" step="0.01" min="0" value="0"></label>
       <label>Código de barras<div style="display:flex;gap:6px"><input id="pCodigoBarras" placeholder="Opcional" maxlength="40" style="flex:1"><button type="button" class="btn azul" style="padding:6px 10px;font-size:12px;white-space:nowrap" onclick="generarCodigoFormProducto()">🎲 Generar</button></div></label>
       <label>Categoría<select id="pCategoria" onchange="alCambiarCategoria(this)"></select></label>
       <label style="grid-column: 1 / -1;">Características (opcional)<textarea id="pCaracteristicas" rows="2" maxlength="300" placeholder="Ej: Frío, importado, 500ml, sabor cola..."></textarea></label>
@@ -523,7 +527,7 @@
       <label>Fecha <input type="date" id="eFecha" required></label>
       <label>Producto <select id="eProducto" required></select></label>
       <label>Proveedor (opcional) <select id="eProveedor"><option value="">-- Sin proveedor --</option></select></label>
-      <label>Cantidad <input type="number" id="eCantidad" step="1" min="1" required></label>
+      <label>Cantidad <input type="number" id="eCantidad" step="0.01" min="0.01" required></label>
       <label>Costo unitario <input type="number" id="eCosto" step="0.01" min="0" required></label>
       <button type="submit" class="btn">📥 Registrar entrada</button>
     </form>
@@ -538,7 +542,7 @@
       <label>Fecha <input type="date" id="vFecha" required></label>
       <label>Producto <select id="vProducto" required></select></label>
       <label>Cliente (opcional) <select id="vCliente"><option value="">-- Consumidor final --</option></select></label>
-      <label>Cantidad <input type="number" id="vCantidad" step="1" min="1" required></label>
+      <label>Cantidad <input type="number" id="vCantidad" step="0.01" min="0.01" required></label>
       <label>Precio unitario <input type="number" id="vPrecio" step="0.01" min="0" required></label>
       <button type="submit" class="btn verde">💰 Registrar venta</button>
     </form>
@@ -586,7 +590,7 @@
       <label>Tipo <select id="devTipo" required><option value="venta">Devolución de venta</option><option value="compra">Devolución de compra</option></select></label>
       <label>Fecha <input type="date" id="devFecha" required></label>
       <label>Producto <select id="devProducto" required></select></label>
-      <label>Cantidad <input type="number" id="devCantidad" step="1" min="1" required></label>
+      <label>Cantidad <input type="number" id="devCantidad" step="0.01" min="0.01" required></label>
       <label>Monto unitario <input type="number" id="devMonto" step="0.01" min="0" required></label>
       <label>Motivo <input id="devMotivo" placeholder="Producto defectuoso, etc." required></label>
       <button type="submit" class="btn morado">↩️ Registrar devolución</button>
@@ -601,7 +605,7 @@
     <form id="formPerdida" class="card form-grid">
       <label>Fecha <input type="date" id="dFecha" required></label>
       <label>Producto <select id="dProducto" required></select></label>
-      <label>Cantidad <input type="number" id="dCantidad" step="1" min="1" required></label>
+      <label>Cantidad <input type="number" id="dCantidad" step="0.01" min="0.01" required></label>
       <label>Costo unitario <input type="number" id="dCosto" step="0.01" min="0" required readonly></label>
       <label>Motivo <input id="dMotivo" placeholder="Robo, deterioro, etc." required></label>
       <button type="submit" class="btn rojo">📉 Registrar pérdida</button>
@@ -635,7 +639,7 @@
       <h3 style="color:#1a4d80;margin:0 0 10px 0;font-size:16px">➕ Agregar productos</h3>
       <div class="form-grid">
         <label>Producto <select id="facProducto"></select></label>
-        <label>Cantidad <input type="number" id="facCantidad" min="1" step="1" value="1"></label>
+        <label>Cantidad <input type="number" id="facCantidad" min="0.01" step="0.01" value="1"></label>
         <label>Precio unit. <input type="number" id="facPrecio" step="0.01" min="0"></label>
         <button type="button" class="btn verde" onclick="agregarItemFactura()">➕ Agregar</button>
       </div>
@@ -674,10 +678,9 @@
       <div id="licenciaActiva" class="licencia-activa" style="display:none">
         <h3>✅ Licencia activa</h3>
         <div class="fecha" id="licenciaFecha">--</div>
-        <label>ID del dispositivo</label>
-        <div class="valor" id="licenciaId" onclick="copiarTexto(this.textContent); mostrarToast('📋 ID copiado.','info')">--</div>
-        <label>Llave de activación</label>
-        <div class="valor llave" id="licenciaLlave" onclick="copiarTexto(this.textContent); mostrarToast('📋 Llave copiada.','info')">--</div>
+        <label>Mi código de activación</label>
+        <div class="valor mi-codigo" id="licenciaMiCodigo" onclick="copiarTexto(this.textContent); mostrarToast('📋 Código copiado.','info')">--</div>
+        <div class="info-extra">Guarda este código. Lo necesitarás si cambias de móvil o de navegador.</div>
       </div>
       <div class="ayuda-card" style="background:linear-gradient(135deg,#1a4d80,#2d7ac0);color:#fff;margin-top:24px">
         <h3 style="color:#fff">📖 Manual de Usuario</h3>
@@ -799,7 +802,8 @@
     <button class="tecla" onclick="teclaCantidad('1')">1</button><button class="tecla" onclick="teclaCantidad('2')">2</button><button class="tecla" onclick="teclaCantidad('3')">3</button>
     <button class="tecla" onclick="teclaCantidad('4')">4</button><button class="tecla" onclick="teclaCantidad('5')">5</button><button class="tecla" onclick="teclaCantidad('6')">6</button>
     <button class="tecla" onclick="teclaCantidad('7')">7</button><button class="tecla" onclick="teclaCantidad('8')">8</button><button class="tecla" onclick="teclaCantidad('9')">9</button>
-    <button class="tecla borrar" onclick="teclaCantidad('back')">⌫</button><button class="tecla" onclick="teclaCantidad('0')">0</button><button class="tecla limpiar" onclick="teclaCantidad('clear')">C</button>
+    <button class="tecla coma" onclick="teclaCantidad('.')">.</button><button class="tecla" onclick="teclaCantidad('0')">0</button><button class="tecla borrar" onclick="teclaCantidad('back')">⌫</button>
+    <button class="tecla limpiar" style="grid-column: span 3" onclick="teclaCantidad('clear')">C · Limpiar</button>
   </div>
   <div class="subtotal-info"><div class="lbl">SUBTOTAL</div><div class="val" id="mcpSubtotal">$ 0.00</div></div>
   <div class="error-cantidad" id="mcpError"></div>
@@ -819,7 +823,7 @@
   <select id="vrProducto" style="width:100%;padding:11px;font-size:14px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:12px"></select>
   <div id="vrStockInfo" style="font-size:12px;color:#6b7a90;margin-bottom:12px"></div>
   <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Cantidad</label>
-  <input type="number" id="vrCantidad" min="1" step="1" value="1" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:12px">
+  <input type="number" id="vrCantidad" min="0.01" step="0.01" value="1" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:12px">
   <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Precio unitario</label>
   <input type="number" id="vrPrecio" min="0" step="0.01" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:14px">
   <div style="background:#f0f8f4;border-radius:8px;padding:12px;text-align:center;margin-bottom:14px"><span style="font-size:12px;color:#6b7a90;font-weight:700">TOTAL</span><br><span id="vrTotal" style="font-size:22px;font-weight:800;color:#217a44">$ 0.00</span></div>
@@ -833,7 +837,7 @@
   <select id="erProducto" style="width:100%;padding:11px;font-size:14px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:12px"></select>
   <div id="erCostoInfo" style="font-size:12px;color:#6b7a90;margin-bottom:12px"></div>
   <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Cantidad</label>
-  <input type="number" id="erCantidad" min="1" step="1" value="1" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:12px">
+  <input type="number" id="erCantidad" min="0.01" step="0.01" value="1" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:12px">
   <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Costo unitario</label>
   <input type="number" id="erCosto" min="0" step="0.01" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:14px">
   <div style="background:#eaf1f9;border-radius:8px;padding:12px;text-align:center;margin-bottom:14px"><span style="font-size:12px;color:#6b7a90;font-weight:700">TOTAL COMPRA</span><br><span id="erTotal" style="font-size:22px;font-weight:800;color:#1a4d80">$ 0.00</span></div>
@@ -861,7 +865,7 @@
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
         <div>
           <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Cantidad inicial</label>
-          <input id="ndcCantidad" type="number" min="0" step="1" value="0" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px">
+          <input id="ndcCantidad" type="number" min="0" step="0.01" value="0" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px">
         </div>
         <div>
           <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Costo unitario</label>
@@ -869,7 +873,7 @@
         </div>
       </div>
       <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Stock mínimo (alerta)</label>
-      <input id="ndcMinimo" type="number" min="0" step="1" value="0" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:12px">
+      <input id="ndcMinimo" type="number" min="0" step="0.01" value="0" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:12px">
       <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Categoría</label>
       <select id="ndcCategoria" onchange="alCambiarCategoria(this)" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:14px"></select>
       <div id="ndcError" style="color:#c0392b;font-size:13px;min-height:18px;font-weight:600;margin-bottom:8px"></div>
@@ -890,7 +894,7 @@
       <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Fecha</label>
       <input id="evFecha" type="date" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:12px">
       <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Cantidad</label>
-      <input id="evCantidad" type="number" min="1" step="1" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:12px">
+      <input id="evCantidad" type="number" min="0.01" step="0.01" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:12px">
       <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Precio unitario</label>
       <input id="evPrecio" type="number" min="0" step="0.01" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:12px">
       <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Cliente</label>
@@ -911,7 +915,7 @@
   <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Precio de venta</label>
   <input id="epPrecio" type="number" min="0" step="0.01" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:14px">
   <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Stock mínimo (0 = sin alerta)</label>
-  <input id="epMinimo" type="number" min="0" step="1" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:14px">
+  <input id="epMinimo" type="number" min="0" step="0.01" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:14px">
   <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Código de barras</label>
   <div style="display:flex;gap:6px;margin-bottom:14px"><input id="epCodigo" type="text" maxlength="40" style="flex:1;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px"><button type="button" class="btn azul" style="padding:9px 12px;font-size:12px" onclick="generarCodigoEdicion()">🎲 Generar</button></div>
   <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Categoría</label>
@@ -967,11 +971,14 @@
 
 <div id="modalActivacion"><div class="caja">
   <h2 id="activacionTitulo">🔓 Activar aplicación</h2>
-  <p id="activacionDescripcion">Introduce el código de activación para este dispositivo.</p>
-  <div class="device-id" id="deviceIdMostrado" onclick="copiarDeviceId()">----</div>
-  <p class="ayuda">Este es su ID. Tóquelo para copiar.</p>
-  <input type="text" id="inputCodigo" placeholder="XXXX-XXXX-XXXX" maxlength="14" autocomplete="off" oninput="formatearCodigo(this)" onkeydown="if(event.key==='Enter') activar()">
+  <p id="activacionDescripcion">Introduce el código de activación que te enviamos por WhatsApp.</p>
+  <div style="margin-bottom:14px">
+    <div style="font-size:11px;color:#6b7a90;font-weight:700;text-transform:uppercase;margin-bottom:4px">Tu ID de dispositivo (para soporte)</div>
+    <div class="device-id" id="deviceIdMostrado" onclick="copiarDeviceId()" style="margin:0">----</div>
+  </div>
+  <input type="text" id="inputCodigo" placeholder="MN-2026-ALROHI-0001" maxlength="30" autocomplete="off" oninput="formatearCodigo(this)" onkeydown="if(event.key==='Enter') activar()">
   <button class="btn-activar" onclick="activar()">✅ Activar</button>
+  <div class="estado-verif" id="estadoVerif"></div>
   <div class="separador">o</div>
   <button class="btn-whatsapp" onclick="solicitarActivacion()"><span style="font-size:20px">📲</span> Solicitar código por WhatsApp</button>
   <button class="btn-cerrar" onclick="cerrarModalActivacion()">✖ Cerrar</button>
@@ -1062,7 +1069,11 @@
 <button id="btnInstalarPWA" onclick="instalarPWA()" style="position:fixed;bottom:90px;right:20px;z-index:10056;background:linear-gradient(135deg,#2d7ac0,#1a4d80);color:#fff;border:none;padding:12px 18px;border-radius:50px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.3);font-family:inherit;align-items:center;gap:8px;">📲 Instalar app</button>
 
 <script>
-const SECRET_KEY = ['MiNegocio', '2026', 'SolucionesALROHI'].join('_');
+// ═══════════════════════════════════════════════════════════════════
+// ⚙️ CONFIGURACIÓN DE LICENCIAS — DEBES CAMBIAR ESTO
+// ═══════════════════════════════════════════════════════════════════
+const LICENSE_SALT = 'miNeg_licencia_2026';  // ⚠️ CAMBIA por tu salt secreto
+const LICENSE_URL  = 'https://raw.githubusercontent.com/miNegocito/miNegocito/main/licencias.json'; // ⚠️ CAMBIA por tu URL
 const WHATSAPP_ADMIN = '5353186004';
 const DIAS_RECORDATORIO_RESPALDO = 3;
 const IMG_MAX_LADO = 720;
@@ -1077,6 +1088,7 @@ const SALT             = 'NegocioSeguro#2026';
 const CAMPOS_PROMO_KEY = 'campos_promocion_v1';
 const TRIAL_DIAS = 7;
 const TRIAL_KEY = 'trial_v1';
+const LICENCIAS_CACHE_KEY = 'licencias_cache_v1';
 const CATEGORIAS_KEY = 'categorias_custom_v1';
 const CATEGORIAS_DEFAULT = ['Alimentos','Bebidas','Limpieza e higiene','Ferretería','Electrodomésticos','Medicamentos','Ropa y moda','Autos y motos','Computadoras y periféricos','Teléfonos','Servicios','Otros'];
 const TEMAS = {
@@ -1120,7 +1132,6 @@ const CATALOGO_LAYOUTS = {
   '3x4': { cols: 3, rows: 4 }
 };
 let _catalogoLayoutActual = '3x4';
-
 let facturaBorrador = [];
 let carritoPOS = [];
 let productoPOSActual = null;
@@ -1139,6 +1150,9 @@ let _ventaEditandoOriginal = null;
 let _imagenTempFormProducto = null;
 const _rawPorNegocio = {};
 
+// ═══════════════════════════════════════════════════════════
+// CATEGORÍAS
+// ═══════════════════════════════════════════════════════════
 function obtenerCategorias() {
   let custom = [];
   try { const raw = localStorage.getItem(CATEGORIAS_KEY); if (raw) custom = JSON.parse(raw) || []; } catch (e) {}
@@ -1170,6 +1184,9 @@ function alCambiarCategoria(sel) {
   llenarSelectCategorias(sel, n.trim());
 }
 
+// ═══════════════════════════════════════════════════════════
+// TEMA Y MONEDA
+// ═══════════════════════════════════════════════════════════
 function aplicarTema(tema) {
   const c = TEMAS[tema] || TEMAS.azul;
   let st = document.getElementById('themeOverrideStyle');
@@ -1208,7 +1225,6 @@ function cambiarTema(tema) {
   aplicarTema(tema);
   mostrarToast('🎨 Color cambiado.', 'info');
 }
-
 function cargarMoneda() {
   const cuenta = obtenerCuenta();
   _monedaActual = (cuenta && cuenta.moneda) ? cuenta.moneda : 'USD';
@@ -1224,6 +1240,9 @@ function cambiarMoneda(moneda) {
   mostrarToast('💱 Moneda: ' + MONEDAS[moneda].nombre, 'info');
 }
 
+// ═══════════════════════════════════════════════════════════
+// TOASTS Y MODALES
+// ═══════════════════════════════════════════════════════════
 function mostrarToast(mensaje, tipo) {
   const t = document.createElement('div');
   t.className = 'toast' + (tipo ? ' ' + tipo : '');
@@ -1266,6 +1285,10 @@ function cerrarPrompt(valor) {
   const cb = _promptCallback; _promptCallback = null; _promptValidador = null;
   if (typeof cb === 'function') cb(valor);
 }
+
+// ═══════════════════════════════════════════════════════════
+// HISTORIAL / POPSTATE
+// ═══════════════════════════════════════════════════════════
 let _historialListo = false;
 function inicializarHistorial() {
   if (_historialListo) return;
@@ -1316,6 +1339,10 @@ window.addEventListener('popstate', function (event) {
   const pestanaActual = obtenerPestanaActiva();
   if (pestanaActual && pestanaActual !== 'rapido') { irAPestana('rapido'); try { history.pushState({ vista: 'rapido' }, ''); } catch (e) {} return; }
 });
+
+// ═══════════════════════════════════════════════════════════
+// DEVICE ID Y HASH
+// ═══════════════════════════════════════════════════════════
 function _hash(str) { let h = 5381; for (let i = 0; i < str.length; i++) { h = ((h << 5) + h) + str.charCodeAt(i); h = h & 0xFFFFFFFF; } return Math.abs(h).toString(36).toUpperCase(); }
 function obtenerDeviceId() {
   const KEY = 'device_id_persistente_v1';
@@ -1328,26 +1355,139 @@ function obtenerDeviceId() {
   try { localStorage.setItem(KEY, idCorto); } catch (e) {}
   return idCorto;
 }
-function generarCodigoDesdeId(deviceId) { const base = deviceId + '|' + SECRET_KEY; let code = _hash(base); while (code.length < 12) code += _hash(code + base).substring(0, 4); return code.substring(0, 12).replace(/(.{4})/g, '$1-').replace(/-$/, ''); }
-function validarCodigo(codigo, deviceId) { const limpio = String(codigo).replace(/[^A-Z0-9]/gi, '').toUpperCase(); if (limpio.length !== 12) return false; return limpio === generarCodigoDesdeId(deviceId).replace(/-/g, ''); }
-function verificarActivacion() { const deviceId = obtenerDeviceId(); const raw = localStorage.getItem('activacion_v1'); if (!raw) return false; try { const data = JSON.parse(raw); return data.activo === true && data.deviceId === deviceId; } catch (e) { return false; } }
+
+// SHA-256 con crypto.subtle
+async function sha256Hex(texto) {
+  if (window.crypto && crypto.subtle) {
+    const buf = new TextEncoder().encode(texto);
+    const hashBuf = await crypto.subtle.digest('SHA-256', buf);
+    const arr = Array.from(new Uint8Array(hashBuf));
+    return arr.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  // Fallback para file:// (Chrome bloquea crypto.subtle): usar _hash (menos seguro pero funcional)
+  return 'FALLBACK_' + _hash(texto);
+}
+async function hashLicencia(codigo) {
+  return await sha256Hex(LICENSE_SALT + '|' + String(codigo).trim().toUpperCase());
+}
+
+// ═══════════════════════════════════════════════════════════
+// LICENCIAS — VERIFICACIÓN CONTRA GITHUB
+// ═══════════════════════════════════════════════════════════
+function leerCacheLicencias() {
+  try {
+    const raw = localStorage.getItem(LICENCIAS_CACHE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return null;
+}
+function guardarCacheLicencias(data) {
+  try { localStorage.setItem(LICENCIAS_CACHE_KEY, JSON.stringify(data)); } catch (e) {}
+}
+
+async function descargarLicenciasGitHub() {
+  if (!LICENSE_URL || LICENSE_URL.indexOf('TU-USUARIO') !== -1) return null;
+  try {
+    const resp = await fetch(LICENSE_URL, { cache: 'no-store' });
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    if (data && Array.isArray(data.licencias)) {
+      guardarCacheLicencias(data);
+      return data;
+    }
+  } catch (e) { /* sin internet */ }
+  return null;
+}
+
+async function verificarLicenciaRemota(codigo) {
+  const hash = await hashLicencia(codigo);
+
+  // 1. Primero caché local (para offline)
+  const cache = leerCacheLicencias();
+  if (cache && Array.isArray(cache.licencias)) {
+    const item = cache.licencias.find(l => l.hash === hash);
+    if (item) return item.activo === true;
+  }
+
+  // 2. Intentar descargar desde GitHub
+  const fresh = await descargarLicenciasGitHub();
+  if (fresh) {
+    const item = fresh.licencias.find(l => l.hash === hash);
+    return item ? item.activo === true : false;
+  }
+
+  return false;
+}
+
+// ═══════════════════════════════════════════════════════════
+// TRIAL (prueba 7 días)
+// ═══════════════════════════════════════════════════════════
 function obtenerTrial() { try { const raw = localStorage.getItem(TRIAL_KEY); if (raw) return JSON.parse(raw); } catch (e) {} return null; }
-function iniciarTrial() { const deviceId = obtenerDeviceId(); const trial = { startDate: new Date().toISOString(), deviceId }; try { localStorage.setItem(TRIAL_KEY, JSON.stringify(trial)); } catch (e) {} return trial; }
-function diasRestantesTrial() { const trial = obtenerTrial(); if (!trial) return TRIAL_DIAS; const inicio = new Date(trial.startDate).getTime(); if (isNaN(inicio)) return 0; const fin = inicio + TRIAL_DIAS * 24 * 60 * 60 * 1000; const restante = fin - Date.now(); return Math.max(0, Math.ceil(restante / (24 * 60 * 60 * 1000))); }
+function iniciarTrial() {
+  const existente = obtenerTrial();
+  if (existente && existente.startDate) return existente;   // NO reiniciar
+  const deviceId = obtenerDeviceId();
+  const trial = { startDate: new Date().toISOString(), deviceId };
+  try { localStorage.setItem(TRIAL_KEY, JSON.stringify(trial)); } catch (e) {}
+  return trial;
+}
+function diasRestantesTrial() {
+  const trial = obtenerTrial();
+  if (!trial) return TRIAL_DIAS;
+  const inicio = new Date(trial.startDate).getTime();
+  if (isNaN(inicio)) return 0;
+  const fin = inicio + TRIAL_DIAS * 24 * 60 * 60 * 1000;
+  const restante = fin - Date.now();
+  return Math.max(0, Math.ceil(restante / (24 * 60 * 60 * 1000)));
+}
 function trialActivo() { const trial = obtenerTrial(); if (!trial) return true; return diasRestantesTrial() > 0; }
+
+function verificarActivacion() {
+  const raw = localStorage.getItem('activacion_v1');
+  if (!raw) return false;
+  try {
+    const data = JSON.parse(raw);
+    return data.activo === true && !!data.codigo;
+  } catch (e) { return false; }
+}
+function obtenerCodigoActivacion() {
+  try {
+    const raw = localStorage.getItem('activacion_v1');
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    return data.codigo || null;
+  } catch (e) { return null; }
+}
 function verificarAcceso() { return verificarActivacion() || trialActivo(); }
+
+// ═══════════════════════════════════════════════════════════
+// MODAL ACTIVACIÓN
+// ═══════════════════════════════════════════════════════════
 function mostrarModalActivacion(bloqueante) {
   _activacionBloqueante = !!bloqueante;
   document.getElementById('deviceIdMostrado').textContent = obtenerDeviceId();
-  document.getElementById('inputCodigo').value = ''; document.getElementById('errorActivacion').textContent = '';
+  document.getElementById('inputCodigo').value = '';
+  document.getElementById('errorActivacion').textContent = '';
+  document.getElementById('estadoVerif').textContent = '';
   const btnCerrar = document.querySelector('#modalActivacion .btn-cerrar');
   const titulo = document.getElementById('activacionTitulo'); const desc = document.getElementById('activacionDescripcion');
-  if (bloqueante) { if (btnCerrar) btnCerrar.style.display = 'none'; if (titulo) titulo.textContent = '⏰ Prueba terminada'; if (desc) desc.textContent = 'Tu período de prueba de ' + TRIAL_DIAS + ' días ha finalizado. Activa la aplicación para seguir usando todas las funciones.'; }
-  else { if (btnCerrar) btnCerrar.style.display = ''; if (titulo) titulo.textContent = '🔓 Activar aplicación'; if (desc) desc.textContent = 'Introduce el código de activación para este dispositivo.'; registrarEstado(obtenerPestanaActiva(), 'activacion'); }
+  if (bloqueante) {
+    if (btnCerrar) btnCerrar.style.display = 'none';
+    if (titulo) titulo.textContent = '⏰ Prueba terminada';
+    if (desc) desc.textContent = 'Tu período de prueba de ' + TRIAL_DIAS + ' días ha finalizado. Introduce el código de activación que te enviamos por WhatsApp.';
+  } else {
+    if (btnCerrar) btnCerrar.style.display = '';
+    if (titulo) titulo.textContent = '🔓 Activar aplicación';
+    if (desc) desc.textContent = 'Introduce el código de activación que te enviamos por WhatsApp.';
+    registrarEstado(obtenerPestanaActiva(), 'activacion');
+  }
   document.getElementById('modalActivacion').classList.add('activo');
 }
 function cerrarModalActivacion() { if (_activacionBloqueante) { mostrarToast('Debes activar la aplicación para continuar.', 'warn'); return; } document.getElementById('modalActivacion').classList.remove('activo'); _activacionBloqueante = false; }
-function formatearCodigo(input) { let v = input.value.replace(/[^A-Z0-9]/gi, '').toUpperCase().substring(0, 12); input.value = v.replace(/(.{4})/g, '$1-').replace(/-$/, ''); }
+function formatearCodigo(input) {
+  let v = input.value.toUpperCase();
+  input.value = v;
+}
 function copiarDeviceId() {
   const el = document.getElementById('deviceIdMostrado'); const id = el.textContent; const orig = id;
   if (navigator.clipboard) navigator.clipboard.writeText(id).catch(() => {});
@@ -1368,24 +1508,53 @@ function solicitarActivacion() {
   msg += '\nPor favor envíenme el código de activación. ¡Gracias!';
   window.open('https://wa.me/' + WHATSAPP_ADMIN + '?text=' + encodeURIComponent(msg), '_blank');
 }
-function activar() {
-  const deviceId = obtenerDeviceId(); const codigo = document.getElementById('inputCodigo').value; const err = document.getElementById('errorActivacion');
-  if (validarCodigo(codigo, deviceId)) {
-    localStorage.setItem('activacion_v1', JSON.stringify({ activo: true, deviceId, codigo: codigo.replace(/-/g, ''), fecha: new Date().toISOString() }));
-    _activacionBloqueante = false; document.getElementById('modalActivacion').classList.remove('activo');
-    actualizarSeccionLicencia(); actualizarBannerTrial(); mostrarToast('🎉 ¡Aplicación activada!');
-  } else err.textContent = '❌ Código inválido.';
+async function activar() {
+  const codigo = document.getElementById('inputCodigo').value.trim();
+  const err = document.getElementById('errorActivacion');
+  const estado = document.getElementById('estadoVerif');
+  err.textContent = '';
+  estado.textContent = '';
+  if (!codigo) { err.textContent = '❌ Escribe el código de activación.'; return; }
+
+  estado.style.color = '#2d7ac0';
+  estado.textContent = '🔄 Verificando en línea...';
+
+  try {
+    const valido = await verificarLicenciaRemota(codigo);
+    if (valido) {
+      localStorage.setItem('activacion_v1', JSON.stringify({
+        activo: true,
+        codigo: codigo.toUpperCase(),
+        fecha: new Date().toISOString()
+      }));
+      _activacionBloqueante = false;
+      document.getElementById('modalActivacion').classList.remove('activo');
+      actualizarSeccionLicencia(); actualizarBannerTrial();
+      mostrarToast('🎉 ¡Aplicación activada!', 'exito');
+    } else {
+      err.textContent = '❌ Código inválido o no activo. Verifica que esté bien escrito o contacta a soporte.';
+      estado.textContent = '';
+    }
+  } catch (e) {
+    err.textContent = '❌ Error de verificación. Revisa tu conexión o intenta más tarde.';
+    estado.textContent = '';
+  }
 }
+
+// ═══════════════════════════════════════════════════════════
+// SECCIÓN LICENCIA EN AYUDA
+// ═══════════════════════════════════════════════════════════
 function actualizarSeccionLicencia() {
-  const activado = verificarActivacion(); const bi = document.getElementById('licenciaInvitacion'); const ba = document.getElementById('licenciaActiva');
+  const activado = verificarActivacion();
+  const bi = document.getElementById('licenciaInvitacion'); const ba = document.getElementById('licenciaActiva');
   if (!bi || !ba) return;
   if (activado) {
     bi.style.display = 'none'; ba.style.display = 'block';
     let datos = {}; try { datos = JSON.parse(localStorage.getItem('activacion_v1') || '{}'); } catch (e) {}
-    const elId = document.getElementById('licenciaId'); const elL = document.getElementById('licenciaLlave'); const elF = document.getElementById('licenciaFecha');
-    if (elId) elId.textContent = datos.deviceId || obtenerDeviceId();
-    if (elL) elL.textContent = formatearLlave(datos.codigo || '');
+    const elF = document.getElementById('licenciaFecha');
+    const elC = document.getElementById('licenciaMiCodigo');
     if (elF) elF.textContent = '📅 Activada el ' + (datos.fecha ? new Date(datos.fecha).toLocaleString('es-ES') : '--');
+    if (elC) elC.textContent = datos.codigo || '--';
   } else {
     bi.style.display = 'block'; ba.style.display = 'none';
     const trial = obtenerTrial(); const dias = diasRestantesTrial();
@@ -1403,10 +1572,13 @@ function actualizarBannerTrial() {
   if (dias > 0) { banner.style.background = dias <= 2 ? 'linear-gradient(135deg,#c0392b,#96291d)' : 'linear-gradient(135deg,#e08a1e,#b56b0d)'; banner.innerHTML = '🎁 Prueba gratis: <b>' + dias + ' día' + (dias === 1 ? '' : 's') + ' restante' + (dias === 1 ? '' : 's') + '</b>. Toca aquí para activar.'; }
   else { banner.style.background = 'linear-gradient(135deg,#c0392b,#96291d)'; banner.innerHTML = '⏰ Prueba terminada. <b>Activa la aplicación para continuar.</b>'; }
 }
-function formatearLlave(llave) { if (!llave) return '--'; if (llave.indexOf('-') !== -1) return llave; if (llave.length === 12) return llave.replace(/(.{4})/g, '$1-').replace(/-$/, ''); return llave; }
 function requerirActivacion(mensaje) { if (verificarAcceso()) return true; document.getElementById('bloqueoMensaje').textContent = mensaje || 'Para esta acción necesitas activar la aplicación.'; document.getElementById('modalBloqueoActivacion').style.display = 'block'; return false; }
 function cerrarBloqueoActivacion() { document.getElementById('modalBloqueoActivacion').style.display = 'none'; }
 function irActivarDesdeBloqueo() { cerrarBloqueoActivacion(); irAPestana('ayuda'); setTimeout(() => { const el = document.getElementById('licenciaInvitacion'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 250); }
+
+// ═══════════════════════════════════════════════════════════
+// CUENTAS / REGISTRO
+// ═══════════════════════════════════════════════════════════
 function generarIdNegocio() { return 'b' + Date.now().toString(36) + Math.random().toString(36).substring(2, 6); }
 function hashClave(clave, contacto) { return _hash(SALT + '|' + String(contacto).toLowerCase().trim() + '|' + String(clave)); }
 function esEmailValido(s) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(s || '').trim()); }
@@ -1438,7 +1610,6 @@ function migrarSiNecesario() {
   const oldRaw = localStorage.getItem(CUENTA_KEY_OLD); if (!oldRaw) return;
   try { const c = JSON.parse(oldRaw); const id = generarIdNegocio(); guardarRegistro({ activo: id, lista: [{ id, nombre: c.negocio || 'Mi Negocio', correo: c.correo || '', direccion: c.direccion || '', claveHash: c.claveHash || '', comisionPorciento: c.comisionPorciento || 0, pagoFijoDiario: c.pagoFijoDiario || 0, tasaCambioPorciento: c.tasaCambioPorciento || 0, tema: 'azul', moneda: 'USD', logo: null, fechaCreacion: c.fechaCreacion || new Date().toISOString() }] }); const dataVieja = localStorage.getItem(LS_KEY_OLD); if (dataVieja) localStorage.setItem(LS_KEY_PREFIX + id, dataVieja); } catch (e) {}
 }
-
 function cambiarNegocio(id) {
   const r = obtenerRegistro();
   const negocio = r.lista.find(n => n.id === id);
@@ -1448,35 +1619,8 @@ function cambiarNegocio(id) {
   document.getElementById('vistaPOS').classList.remove('activo');
   document.getElementById('vistaReporte').classList.remove('activo');
   document.getElementById('vistaManual').classList.remove('activo');
-  const lector = document.getElementById('lectorCodigo');
-  if (lector && lector.classList.contains('activo')) { try { cerrarLectorCodigo(); } catch (e) {} }
-  try { cerrarModalCantidadPOS(); } catch (e) {}
-  try { cerrarModalCarritoPOS(); } catch (e) {}
-  try { cerrarNuevoDesdeCodigo(); } catch (e) {}
-  try { cerrarModalEditarVenta(); } catch (e) {}
-  try { cerrarModalEditarProducto(); } catch (e) {}
-  try { cerrarModalNuevoNegocio(); } catch (e) {}
-  try { cerrarModalCuentasBancarias(); } catch (e) {}
-  try { cerrarFormCuentaBancaria(); } catch (e) {}
-  try { cerrarModalConfigCamposPromo(); } catch (e) {}
-  try { cerrarModalJSON(); } catch (e) {}
-  try { cerrarModalOpciones(); } catch (e) {}
-  try { cerrarModalCatalogoCompartir(); } catch (e) {}
-  try { cerrarPanelNotificaciones(); } catch (e) {}
-  try { cerrarFactura(); } catch (e) {}
-  facturaBorrador = [];
-  carritoPOS = [];
-  productoPOSActual = null;
-  cantidadPOSActual = '0';
-  productoEditandoId = null;
-  _ventaEditandoId = null;
-  _ventaEditandoOriginal = null;
-  _modoEscaneoAlta = false;
-  _modoAltaContinuo = false;
-  _nuevoDesdeCodigoData = null;
-  _imagenTempFormProducto = null;
-  _qrTempCuenta = null;
-  _respaldoSetupData = null;
+  facturaBorrador = []; carritoPOS = [];
+  productoPOSActual = null; cantidadPOSActual = '0';
   delete _rawPorNegocio[id];
   r.activo = id;
   guardarRegistro(r);
@@ -1520,9 +1664,9 @@ function importarRespaldoEnSetup() {
       const ev = new Event('input'); document.getElementById('setupContacto').dispatchEvent(ev);
     }
     if (ct.direccion) document.getElementById('setupDireccion').value = ct.direccion;
-    const resumen = d.productos.length + ' productos · ' + d.ventas.length + ' ventas · ' + d.entradas.length + ' entradas · ' + (d.clientes || []).length + ' clientes';
-    document.getElementById('errorSetup').innerHTML = '<span style="color:#217a44;font-weight:700">✅ Respaldo cargado: ' + esc(resumen) + '</span><br><span style="font-size:12px;color:#555">Complete la contraseña para continuar.</span>';
-    mostrarToast('📂 Respaldo cargado correctamente.', 'info');
+    const resumen = d.productos.length + ' productos · ' + d.ventas.length + ' ventas · ' + d.entradas.length + ' entradas';
+    document.getElementById('errorSetup').innerHTML = '<span style="color:#217a44;font-weight:700">✅ Respaldo cargado: ' + esc(resumen) + '</span>';
+    mostrarToast('📂 Respaldo cargado.', 'info');
     setTimeout(() => document.getElementById('setupClave').focus(), 200);
   });
 }
@@ -1533,36 +1677,24 @@ function guardarSetup() {
   const clave = document.getElementById('setupClave').value;
   const clave2 = document.getElementById('setupClave2').value;
   const err = document.getElementById('errorSetup'); err.textContent = '';
-
   if (!negocio) { err.textContent = 'Escriba el nombre del negocio.'; return; }
-
   const tipo = clasificarContacto(contacto);
   if (!tipo) { err.textContent = 'Introduce un correo válido o un teléfono de 7 a 15 dígitos.'; return; }
-
   if (!clave || clave.length < 4) { err.textContent = 'Contraseña mínimo 4 caracteres.'; return; }
   if (clave !== clave2) { err.textContent = 'Las contraseñas no coinciden.'; return; }
-
-  const teniaRespaldo = !!_respaldoSetupData;
   const ct = (_respaldoSetupData && _respaldoSetupData.cuenta) ? _respaldoSetupData.cuenta : {};
   const id = generarIdNegocio();
-
   const correoFinal = tipo === 'correo' ? contacto : (ct.correo || '');
   const telefonoFinal = tipo === 'telefono' ? contacto : (ct.telefonoPagos || '');
-
   guardarRegistro({ activo: id, lista: [{
     id, nombre: negocio, correo: correoFinal, telefonoPagos: telefonoFinal,
     direccion: (direccion || '').trim(),
     claveHash: hashClave(clave, contacto),
-    comisionPorciento: ct.comisionPorciento || 0,
-    pagoFijoDiario: ct.pagoFijoDiario || 0,
-    tasaCambioPorciento: ct.tasaCambioPorciento || 0,
-    tema: ct.tema || 'azul',
-    moneda: ct.moneda || 'USD',
-    cuentasBancarias: ct.cuentasBancarias || [],
-    logo: ct.logo || null,
+    comisionPorciento: ct.comisionPorciento || 0, pagoFijoDiario: ct.pagoFijoDiario || 0,
+    tasaCambioPorciento: ct.tasaCambioPorciento || 0, tema: ct.tema || 'azul', moneda: ct.moneda || 'USD',
+    cuentasBancarias: ct.cuentasBancarias || [], logo: ct.logo || null,
     fechaCreacion: new Date().toISOString()
   }] });
-
   let estadoInicial;
   if (_respaldoSetupData) {
     estadoInicial = { productos: _respaldoSetupData.productos || [], entradas: _respaldoSetupData.entradas || [], ventas: _respaldoSetupData.ventas || [], perdidas: _respaldoSetupData.perdidas || [], devoluciones: _respaldoSetupData.devoluciones || [], gastos: _respaldoSetupData.gastos || [], facturas: _respaldoSetupData.facturas || [], clientes: _respaldoSetupData.clientes || [], proveedores: _respaldoSetupData.proveedores || [], facturasMulti: _respaldoSetupData.facturasMulti || [], seq: _respaldoSetupData.seq || { p: 1, e: 1, v: 1, d: 1, dev: 1, g: 1, f: 1, c: 1, pv: 1, fm: 1 } };
@@ -1574,7 +1706,7 @@ function guardarSetup() {
   localStorage.setItem(LS_KEY_PREFIX + id, JSON.stringify(estadoInicial));
   _respaldoSetupData = null;
   activarSesion(); ocultarPantallaCuenta(); iniciarApp();
-  mostrarToast(teniaRespaldo ? '✅ Cuenta creada con respaldo. Prueba de 7 días activada.' : '✅ Cuenta creada. 🎁 Prueba de 7 días activada.');
+  mostrarToast('✅ Cuenta creada. 🎁 Prueba de 7 días activada.');
 }
 function iniciarSesion() {
   const contacto = document.getElementById('loginContacto').value.trim();
@@ -1582,21 +1714,18 @@ function iniciarSesion() {
   const err = document.getElementById('errorLogin'); err.textContent = '';
   const r = obtenerRegistro();
   if (!r.lista.length) { mostrarSetup(); return; }
-
   const nc = normalizarContacto(contacto);
   const negocio = r.lista.find(n =>
     normalizarContacto(n.correo || '') === nc ||
     normalizarContacto(n.telefonoPagos || '') === nc
   );
   if (!negocio) { err.textContent = 'Teléfono o correo no registrado.'; return; }
-
   const contactoOriginal = negocio.correo || negocio.telefonoPagos || '';
   if (hashClave(clave, contactoOriginal) !== negocio.claveHash &&
       hashClave(clave, negocio.correo || '') !== negocio.claveHash &&
       hashClave(clave, negocio.telefonoPagos || '') !== negocio.claveHash) {
     err.textContent = 'Contraseña incorrecta.'; return;
   }
-
   r.activo = negocio.id; guardarRegistro(r); activarSesion();
   ocultarPantallaCuenta(); iniciarApp();
   mostrarToast('👋 Bienvenido, ' + negocio.nombre, 'info');
@@ -1631,27 +1760,22 @@ function editarPerfil() {
       pedirValor('Teléfono', 'Teléfono del negocio (vacío para quitar):', cuenta.telefonoPagos || '', (tel) => {
         if (tel === null) return;
         const telLimpio = tel.trim();
-        if (telLimpio && !esTelefonoValido(telLimpio)) { mostrarToast('Teléfono inválido (7 a 15 dígitos).', 'error'); return; }
+        if (telLimpio && !esTelefonoValido(telLimpio)) { mostrarToast('Teléfono inválido.', 'error'); return; }
         pedirValor('Correo', 'Correo electrónico (vacío para quitar):', cuenta.correo || '', (e) => {
           if (e === null) return;
           const el = e.trim();
           if (el && !esEmailValido(el)) { mostrarToast('Correo inválido.', 'error'); return; }
           if (!telLimpio && !el) { mostrarToast('Debes tener al menos un teléfono o correo.', 'error'); return; }
-
           const contactoViejo = cuenta.correo || cuenta.telefonoPagos || '';
           const contactoNuevo = el || telLimpio;
           const contactoCambio = normalizarContacto(contactoViejo) !== normalizarContacto(contactoNuevo);
-
           const aplicar = (clavePlana) => {
-            cuenta.nombre = nl;
-            cuenta.direccion = d.trim();
-            cuenta.telefonoPagos = telLimpio;
-            cuenta.correo = el;
+            cuenta.nombre = nl; cuenta.direccion = d.trim();
+            cuenta.telefonoPagos = telLimpio; cuenta.correo = el;
             if (contactoCambio && clavePlana) cuenta.claveHash = hashClave(clavePlana, contactoNuevo);
             guardarCuenta(cuenta); actualizarHeader(); actualizarFooter();
             mostrarToast('✅ Datos actualizados.');
           };
-
           if (contactoCambio) {
             pedirValor('Confirmar contraseña', 'Cambió el contacto principal. Confirme su contraseña actual:', '', (clave) => {
               if (clave === null) return;
@@ -1660,9 +1784,7 @@ function editarPerfil() {
               }
               aplicar(clave);
             }, (v) => !v ? 'Introduzca su contraseña.' : null);
-          } else {
-            aplicar(null);
-          }
+          } else { aplicar(null); }
         }, (v) => (v && !esEmailValido(v)) ? 'Correo inválido.' : null);
       }, (v) => (v && !esTelefonoValido(v)) ? 'Teléfono inválido.' : null);
     });
@@ -1751,11 +1873,7 @@ function renderSelectorNegocios() {
 }
 function cambiarNegocioDesdeSelector(id) {
   if (!cambiarNegocio(id)) return;
-  actualizarHeader();
-  cargarTemaGuardado();
-  cargarMoneda();
-  renderTodo();
-  renderSelectorNegocios();
+  actualizarHeader(); cargarTemaGuardado(); cargarMoneda(); renderTodo(); renderSelectorNegocios();
   const cta = obtenerCuenta();
   const st = document.getElementById('selectorTema'); if (st && cta) st.value = cta.tema || 'azul';
   const sm = document.getElementById('selectorMoneda'); if (sm && cta) sm.value = cta.moneda || 'USD';
@@ -1783,6 +1901,9 @@ function actualizarHeader() {
 }
 function actualizarFooter() { const cuenta = obtenerCuenta(); const f = document.getElementById('footerNegocio'); if (f && cuenta) f.textContent = cuenta.nombre; const a = document.getElementById('footerAnio'); if (a) a.textContent = new Date().getFullYear(); }
 
+// ═══════════════════════════════════════════════════════════
+// DB
+// ═══════════════════════════════════════════════════════════
 let db = { productos: [], entradas: [], ventas: [], perdidas: [], devoluciones: [], gastos: [], facturas: [], clientes: [], proveedores: [], facturasMulti: [], seq: { p: 1, e: 1, v: 1, d: 1, dev: 1, g: 1, f: 1, c: 1, pv: 1, fm: 1 } };
 function loadDB() {
   const key = getLSKeyActual();
@@ -1839,6 +1960,9 @@ function fechaBonita(iso) { const p = iso.split('-'); return p[2] + '/' + p[1] +
 function fechaArchivo(iso) { const p = iso.split('-'); return p[2] + '-' + p[1] + '-' + p[0]; }
 function esc(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
+// ═══════════════════════════════════════════════════════════
+// HELPERS DE PRODUCTOS
+// ═══════════════════════════════════════════════════════════
 const getProducto = id => db.productos.find(p => p.id === id);
 const nombreProducto = id => { const p = getProducto(id); return p ? p.nombre : 'ID ' + id + ' (eliminado)'; };
 const getCliente = id => db.clientes.find(c => c.id === id);
@@ -1905,6 +2029,9 @@ function generarCodigoFormProducto() { document.getElementById('pCodigoBarras').
 function generarCodigoEdicion() { document.getElementById('epCodigo').value = generarCodigoUnico(); }
 function buscarPorCodigo(codigo) { codigo = String(codigo).trim().toUpperCase(); if (!codigo) return null; return db.productos.find(p => String(p.codigoBarras || '').toUpperCase() === codigo) || null; }
 
+// ═══════════════════════════════════════════════════════════
+// LECTOR DE CÓDIGO
+// ═══════════════════════════════════════════════════════════
 let _lectorStream = null; let _lectorAnimationId = null; let _lectorDetector = null;
 function abrirLectorCodigo() { document.getElementById('lectorCodigo').classList.add('activo'); registrarEstado(obtenerPestanaActiva(), 'lector'); iniciarCamaraLector(); }
 function iniciarCamaraLector() {
@@ -1944,7 +2071,7 @@ function abrirAltaPorEscaneo() { _modoEscaneoAlta = true; _modoAltaContinuo = tr
 async function buscarProductoEnInternet(codigo) {
   const url = 'https://world.openfoodfacts.org/api/v2/product/' + encodeURIComponent(codigo) + '.json?fields=product_name,product_name_es,product_name_en,brands,quantity,image_small_url';
   const ctrl = new AbortController(); const timeout = setTimeout(() => ctrl.abort(), 3500);
-  try { const r = await fetch(url, { signal: ctrl.signal }); clearTimeout(timeout); if (!r.ok) return null; const d = await r.json(); if (d.status !== 1 || !d.product) return null; const nombre = d.product.product_name_es || d.product.product_name || d.product.product_name_en || ''; const marca = d.product.brands || ''; const cant = d.product.quantity || ''; let full = nombre.trim(); if (marca && !full.toLowerCase().includes(marca.toLowerCase())) full = marca + ' ' + full; if (cant) full += ' ' + cant; return { nombre: full.trim(), imagen: d.product.image_small_url || null }; }
+  try { const r = await fetch(url, { signal: ctrl.signal }); clearTimeout(timeout); if (!r.ok) return null; const d = await r.json(); if (d.status !== 1 || !d.product) return null; const nombre = d.product.product_name_es || d.product.product_name || d.product.product_name_en || ''; const marca = d.product.brands || ''; const cantidad = d.product.quantity || ''; let full = nombre.trim(); if (marca && !full.toLowerCase().includes(marca.toLowerCase())) full = marca + ' ' + full; if (cantidad) full += ' ' + cantidad; return { nombre: full.trim(), imagen: d.product.image_small_url || null }; }
   catch (e) { clearTimeout(timeout); return null; }
 }
 function abrirNuevoProductoDesdeCodigo(codigo) {
@@ -1983,7 +2110,7 @@ function confirmarNuevoDesdeCodigo() {
   if (precio <= 0) { err.textContent = 'El precio de venta debe ser mayor que 0.'; return; }
   if (cantidad > 0 && costo <= 0) { err.textContent = 'Indica el costo del stock inicial.'; return; }
   const codigo = _nuevoDesdeCodigoData.codigo;
-  if (codigo && db.productos.find(x => String(x.codigoBarras || '').toUpperCase() === codigo.toUpperCase())) { err.textContent = 'Ese código ya existe. Cierra y vuelve a escanear.'; return; }
+  if (codigo && db.productos.find(x => String(x.codigoBarras || '').toUpperCase() === codigo.toUpperCase())) { err.textContent = 'Ese código ya existe.'; return; }
   const id = db.seq.p++;
   db.productos.push({ id, nombre, precioVenta: precio, stock: 0, stockMinimo: minimo, imagen: _nuevoDesdeCodigoData.imagen || null, codigoBarras: codigo || '', caracteristicas: '', categoria: categoria || '' });
   if (cantidad > 0) { const total = cantidad * costo; db.entradas.push({ id: db.seq.e++, fecha: fechaISO(), productoId: id, cantidad, costoUnitario: costo, total, proveedorId: null }); const p = getProducto(id); if (p) p.stock += cantidad; }
@@ -1994,6 +2121,10 @@ function confirmarNuevoDesdeCodigo() {
   mostrarToast('✅ "' + nombre + '" creado' + (cantidad > 0 ? ' con ' + cantidad + ' unidades' : ''));
   if (continuar) { setTimeout(() => { _modoEscaneoAlta = true; abrirLectorCodigo(); }, 400); }
 }
+
+// ═══════════════════════════════════════════════════════════
+// GENERAR CÓDIGOS DE BARRA SVG
+// ═══════════════════════════════════════════════════════════
 function generarBarcodeSVG(code, opts) {
   opts = opts || {}; if (!code) return '';
   const fallback = '<span style="font-family:monospace;font-size:11px">' + esc(code) + '</span>';
@@ -2003,29 +2134,30 @@ function generarBarcodeSVG(code, opts) {
 function exportarCodigosBarras() {
   if (!db.productos.length) { mostrarToast('No hay productos.', 'warn'); return; }
   const cuenta = obtenerCuenta(); const nombreNegocio = cuenta ? cuenta.nombre : 'miNegocito';
-  let html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Códigos de barras - ' + esc(nombreNegocio) + '</title><style>body{font-family:Arial,sans-serif;font-size:11pt;padding:16px;margin:0}h1{color:#1a4d80;text-align:center;font-size:16pt;margin:0 0 4pt 0}.sub{text-align:center;color:#555;font-size:10pt;margin:0 0 14pt 0}table{width:100%;border-collapse:collapse}th,td{border:1px solid #8fa8c4;padding:6pt;font-size:10pt;vertical-align:middle}th{background:#dbe8f5;color:#12395e}td.cb{text-align:center;padding:4pt}@media print { body{padding:8px} th,td{padding:4pt} }</style></head><body>';
+  let html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Códigos de barras</title><style>body{font-family:Arial,sans-serif;font-size:11pt;padding:16px}h1{color:#1a4d80;text-align:center;font-size:16pt}.sub{text-align:center;color:#555;font-size:10pt;margin:0 0 14pt 0}table{width:100%;border-collapse:collapse}th,td{border:1px solid #8fa8c4;padding:6pt;font-size:10pt}th{background:#dbe8f5;color:#12395e}td.cb{text-align:center}</style></head><body>';
   html += '<h1>🏪 ' + esc(nombreNegocio) + '</h1><p class="sub">Lista de códigos de barras — ' + fechaBonita(fechaISO()) + '</p>';
-  html += '<table><thead><tr><th style="width:30pt">#</th><th>Producto</th><th style="width:70pt">Código</th><th style="width:220pt">Código de barras</th><th style="width:70pt">Precio</th></tr></thead><tbody>';
-  db.productos.forEach((p, i) => { const barcodeHtml = p.codigoBarras ? generarBarcodeSVG(p.codigoBarras, { height: 45 }) : '<span style="color:#999">— Sin código —</span>'; html += '<tr><td>' + (i + 1) + '</td><td>' + esc(p.nombre) + '</td><td style="font-family:monospace;font-size:9pt">' + esc(p.codigoBarras || '—') + '</td><td class="cb">' + barcodeHtml + '</td><td style="text-align:right">' + money(p.precioVenta) + '</td></tr>'; });
+  html += '<table><thead><tr><th>#</th><th>Producto</th><th>Código</th><th>Código de barras</th><th>Precio</th></tr></thead><tbody>';
+  db.productos.forEach((p, i) => { const bh = p.codigoBarras ? generarBarcodeSVG(p.codigoBarras, { height: 45 }) : '—'; html += '<tr><td>' + (i+1) + '</td><td>' + esc(p.nombre) + '</td><td style="font-family:monospace">' + esc(p.codigoBarras || '—') + '</td><td class="cb">' + bh + '</td><td>' + money(p.precioVenta) + '</td></tr>'; });
   html += '</tbody></table></body></html>';
   const blob = new Blob(['\ufeff', html], { type: 'application/msword' }); const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'Codigos de barras - ' + nombreNegocio + '.doc';
+  const a = document.createElement('a'); a.href = url; a.download = 'Codigos - ' + nombreNegocio + '.doc';
   document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(url), 3000);
-  mostrarToast('🖨️ Lista de códigos generada.', 'info');
+  mostrarToast('🖨️ Lista generada.', 'info');
 }
 function exportarCodigosBarrasPDF() {
   if (!db.productos.length) { mostrarToast('No hay productos.', 'warn'); return; }
   const cuenta = obtenerCuenta(); const nombreNegocio = cuenta ? cuenta.nombre : 'miNegocito';
-  const cor = cuenta ? (cuenta.correo || cuenta.telefonoPagos || '') : ''; const dir = cuenta && cuenta.direccion ? cuenta.direccion : '';
-  let html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Códigos de barras - ' + esc(nombreNegocio) + '</title><style>@page{size:A4;margin:10mm}body{font-family:Arial,sans-serif;font-size:11pt;color:#222;margin:0;padding:0}h1{color:#1a4d80;text-align:center;font-size:16pt;margin:0 0 4pt 0}.sub{text-align:center;color:#555;font-size:10pt;margin:0 0 2pt 0}.sub2{text-align:center;color:#777;font-size:9pt;margin:0 0 14pt 0}table{width:100%;border-collapse:collapse}th,td{border:1px solid #8fa8c4;padding:6pt;font-size:10pt;vertical-align:middle}th{background:#dbe8f5;color:#12395e}td.cb{text-align:center;padding:4pt}tr{page-break-inside:avoid}</style></head><body>';
-  html += '<h1>🏪 ' + esc(nombreNegocio) + '</h1>'; if (cor) html += '<p class="sub">' + esc(cor) + '</p>'; if (dir) html += '<p class="sub">📍 ' + esc(dir) + '</p>';
-  html += '<p class="sub2">Lista de códigos de barras — ' + fechaBonita(fechaISO()) + '</p>';
-  html += '<table><thead><tr><th style="width:30pt">#</th><th>Producto</th><th style="width:80pt">Código</th><th style="width:230pt">Código de barras</th><th style="width:70pt">Precio</th></tr></thead><tbody>';
-  db.productos.forEach((p, i) => { const barcodeHtml = p.codigoBarras ? generarBarcodeSVG(p.codigoBarras, { height: 45 }) : '<span style="color:#999">— Sin código —</span>'; html += '<tr><td>' + (i + 1) + '</td><td>' + esc(p.nombre) + '</td><td style="font-family:monospace;font-size:9pt">' + esc(p.codigoBarras || '—') + '</td><td class="cb">' + barcodeHtml + '</td><td style="text-align:right">' + money(p.precioVenta) + '</td></tr>'; });
+  let html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>@page{size:A4;margin:10mm}body{font-family:Arial;font-size:11pt}h1{color:#1a4d80;text-align:center}table{width:100%;border-collapse:collapse}th,td{border:1px solid #8fa8c4;padding:6pt;font-size:10pt}th{background:#dbe8f5}td.cb{text-align:center}</style></head><body>';
+  html += '<h1>🏪 ' + esc(nombreNegocio) + '</h1><p style="text-align:center">Lista de códigos — ' + fechaBonita(fechaISO()) + '</p><table><thead><tr><th>#</th><th>Producto</th><th>Código</th><th>Código de barras</th><th>Precio</th></tr></thead><tbody>';
+  db.productos.forEach((p, i) => { const bh = p.codigoBarras ? generarBarcodeSVG(p.codigoBarras, { height: 45 }) : '—'; html += '<tr><td>' + (i+1) + '</td><td>' + esc(p.nombre) + '</td><td style="font-family:monospace">' + esc(p.codigoBarras || '—') + '</td><td class="cb">' + bh + '</td><td>' + money(p.precioVenta) + '</td></tr>'; });
   html += '</tbody></table></body></html>';
-  try { const w = window.open('', '_blank'); if (!w) throw new Error('Bloqueado'); w.document.open(); w.document.write(html); w.document.close(); setTimeout(() => { try { w.focus(); w.print(); } catch (e) {} }, 600); mostrarToast('🖨️ Elige "Guardar como PDF" en el diálogo.', 'info'); }
-  catch (e) { mostrarToast('❌ Permite las ventanas emergentes.', 'error'); }
+  try { const w = window.open('', '_blank'); if (!w) throw new Error('Bloqueado'); w.document.open(); w.document.write(html); w.document.close(); setTimeout(() => { try { w.focus(); w.print(); } catch (e) {} }, 600); mostrarToast('🖨️ Elige "Guardar como PDF".', 'info'); }
+  catch (e) { mostrarToast('❌ Permite ventanas emergentes.', 'error'); }
 }
+
+// ═══════════════════════════════════════════════════════════
+// CUENTAS BANCARIAS
+// ═══════════════════════════════════════════════════════════
 function abrirModalCuentasBancarias() { renderListaCuentasBancarias(); document.getElementById('modalCuentasBancarias').style.display = 'block'; registrarEstado(obtenerPestanaActiva(), 'cuentasBancarias'); }
 function cerrarModalCuentasBancarias() { document.getElementById('modalCuentasBancarias').style.display = 'none'; }
 function renderListaCuentasBancarias() {
@@ -2049,7 +2181,7 @@ function quitarQRBancario() { _qrTempCuenta = null; document.getElementById('cbP
 function guardarCuentaBancaria() {
   const banco = document.getElementById('cbBanco').value.trim(); const numero = document.getElementById('cbNumero').value.trim(); const titular = document.getElementById('cbTitular').value.trim();
   const err = document.getElementById('cbError'); err.textContent = '';
-  if (!banco) { err.textContent = 'Escriba el banco.'; return; } if (!numero) { err.textContent = 'Escriba el número de cuenta.'; return; }
+  if (!banco) { err.textContent = 'Escriba el banco.'; return; } if (!numero) { err.textContent = 'Escriba el número.'; return; }
   const cuenta = obtenerCuenta(); if (!cuenta) return; if (!cuenta.cuentasBancarias) cuenta.cuentasBancarias = [];
   if (cuentaBancariaEditandoId) { const c = cuenta.cuentasBancarias.find(x => x.id === cuentaBancariaEditandoId); if (c) { c.banco = banco; c.numero = numero; c.titular = titular; c.qr = _qrTempCuenta; } }
   else { cuenta.cuentasBancarias.push({ id: Date.now(), banco, numero, titular, qr: _qrTempCuenta }); }
@@ -2060,9 +2192,9 @@ function eliminarCuentaBancaria(id) { pedirConfirmacion('Eliminar cuenta', '¿El
 function compartirDatosPago() {
   const cuenta = obtenerCuenta(); if (!cuenta) return;
   const cuentas = cuenta.cuentasBancarias || [];
-  if (!cuentas.length && !cuenta.telefonoPagos) { mostrarToast('Configura cuentas en Ayuda → Cuentas bancarias.', 'warn'); return; }
+  if (!cuentas.length && !cuenta.telefonoPagos) { mostrarToast('Configura cuentas en Ayuda.', 'warn'); return; }
   if (cuentas.length <= 1) { enviarDatosPago(cuentas[0] || null); return; }
-  let html = '<div class="modal-overlay" onclick="if(event.target===this) cerrarModalOpciones()"><div class="modal-caja" style="max-width:480px"><h3>💳 ¿Cuál cuenta enviar?</h3><p style="font-size:13px;color:#555;margin-bottom:14px">Elige cuál compartir:</p><div class="botones" style="flex-direction:column;align-items:stretch;gap:8px">';
+  let html = '<div class="modal-overlay" onclick="if(event.target===this) cerrarModalOpciones()"><div class="modal-caja" style="max-width:480px"><h3>💳 ¿Cuál cuenta enviar?</h3><div class="botones" style="flex-direction:column;align-items:stretch;gap:8px">';
   cuentas.forEach((c, i) => { html += '<button class="btn azul" data-cuenta="' + i + '" style="width:100%;padding:12px;text-align:left;margin:0">🏦 ' + esc(c.banco) + ' — ' + esc(c.numero) + '</button>'; });
   html += '<button class="btn gris" onclick="cerrarModalOpciones()" style="width:100%;margin:0">✖ Cancelar</button></div></div></div>';
   const cont = document.createElement('div'); cont.id = 'modalOpcionesWrapper'; cont.innerHTML = html; document.body.appendChild(cont);
@@ -2073,15 +2205,20 @@ function enviarDatosPago(cuentaBancaria) {
   let texto = '💳 *Datos de pago:*\n\n🏪 *' + cuenta.nombre + '*\n\n';
   if (cuentaBancaria) texto += '🏦 *' + cuentaBancaria.banco + '*\n' + cuentaBancaria.numero + '\n\n';
   if (cuenta.telefonoPagos) texto += '📱 Confirmar: ' + cuenta.telefonoPagos + '\n\n';
-  texto += '_Envía el comprobante para confirmar_ 💙\n\n⚙️ *miNegocito*';
-  if (cuentaBancaria && cuentaBancaria.qr && esDispositivoMovil() && navigator.share) { base64ToFile(cuentaBancaria.qr, 'qr-pago.jpg').then(file => { if (navigator.canShare && navigator.canShare({ files: [file] })) { navigator.share({ files: [file], title: 'Datos de pago', text: texto }).catch(() => abrirWhatsAppConTexto(texto)); } else abrirWhatsAppConTexto(texto); }).catch(() => abrirWhatsAppConTexto(texto)); }
+  texto += '_Envía el comprobante_ 💙\n\n⚙️ *miNegocito*';
+  if (cuentaBancaria && cuentaBancaria.qr && esDispositivoMovil() && navigator.share) { base64ToFile(cuentaBancaria.qr, 'qr.jpg').then(file => { if (navigator.canShare && navigator.canShare({ files: [file] })) { navigator.share({ files: [file], title: 'Datos', text: texto }).catch(() => abrirWhatsAppConTexto(texto)); } else abrirWhatsAppConTexto(texto); }).catch(() => abrirWhatsAppConTexto(texto)); }
   else abrirWhatsAppConTexto(texto);
 }
+function base64ToFile(dataUrl, nombre) { return new Promise((res, rej) => { try { const ps = dataUrl.split(','); const mm = ps[0].match(/:(.*?);/); const mime = mm ? mm[1] : 'image/jpeg'; const bin = atob(ps[1]); const bytes = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i); res(new File([new Blob([bytes], { type: mime })], nombre, { type: mime })); } catch (e) { rej(e); } }); }
+
+// ═══════════════════════════════════════════════════════════
+// CONFIG CAMPOS PROMO
+// ═══════════════════════════════════════════════════════════
 function obtenerConfigCamposPromo() { try { const raw = localStorage.getItem(CAMPOS_PROMO_KEY); if (raw) return JSON.parse(raw); } catch (e) {} return { nombre: true, direccion: true, telefono: true, correo: false, banco: false }; }
 function guardarConfigCamposPromoEnStorage(cfg) { try { localStorage.setItem(CAMPOS_PROMO_KEY, JSON.stringify(cfg)); } catch (e) {} }
 function abrirModalConfigCamposPromo() {
   const cfg = obtenerConfigCamposPromo();
-  const campos = [{ id: 'nombre', label: 'Nombre del negocio' }, { id: 'direccion', label: 'Dirección' }, { id: 'telefono', label: 'Teléfono de pagos' }, { id: 'correo', label: 'Correo electrónico' }, { id: 'banco', label: 'Cuentas bancarias' }];
+  const campos = [{ id: 'nombre', label: 'Nombre del negocio' }, { id: 'direccion', label: 'Dirección' }, { id: 'telefono', label: 'Teléfono' }, { id: 'correo', label: 'Correo' }, { id: 'banco', label: 'Cuentas bancarias' }];
   document.getElementById('listaCamposPromo').innerHTML = campos.map(c => `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #eef2f8"><input type="checkbox" id="campoP_${c.id}" ${cfg[c.id] ? 'checked' : ''} style="width:auto"><label for="campoP_${c.id}" style="flex:1;font-size:14px;font-weight:600;color:#333;margin:0;display:block">${c.label}</label></div>`).join('');
   document.getElementById('modalConfigCamposPromo').style.display = 'block'; registrarEstado(obtenerPestanaActiva(), 'configPromo');
 }
@@ -2099,11 +2236,16 @@ function bloqueDatosNegocioParaPromo() {
   if (cfg.banco && (cuenta.cuentasBancarias || []).length) { cuenta.cuentasBancarias.forEach(c => { t += '🏦 ' + c.banco + ': ' + c.numero + '\n'; }); }
   return t;
 }
+
+// ═══════════════════════════════════════════════════════════
+// SIDEBAR
+// ═══════════════════════════════════════════════════════════
 function abrirSidebar() { document.getElementById('sidebarOverlay').classList.add('activo'); document.getElementById('sidebarMovil').classList.add('abierto'); const p = obtenerPestanaActiva(); document.querySelectorAll('#sidebarMovil .side-lista button').forEach(b => { if (b.dataset.tab === p) b.classList.add('active'); else b.classList.remove('active'); }); actualizarFAB(); }
 function cerrarSidebar() { document.getElementById('sidebarOverlay').classList.remove('activo'); document.getElementById('sidebarMovil').classList.remove('abierto'); actualizarFAB(); }
 let _swipeStartX = 0; let _swipeStartY = 0; let _swipeStartTime = 0;
 document.addEventListener('touchstart', (e) => { if (window.innerWidth > 600) return; if (e.touches.length !== 1) return; _swipeStartX = e.touches[0].clientX; _swipeStartY = e.touches[0].clientY; _swipeStartTime = Date.now(); }, { passive: true });
 document.addEventListener('touchend', (e) => { if (window.innerWidth > 600) return; if (!e.changedTouches || e.changedTouches.length < 1) return; const dx = e.changedTouches[0].clientX - _swipeStartX; const dy = e.changedTouches[0].clientY - _swipeStartY; const dt = Date.now() - _swipeStartTime; if (dt > 600) return; if (Math.abs(dx) < 60 || Math.abs(dy) > 80) return; if (_swipeStartX < 30 && dx > 60) abrirSidebar(); else if (dx < -60 && document.getElementById('sidebarMovil').classList.contains('abierto')) cerrarSidebar(); }, { passive: true });
+
 $$('nav button').forEach(btn => {
   btn.onclick = () => {
     $$('nav button').forEach(b => b.classList.remove('active')); $$('.tab').forEach(t => t.classList.remove('active'));
@@ -2153,7 +2295,7 @@ function renderProductos() {
     return `<tr>
       <td>${renderMiniatura(p, 42)}</td>
       <td>${p.id}</td>
-      <td>${esc(p.nombre)}${p.categoria ? '<br><span style="font-size:11px;color:#2d7ac0;font-weight:700">🏷️ ' + esc(p.categoria) + '</span>' : ''}${p.caracteristicas ? '<br><span style="font-size:11px;color:#6b7a90">' + esc(p.caracteristicas.substring(0, 40)) + (p.caracteristicas.length > 40 ? '...' : '') + '</span>' : ''}</td>
+      <td>${esc(p.nombre)}${p.categoria ? '<br><span style="font-size:11px;color:#2d7ac0;font-weight:700">🏷️ ' + esc(p.categoria) + '</span>' : ''}${p.caracteristicas ? '<br><span style="font-size:11px;color:#6b7a90">' + esc(p.caracteristicas.substring(0, 40)) + '</span>' : ''}</td>
       <td class="mon">${money(p.precioVenta)}</td>
       <td class="num"${cs}>${cant(p.stock)}${ic}</td>
       <td class="num">${min > 0 ? cant(min) : '—'}</td>
@@ -2188,7 +2330,7 @@ function guardarEdicionProducto() {
   const p = getProducto(productoEditandoId); if (!p) { err.textContent = 'Producto no encontrado.'; return; }
   const nombre = (document.getElementById('epNombre').value || '').trim();
   const precio = parseFloat(document.getElementById('epPrecio').value);
-  const minimo = parseInt(document.getElementById('epMinimo').value, 10);
+  const minimo = parseFloat(document.getElementById('epMinimo').value);
   const codigo = (document.getElementById('epCodigo').value || '').trim();
   const caracteristicas = (document.getElementById('epCaracteristicas').value || '').trim();
   const categoria = document.getElementById('epCategoria').value === '__nueva__' ? '' : document.getElementById('epCategoria').value;
@@ -2216,7 +2358,7 @@ function renderVentas() {
   tb.innerHTML = lista.map(v => {
     const fac = db.facturasMulti.find(f => f.id === v.facturaId);
     const btnFac = fac ? '<span style="color:#2e9e5b;font-weight:700">🧾 ' + fac.id + '</span>' : '<button class="btn morado" style="padding:4px 9px;font-size:12px" onclick="facturarVentaExistente(' + v.id + ')">🧾 Facturar</button>';
-    return `<tr><td>${fechaBonita(v.fecha)}</td><td>${esc(nombreProducto(v.productoId))}</td><td>${v.clienteId ? esc(nombreCliente(v.clienteId)) : 'Consumidor final'}</td><td class="num">${cant(v.cantidad)}</td><td class="mon">${money(v.precioUnitario)}</td><td class="mon">${money(v.total)}</td><td>${btnFac}</td><td><button class="btn azul" style="padding:4px 9px;font-size:12px" onclick="editarVenta(${v.id})" title="Editar">✏️</button> <button class="btn rojo" style="padding:4px 9px;font-size:12px" onclick="eliminarVenta(${v.id})">🗑️</button></td></tr>`;
+    return `<tr><td>${fechaBonita(v.fecha)}</td><td>${esc(nombreProducto(v.productoId))}</td><td>${v.clienteId ? esc(nombreCliente(v.clienteId)) : 'Consumidor final'}</td><td class="num">${cant(v.cantidad)}</td><td class="mon">${money(v.precioUnitario)}</td><td class="mon">${money(v.total)}</td><td>${btnFac}</td><td><button class="btn azul" style="padding:4px 9px;font-size:12px" onclick="editarVenta(${v.id})">✏️</button> <button class="btn rojo" style="padding:4px 9px;font-size:12px" onclick="eliminarVenta(${v.id})">🗑️</button></td></tr>`;
   }).join('');
 }
 function editarVenta(id) {
@@ -2242,7 +2384,7 @@ function guardarEdicionVenta() {
   const precio = parseFloat(document.getElementById('evPrecio').value) || 0;
   const cliId = Number(document.getElementById('evCliente').value) || null;
   if (cantidad <= 0 || precio <= 0) { err.textContent = 'Cantidad y precio deben ser mayores que 0.'; return; }
-  const p = getProducto(v.productoId); if (!p) { err.textContent = 'El producto fue eliminado. Elimina esta venta y regístrala de nuevo.'; return; }
+  const p = getProducto(v.productoId); if (!p) { err.textContent = 'El producto fue eliminado.'; return; }
   const stockDisponible = p.stock + orig.cantidad;
   if (cantidad > stockDisponible) { err.textContent = 'Stock insuficiente. Disponible: ' + cant(stockDisponible) + ' uds.'; return; }
   p.stock = stockDisponible - cantidad; v.fecha = fecha; v.cantidad = cantidad; v.precioUnitario = precio; v.total = cantidad * precio; v.clienteId = cliId;
@@ -2268,6 +2410,10 @@ function renderGastos() {
 function renderPerdidasForm() { const sel = document.getElementById('dProducto'); if (!sel) return; const v = sel.value; sel.innerHTML = '<option value="">-- Seleccione un producto --</option>' + db.productos.map(p => `<option value="${p.id}">${esc(p.nombre)} (Stock: ${cant(p.stock)})</option>`).join(''); if (v) sel.value = v; const f = document.getElementById('dFecha'); if (f && !f.value) f.value = fechaISO(); }
 function renderDevolucionesForm() { const f = document.getElementById('devFecha'); if (f && !f.value) f.value = fechaISO(); const sel = document.getElementById('devProducto'); if (sel) { const v = sel.value; sel.innerHTML = '<option value="">-- Seleccione un producto --</option>' + db.productos.map(p => `<option value="${p.id}">${esc(p.nombre)} (Stock: ${cant(p.stock)})</option>`).join(''); if (v) sel.value = v; } }
 function renderGastosForm() { const f = document.getElementById('gFecha'); if (f && !f.value) f.value = fechaISO(); }
+
+// ═══════════════════════════════════════════════════════════
+// BALANCE
+// ═══════════════════════════════════════════════════════════
 function calcularBalance(fecha) {
   let totalVentas = 0, totalCosto = 0, totalInversion = 0, totalPerdidas = 0, totalGastos = 0, totalDevVenta = 0;
   const ventasAgr = {}, entradasAgr = {}, perdidasAgr = {}, gastosAgr = {};
@@ -2337,6 +2483,10 @@ function renderBajoMinimo() {
   sec.style.display = 'block';
   tb.innerHTML = lst.map(p => { const m = Number(p.stockMinimo) || 0; let e, c; if (p.stock <= 0) { e = '🔴 AGOTADO'; c = '#c0392b'; } else if (p.stock <= m) { e = '🟠 BAJO MÍNIMO'; c = '#e08a1e'; } else { e = '🟡 CERCA'; c = '#b56b0d'; } return `<tr><td style="font-weight:600">${esc(p.nombre)}</td><td class="num" style="color:${c};font-weight:700">${cant(p.stock)}</td><td class="num">${cant(m)}</td><td style="color:${c};font-weight:700">${e}</td></tr>`; }).join('');
 }
+
+// ═══════════════════════════════════════════════════════════
+// PANEL NEGOCIOS
+// ═══════════════════════════════════════════════════════════
 function calcularCostoPromedioEn(d, pid) { let c = 0, t = 0; (d.entradas || []).forEach(e => { if (e.productoId === pid) { c += e.cantidad; t += e.total; } }); return c > 0 ? t / c : 0; }
 function calcularKPIsNegocio(id) {
   const k = { productos: 0, hoyVentas: 0, hoyGanancia: 0, mesVentas: 0, mesGanancia: 0, bajoMinimo: 0 };
@@ -2359,11 +2509,7 @@ function renderPanelNegocios() {
 }
 function cambiarNegocioDesdePanel(id) {
   if (!cambiarNegocio(id)) return;
-  actualizarHeader();
-  cargarTemaGuardado();
-  cargarMoneda();
-  renderTodo();
-  renderPanelNegocios();
+  actualizarHeader(); cargarTemaGuardado(); cargarMoneda(); renderTodo(); renderPanelNegocios();
   const cta = obtenerCuenta();
   const st = document.getElementById('selectorTema'); if (st && cta) st.value = cta.tema || 'azul';
   const sm = document.getElementById('selectorMoneda'); if (sm && cta) sm.value = cta.moneda || 'USD';
@@ -2396,6 +2542,10 @@ function confirmarNuevoNegocio() {
   if (document.getElementById('tab-negocios').classList.contains('active')) renderPanelNegocios();
   mostrarToast('✅ Negocio "' + nombre + '" creado.');
 }
+
+// ═══════════════════════════════════════════════════════════
+// BALANCE CONSOLIDADO
+// ═══════════════════════════════════════════════════════════
 function cambiarTipoConsolidado(tipo) {
   tipoConsolidado = tipo;
   const tD = document.getElementById('tabConDia'), tR = document.getElementById('tabConRango'), tM = document.getElementById('tabConMes');
@@ -2437,7 +2587,7 @@ function construirConsolidadoHTML(con, paraPDF) {
   const t = con.total;
   const filas = con.porNegocio.map((p, i) => '<tr><td>' + (i + 1) + '</td><td>' + esc(p.nombre) + '</td><td class="mon">' + money(p.totalVentas) + '</td><td class="mon">' + money(p.totalCosto) + '</td><td class="mon">' + money(p.ganancia) + '</td><td class="mon">' + money(p.totalInversion) + '</td><td class="mon">' + (p.totalPerdidas > 0 ? '-' + money(p.totalPerdidas) : money(0)) + '</td><td class="mon">' + (p.totalGastos > 0 ? '-' + money(p.totalGastos) : money(0)) + '</td><td class="mon" style="color:#217a44;font-weight:700">' + money(p.beneficioNeto) + '</td></tr>').join('');
   const filaTotal = '<tr class="total"><td colspan="2">TOTAL CONSOLIDADO</td><td class="mon">' + money(t.totalVentas) + '</td><td class="mon">' + money(t.totalCosto) + '</td><td class="mon">' + money(t.ganancia) + '</td><td class="mon">' + money(t.totalInversion) + '</td><td class="mon">' + (t.totalPerdidas > 0 ? '-' + money(t.totalPerdidas) : money(0)) + '</td><td class="mon">' + (t.totalGastos > 0 ? '-' + money(t.totalGastos) : money(0)) + '</td><td class="mon" style="color:#217a44">' + money(t.beneficioNeto) + '</td></tr>';
-  if (paraPDF) { return '<style>' + REPORT_CSS + '</style>' + '<h1>📊 Balance Consolidado</h1>' + '<p class="subt">🏪 Todos los negocios — ' + esc(con.etiqueta) + '</p>' + '<h2>Resumen</h2><table><thead><tr><th>Concepto</th><th class="mon">Monto</th></tr></thead><tbody>' + '<tr><td>Ventas</td><td class="mon">' + money(t.totalVentas) + '</td></tr>' + (t.totalDevolucionesVenta > 0 ? '<tr><td>↩️ Devoluciones</td><td class="mon">-' + money(t.totalDevolucionesVenta) + '</td></tr>' : '') + '<tr><td>Costo de Ventas</td><td class="mon">' + money(t.totalCosto) + '</td></tr>' + '<tr class="total"><td>Ganancia Bruta</td><td class="mon">' + money(t.ganancia) + '</td></tr>' + (t.totalPerdidas > 0 ? '<tr style="color:#c0392b"><td>📉 Pérdidas</td><td class="mon">-' + money(t.totalPerdidas) + '</td></tr>' : '') + (t.totalGastos > 0 ? '<tr style="color:#c0392b"><td>💸 Gastos</td><td class="mon">-' + money(t.totalGastos) + '</td></tr>' : '') + '<tr class="total-neto"><td>💚 Beneficio Neto</td><td class="mon">' + money(t.beneficioNeto) + '</td></tr>' + '<tr class="total"><td>📦 Inversión</td><td class="mon">' + money(t.totalInversion) + '</td></tr></tbody></table>' + '<h2>Detalle por negocio</h2><table><thead><tr><th>#</th><th>Negocio</th><th class="mon">Ventas</th><th class="mon">Costo</th><th class="mon">Ganancia</th><th class="mon">Inversión</th><th class="mon">Pérdidas</th><th class="mon">Gastos</th><th class="mon">Benef. Neto</th></tr></thead><tbody>' + filas + '</tbody><tfoot>' + filaTotal + '</tfoot></table>' + '<p class="pie">Generado el ' + new Date().toLocaleString('es-ES') + '</p>'; }
+  if (paraPDF) { return '<style>' + REPORT_CSS + '</style>' + '<h1>📊 Balance Consolidado</h1>' + '<p class="subt">🏪 Todos los negocios — ' + esc(con.etiqueta) + '</p>' + '<h2>Resumen</h2><table><thead><tr><th>Concepto</th><th class="mon">Monto</th></tr></thead><tbody><tr><td>Ventas</td><td class="mon">' + money(t.totalVentas) + '</td></tr>' + (t.totalDevolucionesVenta > 0 ? '<tr><td>↩️ Devoluciones</td><td class="mon">-' + money(t.totalDevolucionesVenta) + '</td></tr>' : '') + '<tr><td>Costo de Ventas</td><td class="mon">' + money(t.totalCosto) + '</td></tr><tr class="total"><td>Ganancia Bruta</td><td class="mon">' + money(t.ganancia) + '</td></tr>' + (t.totalPerdidas > 0 ? '<tr style="color:#c0392b"><td>📉 Pérdidas</td><td class="mon">-' + money(t.totalPerdidas) + '</td></tr>' : '') + (t.totalGastos > 0 ? '<tr style="color:#c0392b"><td>💸 Gastos</td><td class="mon">-' + money(t.totalGastos) + '</td></tr>' : '') + '<tr class="total-neto"><td>💚 Beneficio Neto</td><td class="mon">' + money(t.beneficioNeto) + '</td></tr><tr class="total"><td>📦 Inversión</td><td class="mon">' + money(t.totalInversion) + '</td></tr></tbody></table>' + '<h2>Detalle por negocio</h2><table><thead><tr><th>#</th><th>Negocio</th><th class="mon">Ventas</th><th class="mon">Costo</th><th class="mon">Ganancia</th><th class="mon">Inversión</th><th class="mon">Pérdidas</th><th class="mon">Gastos</th><th class="mon">Benef. Neto</th></tr></thead><tbody>' + filas + '</tbody><tfoot>' + filaTotal + '</tfoot></table>' + '<p class="pie">Generado el ' + new Date().toLocaleString('es-ES') + '</p>'; }
   return '<div class="cards" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))"><div class="kpi compacto"><div class="t">Ventas</div><div class="v">' + money(t.totalVentas) + '</div></div><div class="kpi compacto rojo"><div class="t">Costo</div><div class="v">' + money(t.totalCosto) + '</div></div><div class="kpi compacto verde"><div class="t">Ganancia Bruta</div><div class="v">' + money(t.ganancia) + '</div></div><div class="kpi compacto naranja"><div class="t">Inversión</div><div class="v">' + money(t.totalInversion) + '</div></div>' + (t.totalPerdidas > 0 ? '<div class="kpi compacto rojo"><div class="t">Pérdidas</div><div class="v">-' + money(t.totalPerdidas) + '</div></div>' : '') + (t.totalGastos > 0 ? '<div class="kpi compacto rojo"><div class="t">Gastos</div><div class="v">-' + money(t.totalGastos) + '</div></div>' : '') + '<div class="kpi compacto verde"><div class="t">Beneficio Neto</div><div class="v">' + money(t.beneficioNeto) + '</div></div></div>' + '<div class="card tabla-wrap"><table><thead><tr><th>#</th><th>Negocio</th><th class="mon">Ventas</th><th class="mon">Costo</th><th class="mon">Ganancia</th><th class="mon">Inversión</th><th class="mon">Pérdidas</th><th class="mon">Gastos</th><th class="mon">Benef. Neto</th></tr></thead><tbody>' + (filas || '<tr><td colspan="9" class="vacio">Sin datos en este período.</td></tr>') + '</tbody><tfoot>' + filaTotal + '</tfoot></table></div>';
 }
 function verConsolidado() { const r = obtenerRangoConsolidado(); if (!r) { mostrarToast('Fechas inválidas.', 'error'); return; } const con = calcularConsolidado(r.desde, r.hasta); con.etiqueta = r.etiqueta; document.getElementById('resultadoConsolidado').innerHTML = construirConsolidadoHTML(con, false); document.getElementById('resultadoConsolidado').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
@@ -2449,15 +2599,15 @@ function exportarConsolidadoWord() {
   const blob = new Blob(['\ufeff', html], { type: 'application/msword' }); const url = URL.createObjectURL(blob);
   const a = document.createElement('a'); a.href = url; a.download = 'Balance Consolidado - ' + fechaArchivo(r.desde) + '_a_' + fechaArchivo(r.hasta) + '.doc';
   document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(url), 3000);
-  mostrarToast('📄 Balance consolidado guardado en Word.', 'info');
+  mostrarToast('📄 Balance guardado en Word.', 'info');
 }
 function exportarConsolidadoPDF() {
   const r = obtenerRangoConsolidado(); if (!r) { mostrarToast('Fechas inválidas.', 'error'); return; }
   const con = calcularConsolidado(r.desde, r.hasta); con.etiqueta = r.etiqueta;
   const cuerpo = construirConsolidadoHTML(con, true);
   const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Balance Consolidado</title><style>' + REPORT_CSS + '</style></head><body>' + cuerpo + '</body></html>';
-  try { const w = window.open('', '_blank'); if (!w) throw new Error('Bloqueado'); w.document.open(); w.document.write(html); w.document.close(); setTimeout(() => { try { w.focus(); w.print(); } catch (e) {} }, 600); mostrarToast('🖨️ Elige "Guardar como PDF" en el diálogo.', 'info'); }
-  catch (e) { mostrarToast('❌ Permite las ventanas emergentes.', 'error'); }
+  try { const w = window.open('', '_blank'); if (!w) throw new Error('Bloqueado'); w.document.open(); w.document.write(html); w.document.close(); setTimeout(() => { try { w.focus(); w.print(); } catch (e) {} }, 600); mostrarToast('🖨️ Elige "Guardar como PDF".', 'info'); }
+  catch (e) { mostrarToast('❌ Permite ventanas emergentes.', 'error'); }
 }
 function compartirConsolidado() {
   if (!requerirActivacion('Para compartir debes activar la app.')) return;
@@ -2470,9 +2620,13 @@ function compartirConsolidado() {
   if (t.totalGastos > 0) txt += '💸 Gastos: -' + money(t.totalGastos) + '\n';
   txt += '💚 Beneficio Neto: ' + money(t.beneficioNeto) + '\n'; txt += '📦 Inversión: ' + money(t.totalInversion) + '\n\n'; txt += '⚙️ miNegocito · ' + new Date().toLocaleString('es-ES');
   if (esDispositivoMovil() && navigator.share) { navigator.share({ title: 'Balance Consolidado', text: txt }).catch(err => { if (err.name !== 'AbortError') abrirWhatsAppConTexto(txt); }); }
-  else { mostrarModalOpciones('📤 Compartir Balance Consolidado', 'Elige el medio:', [{ texto: '📱 WhatsApp', clase: 'verde', accion: () => abrirWhatsAppConTexto(txt) }, { texto: '📧 Correo', clase: 'azul', accion: () => { const as = 'Balance Consolidado - ' + r.etiqueta; window.location.href = 'mailto:?subject=' + encodeURIComponent(as) + '&body=' + encodeURIComponent(txt); } }, { texto: '📋 Copiar texto', clase: 'gris', accion: () => { copiarTexto(txt); mostrarToast('📋 Copiado.', 'info'); } }, { texto: '✖ Cerrar', clase: 'gris', accion: () => {} }]); }
+  else { mostrarModalOpciones('📤 Compartir', 'Elige el medio:', [{ texto: '📱 WhatsApp', clase: 'verde', accion: () => abrirWhatsAppConTexto(txt) }, { texto: '📧 Correo', clase: 'azul', accion: () => { const as = 'Balance Consolidado - ' + r.etiqueta; window.location.href = 'mailto:?subject=' + encodeURIComponent(as) + '&body=' + encodeURIComponent(txt); } }, { texto: '📋 Copiar texto', clase: 'gris', accion: () => { copiarTexto(txt); mostrarToast('📋 Copiado.', 'info'); } }, { texto: '✖ Cerrar', clase: 'gris', accion: () => {} }]); }
   mostrarToast('📤 Preparando...', 'info');
 }
+
+// ═══════════════════════════════════════════════════════════
+// FORM PRODUCTO
+// ═══════════════════════════════════════════════════════════
 $('#formProducto').onsubmit = ev => {
   ev.preventDefault();
   const nombre = $('#pNombre').value.trim(); const precio = parseFloat($('#pPrecio').value) || 0;
@@ -2495,6 +2649,10 @@ $('#formProducto').onsubmit = ev => {
 const pImagenInput = document.getElementById('pImagen');
 if (pImagenInput) { pImagenInput.addEventListener('change', (e) => { const file = e.target.files && e.target.files[0]; if (!file) { _imagenTempFormProducto = null; document.getElementById('pPreviewImg').innerHTML = '📷'; return; } procesarImagen(file, IMG_MAX_LADO, IMG_CALIDAD, (dataUrl) => { _imagenTempFormProducto = dataUrl; document.getElementById('pPreviewImg').innerHTML = '<img src="' + dataUrl + '">'; }); }); }
 function quitarPreviewImagenProducto() { _imagenTempFormProducto = null; document.getElementById('pPreviewImg').innerHTML = '📷'; const i = document.getElementById('pImagen'); if (i) i.value = ''; }
+
+// ═══════════════════════════════════════════════════════════
+// FORM ENTRADA
+// ═══════════════════════════════════════════════════════════
 $('#eProducto').onchange = () => { const aviso = $('#avisoCosto'); const pid = Number($('#eProducto').value); if (!pid) { $('#eCosto').value = ''; aviso.style.display = 'none'; return; } const costo = costoPromedio(pid); if (costo > 0) { $('#eCosto').value = costo.toFixed(2); aviso.style.display = 'block'; aviso.textContent = '💡 Costo actual: ' + money(costo); } else { $('#eCosto').value = ''; aviso.style.display = 'block'; aviso.textContent = '💡 Primera compra: introduce el costo.'; } };
 $('#formEntrada').onsubmit = ev => {
   ev.preventDefault();
@@ -2505,6 +2663,10 @@ $('#formEntrada').onsubmit = ev => {
   _addEntrada(pid, cantidad, costo, fecha, provId); renderTodo(); ev.target.reset(); $('#eFecha').value = fechaISO(); $('#avisoCosto').style.display = 'none';
   mostrarToast('✅ Entrada registrada.');
 };
+
+// ═══════════════════════════════════════════════════════════
+// FORM VENTA
+// ═══════════════════════════════════════════════════════════
 $('#vProducto').onchange = () => { const p = getProducto(Number($('#vProducto').value)); if (p) $('#vPrecio').value = p.precioVenta; else $('#vPrecio').value = ''; mostrarAvisoStock(); };
 function mostrarAvisoStock() { const p = getProducto(Number($('#vProducto').value)); const av = $('#avisoStock'); if (p && p.stock <= 0) { av.style.display = 'block'; av.textContent = '⚠️ "' + p.nombre + '" sin stock.'; } else if (p && p.stock <= 5) { av.style.display = 'block'; av.textContent = '⚠️ Stock bajo: ' + cant(p.stock) + ' uds.'; } else av.style.display = 'none'; }
 $('#formVenta').onsubmit = ev => {
@@ -2518,6 +2680,10 @@ $('#formVenta').onsubmit = ev => {
   _addVenta(pid, cantidad, precio, fecha, cliId); renderTodo(); ev.target.reset(); $('#vFecha').value = fechaISO(); $('#avisoStock').style.display = 'none';
   mostrarToast('✅ Venta registrada.');
 };
+
+// ═══════════════════════════════════════════════════════════
+// FORM PERDIDA
+// ═══════════════════════════════════════════════════════════
 const dPS = document.getElementById('dProducto');
 if (dPS) { dPS.onchange = () => { const av = document.getElementById('avisoPerdida'); const pid = Number(dPS.value); if (!pid) { document.getElementById('dCosto').value = ''; if (av) av.style.display = 'none'; return; } const p = getProducto(pid); const c = costoPromedio(pid); document.getElementById('dCosto').value = c > 0 ? c.toFixed(2) : ''; if (av && p) { av.style.display = 'block'; av.textContent = '📦 Stock: ' + cant(p.stock) + ' uds. Costo: ' + money(c); } }; }
 const fp = document.getElementById('formPerdida');
@@ -2533,6 +2699,10 @@ if (fp) { fp.onsubmit = ev => {
   _addPerdida(pid, cantidad, costo, motivo, fecha); renderTodo(); ev.target.reset(); document.getElementById('dFecha').value = fechaISO();
   mostrarToast('📉 Pérdida registrada.', 'info');
 }; }
+
+// ═══════════════════════════════════════════════════════════
+// FORM DEVOLUCION
+// ═══════════════════════════════════════════════════════════
 const fd = document.getElementById('formDevolucion');
 if (fd) { fd.onsubmit = ev => {
   ev.preventDefault();
@@ -2547,6 +2717,10 @@ if (fd) { fd.onsubmit = ev => {
   _addDevolucion(tipo, pid, cantidad, monto, motivo, fecha); renderTodo(); ev.target.reset(); document.getElementById('devFecha').value = fechaISO();
   mostrarToast('↩️ Devolución registrada.', 'info');
 }; }
+
+// ═══════════════════════════════════════════════════════════
+// FORM GASTO
+// ═══════════════════════════════════════════════════════════
 const fg = document.getElementById('formGasto');
 if (fg) { fg.onsubmit = ev => {
   ev.preventDefault();
@@ -2558,6 +2732,7 @@ if (fg) { fg.onsubmit = ev => {
   _addGasto(cat, desc, monto, fecha); renderTodo(); ev.target.reset(); document.getElementById('gFecha').value = fechaISO();
   mostrarToast('💸 Gasto registrado.', 'info');
 }; }
+
 function _addEntrada(pid, cantidad, costo, fecha, prov) { const total = cantidad * costo; db.entradas.push({ id: db.seq.e++, fecha: fecha || fechaISO(), productoId: pid, cantidad, costoUnitario: costo, total, proveedorId: prov || null }); const p = getProducto(pid); if (p) p.stock += cantidad; saveDB(); }
 function _addVenta(pid, cantidad, precio, fecha, cli) { const total = cantidad * precio; db.ventas.push({ id: db.seq.v++, fecha: fecha || fechaISO(), productoId: pid, cantidad, precioUnitario: precio, total, clienteId: cli || null }); const p = getProducto(pid); if (p) p.stock -= cantidad; saveDB(); }
 function _addPerdida(pid, cantidad, costo, motivo, fecha) { const total = cantidad * costo; db.perdidas.push({ id: db.seq.d++, fecha: fecha || fechaISO(), productoId: pid, cantidad, costoUnitario: costo, total, motivo }); const p = getProducto(pid); if (p) p.stock -= cantidad; saveDB(); }
@@ -2568,11 +2743,11 @@ function eliminarProducto(id) {
   const mov = db.entradas.some(e => e.productoId === id) || db.ventas.some(v => v.productoId === id) || db.perdidas.some(d => d.productoId === id) || db.devoluciones.some(d => d.productoId === id);
   pedirConfirmacion('Eliminar producto', mov ? '"' + p.nombre + '" tiene movimientos. ¿Eliminar de todas formas?' : '¿Eliminar "' + p.nombre + '"?', (ok) => { if (!ok) return; db.productos = db.productos.filter(x => x.id !== id); saveDB(); renderTodo(); mostrarToast('🗑️ Producto eliminado.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' });
 }
-function eliminarEntrada(id) { const e = db.entradas.find(x => x.id === id); if (!e) return; pedirConfirmacion('Eliminar entrada', '¿Eliminar esta entrada? Se devolverá stock.', (ok) => { if (!ok) return; const p = getProducto(e.productoId); if (p) p.stock -= e.cantidad; db.entradas = db.entradas.filter(x => x.id !== id); saveDB(); renderTodo(); mostrarToast('🗑️ Entrada eliminada.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' }); }
+function eliminarEntrada(id) { const e = db.entradas.find(x => x.id === id); if (!e) return; pedirConfirmacion('Eliminar entrada', '¿Eliminar? Se devolverá stock.', (ok) => { if (!ok) return; const p = getProducto(e.productoId); if (p) p.stock -= e.cantidad; db.entradas = db.entradas.filter(x => x.id !== id); saveDB(); renderTodo(); mostrarToast('🗑️ Entrada eliminada.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' }); }
 function eliminarVenta(id) { const v = db.ventas.find(x => x.id === id); if (!v) return; pedirConfirmacion('Eliminar venta', '¿Eliminar? Stock será devuelto.', (ok) => { if (!ok) return; const p = getProducto(v.productoId); if (p) p.stock += v.cantidad; db.ventas = db.ventas.filter(x => x.id !== id); saveDB(); renderTodo(); mostrarToast('🗑️ Venta eliminada.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' }); }
-function eliminarPerdida(id) { const d = db.perdidas.find(x => x.id === id); if (!d) return; pedirConfirmacion('Eliminar pérdida', '¿Eliminar? Stock será devuelto.', (ok) => { if (!ok) return; const p = getProducto(d.productoId); if (p) p.stock += d.cantidad; db.perdidas = db.perdidas.filter(x => x.id !== id); saveDB(); renderTodo(); mostrarToast('🗑️ Pérdida eliminada.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' }); }
-function eliminarDevolucion(id) { const d = db.devoluciones.find(x => x.id === id); if (!d) return; pedirConfirmacion('Eliminar devolución', '¿Eliminar? Stock será ajustado.', (ok) => { if (!ok) return; const p = getProducto(d.productoId); if (p) { if (d.tipo === 'venta') p.stock -= d.cantidad; else p.stock += d.cantidad; } db.devoluciones = db.devoluciones.filter(x => x.id !== id); saveDB(); renderTodo(); mostrarToast('🗑️ Devolución eliminada.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' }); }
-function eliminarGasto(id) { pedirConfirmacion('Eliminar gasto', '¿Eliminar este gasto?', (ok) => { if (!ok) return; db.gastos = db.gastos.filter(x => x.id !== id); saveDB(); renderTodo(); mostrarToast('🗑️ Gasto eliminado.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' }); }
+function eliminarPerdida(id) { const d = db.perdidas.find(x => x.id === id); if (!d) return; pedirConfirmacion('Eliminar pérdida', '¿Eliminar? Stock devuelto.', (ok) => { if (!ok) return; const p = getProducto(d.productoId); if (p) p.stock += d.cantidad; db.perdidas = db.perdidas.filter(x => x.id !== id); saveDB(); renderTodo(); mostrarToast('🗑️ Pérdida eliminada.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' }); }
+function eliminarDevolucion(id) { const d = db.devoluciones.find(x => x.id === id); if (!d) return; pedirConfirmacion('Eliminar devolución', '¿Eliminar?', (ok) => { if (!ok) return; const p = getProducto(d.productoId); if (p) { if (d.tipo === 'venta') p.stock -= d.cantidad; else p.stock += d.cantidad; } db.devoluciones = db.devoluciones.filter(x => x.id !== id); saveDB(); renderTodo(); mostrarToast('🗑️ Devolución eliminada.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' }); }
+function eliminarGasto(id) { pedirConfirmacion('Eliminar gasto', '¿Eliminar?', (ok) => { if (!ok) return; db.gastos = db.gastos.filter(x => x.id !== id); saveDB(); renderTodo(); mostrarToast('🗑️ Gasto eliminado.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' }); }
 function declararPerdida(id) {
   const p = getProducto(id); if (!p) return;
   if (p.stock <= 0) { mostrarToast('Sin stock.', 'warn'); return; }
@@ -2583,6 +2758,10 @@ function declararPerdida(id) {
     pedirValor('📝 Motivo', 'Describe la causa:', '', (m) => { if (m === null) return; _addPerdida(id, c, costo, (m || '').trim() || 'No especificado', fechaISO()); renderTodo(); mostrarToast('📉 Pérdida registrada.', 'info'); });
   }, (v) => { const n = parseFloat(v); if (isNaN(n) || n <= 0) return 'Cantidad válida.'; if (n > p.stock) return 'Máximo ' + cant(p.stock); return null; });
 }
+
+// ═══════════════════════════════════════════════════════════
+// CLIENTES
+// ═══════════════════════════════════════════════════════════
 function renderClientes() {
   const tb = document.querySelector('#tblClientes tbody'); if (!tb) return;
   const lst = db.clientes.slice().sort((a,b) => a.nombre.localeCompare(b.nombre,'es',{sensitivity:'base'}));
@@ -2620,6 +2799,10 @@ function mostrarListaEnvios(contactos, mensaje, titulo) {
   const html = `<div style="position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100001;padding:20px;overflow-y:auto;display:flex;align-items:flex-start;justify-content:center"><div style="background:#fff;border-radius:12px;padding:22px;max-width:520px;width:100%;margin:auto"><h3 style="color:#1a4d80;margin:0 0 10px 0">${esc(titulo)}</h3><p style="font-size:13px;color:#555;margin:0 0 14px 0">Se enviará a ${contactos.length} contactos:</p><div style="background:#f8faff;border:1px solid #e3e9f2;border-radius:8px;padding:12px;font-size:13px;white-space:pre-wrap;margin-bottom:14px">${esc(mensaje)}</div><div style="max-height:40vh;overflow-y:auto;border:1px solid #e3e9f2;border-radius:8px;margin-bottom:14px">${lh}</div><button onclick="document.getElementById('enviosContainer').remove()" style="padding:9px 16px;border:none;border-radius:6px;background:#6b7a90;color:#fff;font-weight:700;cursor:pointer">✖ Cerrar</button></div></div>`;
   const ct = document.createElement('div'); ct.id = 'enviosContainer'; ct.innerHTML = html; document.body.appendChild(ct);
 }
+
+// ═══════════════════════════════════════════════════════════
+// PROVEEDORES
+// ═══════════════════════════════════════════════════════════
 function renderProveedores() {
   const tb = document.querySelector('#tblProveedores tbody'); if (!tb) return;
   const lst = db.proveedores.slice().sort((a,b) => a.nombre.localeCompare(b.nombre,'es',{sensitivity:'base'}));
@@ -2644,18 +2827,22 @@ function solicitudGeneralProveedores() {
   const act = db.proveedores.filter(p => p.activo && (p.telefono || p.correo));
   if (!act.length) { mostrarToast('Sin proveedores activos.', 'warn'); return; }
   if (!db.productos.length) { mostrarToast('Sin productos.', 'warn'); return; }
-  abrirModalSeleccionProductos(null, (sel, msg) => { if (!sel.length && !msg.trim()) return; let m = msg.trim() || '¡Hola! Quisiera solicitar oferta de:'; if (sel.length) { m += '\n\n'; sel.forEach(s => { m += '• ' + s.nombre + (s.cantidad > 0 ? ' — ' + cant(s.cantidad) + ' uds.' : '') + '\n'; }); } m += '\nPor favor envíenme precios. ¡Gracias!'; mostrarListaEnvios(act, m, 'Solicitud general a proveedores'); });
+  abrirModalSeleccionProductos(null, (sel, msg) => { if (!sel.length && !msg.trim()) return; let m = msg.trim() || '¡Hola! Quisiera solicitar oferta de:'; if (sel.length) { m += '\n\n'; sel.forEach(s => { m += '• ' + s.nombre + (s.cantidad > 0 ? ' — ' + cant(s.cantidad) + ' uds.' : '') + '\n'; }); } m += '\nPor favor envíenme precios. ¡Gracias!'; mostrarListaEnvios(act, m, 'Solicitud general'); });
 }
 function abrirModalSeleccionProductos(prov, cb) {
   const tit = prov ? '📩 Oferta a ' + prov.nombre : '📩 Solicitud general';
-  const lp = db.productos.map(p => `<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid #e3e9f2"><input type="checkbox" id="selP_${p.id}" style="width:auto"><label for="selP_${p.id}" style="flex:1;font-size:13px;font-weight:600;color:#333;margin:0;display:block">${esc(p.nombre)}</label><input type="number" id="cantP_${p.id}" placeholder="Cant." min="0" step="1" style="width:80px;padding:5px;font-size:12px"></div>`).join('');
+  const lp = db.productos.map(p => `<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid #e3e9f2"><input type="checkbox" id="selP_${p.id}" style="width:auto"><label for="selP_${p.id}" style="flex:1;font-size:13px;font-weight:600;color:#333;margin:0;display:block">${esc(p.nombre)}</label><input type="number" id="cantP_${p.id}" placeholder="Cant." min="0" step="0.01" style="width:80px;padding:5px;font-size:12px"></div>`).join('');
   const html = `<div style="position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100002;padding:20px;overflow-y:auto;display:flex;align-items:flex-start;justify-content:center"><div style="background:#fff;border-radius:12px;padding:22px;max-width:560px;width:100%;margin:auto"><h3 style="color:#1a4d80;margin:0 0 10px 0">${esc(tit)}</h3><p style="font-size:13px;color:#555;margin:0 0 12px 0">Marca los productos y la cantidad aproximada.</p><div style="max-height:50vh;overflow-y:auto;border:1px solid #e3e9f2;border-radius:8px;margin-bottom:14px">${lp}</div><label style="display:block;font-size:13px;font-weight:600;color:#333;margin-bottom:6px">Mensaje adicional</label><textarea id="selProdMsg" rows="2" style="width:100%;padding:9px;font-size:13px;border:1px solid #c8d2e0;border-radius:6px;margin-bottom:14px"></textarea><div style="display:flex;gap:8px;justify-content:flex-end"><button onclick="document.getElementById('selProdContainer').remove()" style="padding:9px 16px;border:none;border-radius:6px;background:#6b7a90;color:#fff;font-weight:700;cursor:pointer">Cancelar</button><button id="btnConfirmarSelProd" style="padding:9px 16px;border:none;border-radius:6px;background:#2e9e5b;color:#fff;font-weight:700;cursor:pointer">✅ Confirmar</button></div></div></div>`;
   const ct = document.createElement('div'); ct.id = 'selProdContainer'; ct.innerHTML = html; document.body.appendChild(ct);
-  document.getElementById('btnConfirmarSelProd').onclick = () => { const sel = []; db.productos.forEach(p => { const chk = document.getElementById('selP_' + p.id); if (chk && chk.checked) { const ci = document.getElementById('cantP_' + p.id); sel.push({ id: p.id, nombre: p.nombre, cantidad: parseInt(ci.value, 10) || 0 }); } }); const m = document.getElementById('selProdMsg').value; ct.remove(); cb(sel, m); };
+  document.getElementById('btnConfirmarSelProd').onclick = () => { const sel = []; db.productos.forEach(p => { const chk = document.getElementById('selP_' + p.id); if (chk && chk.checked) { const ci = document.getElementById('cantP_' + p.id); sel.push({ id: p.id, nombre: p.nombre, cantidad: parseFloat(ci.value) || 0 }); } }); const m = document.getElementById('selProdMsg').value; ct.remove(); cb(sel, m); };
 }
+
+// ═══════════════════════════════════════════════════════════
+// FACTURACIÓN
+// ═══════════════════════════════════════════════════════════
 function llenarSelectsFactura() {
   const sel = document.getElementById('facProducto'); if (sel) sel.innerHTML = db.productos.length ? '<option value="">-- Seleccione --</option>' + db.productos.map(p => `<option value="${p.id}">${esc(p.nombre)} (Stock: ${cant(p.stock)})</option>`).join('') : '<option value="">-- Sin productos --</option>';
-  const sc = document.getElementById('facCliente'); if (sc) sc.innerHTML = '<option value="">-- Consumidor final --</option>' + db.clientes.filter(c => c.activo).map(c => `<option value="${c.id}">${esc(c.nombre)}${c.tipo === 'mayorista' ? ' (Mayorista)' : ''}</option>`).join('');
+  const sc = document.getElementById('facCliente'); if (sc) sc.innerHTML = '<option value="">-- Consumidor final --</option>' + db.clientes.filter(c => c.activo).map(c => `<option value="${c.id}">${esc(c.nombre)}</option>`).join('');
 }
 document.getElementById('facProducto')?.addEventListener('change', (e) => { const p = getProducto(Number(e.target.value)); const av = document.getElementById('facAviso'); if (p) { document.getElementById('facPrecio').value = p.precioVenta; document.getElementById('facCantidad').value = 1; if (av) { av.style.display = 'block'; av.style.background = p.stock <= 0 ? '#fdecea' : '#eaf1f9'; av.style.borderLeftColor = p.stock <= 0 ? '#c0392b' : '#2d7ac0'; av.textContent = p.stock <= 0 ? '⚠️ Sin stock.' : '📦 Stock: ' + cant(p.stock) + ' uds.'; } } else { document.getElementById('facPrecio').value = ''; if (av) av.style.display = 'none'; } });
 function agregarItemFactura() {
@@ -2729,6 +2916,10 @@ function copiarTextoFacturaMulti(fid) {
   copiarTexto(t); mostrarToast('📋 Factura copiada.', 'info');
 }
 function imprimirFactura() { const c = document.getElementById('facturaContainer'); if (!c) return; try { const w = window.open('', '_blank'); if (!w) throw new Error('Bloqueado'); w.document.write('<html><head><meta charset="utf-8"><title>Factura</title></head><body>' + c.innerHTML + '</body></html>'); w.document.close(); setTimeout(() => { w.focus(); w.print(); }, 400); } catch (e) { mostrarToast('No se pudo imprimir.', 'error'); } }
+
+// ═══════════════════════════════════════════════════════════
+// IMPORTAR
+// ═══════════════════════════════════════════════════════════
 function mostrarAyudaImportacion() { document.getElementById('tituloModalJSON').textContent = '📥 Formato'; document.getElementById('ayudaModalJSON').innerHTML = '<code>Nombre, PrecioVenta, Stock, Costo, StockMínimo, CodigoBarras</code>'; const ta = document.getElementById('textoJSON'); ta.value = ''; ta.readOnly = true; document.getElementById('btnCopiarJSON').style.display = 'none'; document.getElementById('btnAplicarImport').style.display = 'none'; document.getElementById('estadoJSON').innerHTML = ''; document.getElementById('modalJSON').style.display = 'block'; }
 function descargarPlantillaProductos() { descargarTxtPC('Nombre, PrecioVenta, Stock, Costo, StockMinimo, CodigoBarras\nRefresco Cola 500ml, 1.50, 24, 1.00, 5, NEG-0001\nPan de molde, 2.20, 10, 1.40, 3, NEG-0002\n', 'Plantilla - Productos.csv'); mostrarToast('📄 Plantilla descargada.', 'info'); }
 function parsearLineaCSV(linea) { const r = []; let a = ''; let q = false; for (let i = 0; i < linea.length; i++) { const c = linea[i]; if (c === '"') { if (q && linea[i+1] === '"') { a += '"'; i++; } else q = !q; } else if ((c === ',' || c === ';' || c === '\t') && !q) { r.push(a.trim()); a = ''; } else a += c; } r.push(a.trim()); return r; }
@@ -2744,7 +2935,7 @@ function importarProductosLote() {
       const cs = parsearLineaCSV(lineas[i]); if (cs.length < 2) { err++; continue; }
       const n = (cs[0] || '').trim(); if (!n) { err++; continue; }
       if (nombres.has(n.toLowerCase())) { om++; continue; }
-      const pr = parseFloat((cs[1] || '0').replace(',', '.')) || 0; const st = parseInt((cs[2] || '0').replace(',', '.'), 10) || 0; const co = parseFloat((cs[3] || '0').replace(',', '.')) || 0; const mn = parseInt((cs[4] || '0').replace(',', '.'), 10) || 0; const cb = (cs[5] || '').trim();
+      const pr = parseFloat((cs[1] || '0').replace(',', '.')) || 0; const st = parseFloat((cs[2] || '0').replace(',', '.')) || 0; const co = parseFloat((cs[3] || '0').replace(',', '.')) || 0; const mn = parseFloat((cs[4] || '0').replace(',', '.')) || 0; const cb = (cs[5] || '').trim();
       if (pr <= 0) { err++; continue; }
       if (cb && codigos.has(cb.toUpperCase())) { om++; continue; }
       const id = db.seq.p++;
@@ -2758,9 +2949,9 @@ function importarProductosLote() {
     pedirConfirmacion('📥 Importación', msg + '\n\n¿Ver productos?', (okv) => { if (okv) irAPestana('productos'); }, { textoSi: 'Ver', textoNo: 'Cerrar', tipo: 'normal' });
   });
 }
-function descargarPlantillaCodigos() { const lista = db.productos.slice(0, 15).map(p => p.nombre + ', ' + (p.codigoBarras || '')); const contenido = 'Nombre, CodigoBarras\n' + (lista.length ? lista.join('\n') : 'Refresco Cola 500ml, NEG-0001\nPan de molde, 7501234567890\n'); descargarTxtPC(contenido, 'Plantilla - Codigos de barras.csv'); mostrarToast('📄 Plantilla descargada con tus productos.', 'info'); }
+function descargarPlantillaCodigos() { const lista = db.productos.slice(0, 15).map(p => p.nombre + ', ' + (p.codigoBarras || '')); const contenido = 'Nombre, CodigoBarras\n' + (lista.length ? lista.join('\n') : 'Refresco Cola 500ml, NEG-0001\n'); descargarTxtPC(contenido, 'Plantilla - Codigos.csv'); mostrarToast('📄 Plantilla descargada.', 'info'); }
 function asignarCodigosPorLote() {
-  if (!db.productos.length) { mostrarToast('No hay productos. Primero crea o importa productos.', 'warn'); return; }
+  if (!db.productos.length) { mostrarToast('No hay productos.', 'warn'); return; }
   seleccionarArchivoRespaldo((texto, nf) => {
     const lineas = texto.split(/\r?\n/).filter(l => l.trim()); if (!lineas.length) { mostrarToast('Archivo vacío.', 'error'); return; }
     const prim = parsearLineaCSV(lineas[0]).map(s => s.toLowerCase().trim()); let ini = 0;
@@ -2775,21 +2966,19 @@ function asignarCodigosPorLote() {
       if (!producto) producto = db.productos.find(p => p.nombre.toLowerCase() === col1.toLowerCase());
       if (!producto) { noEncontrados++; if (ejemplosNoEnc.length < 5) ejemplosNoEnc.push(col1); continue; }
       const dup = db.productos.find(x => x.id !== producto.id && String(x.codigoBarras || '').toUpperCase() === col2.toUpperCase());
-      if (dup) { duplicados++; if (ejemplosDup.length < 5) ejemplosDup.push(col2 + ' → ya lo usa "' + dup.nombre + '"'); continue; }
+      if (dup) { duplicados++; if (ejemplosDup.length < 5) ejemplosDup.push(col2); continue; }
       producto.codigoBarras = col2; asignados++;
     }
     if (asignados > 0) saveDB(); renderTodo();
-    let msg = '✅ Asignación completada\n\n• Asignados: ' + asignados + '\n• No encontrados: ' + noEncontrados + '\n• Códigos duplicados: ' + duplicados + '\n• Errores: ' + errores;
-    if (ejemplosNoEnc.length) msg += '\n\n❓ No encontrados: ' + ejemplosNoEnc.join(', ') + (noEncontrados > 5 ? '…' : '');
-    if (ejemplosDup.length) msg += '\n\n🔁 Duplicados: ' + ejemplosDup.join(' · ') + (duplicados > 5 ? '…' : '');
-    pedirConfirmacion('🔖 Asignación por lote', msg, () => {}, { textoSi: 'Cerrar', textoNo: 'Cerrar', tipo: 'normal' });
+    let msg = '✅ Asignación\n• Asignados: ' + asignados + '\n• No encontrados: ' + noEncontrados + '\n• Duplicados: ' + duplicados + '\n• Errores: ' + errores;
+    pedirConfirmacion('🔖 Asignación', msg, () => {}, { textoSi: 'Cerrar', textoNo: 'Cerrar', tipo: 'normal' });
   });
 }
 function descargarPlantillaPrecios() {
   const lista = db.productos.slice(0, 20).map(p => p.nombre + ', ' + p.precioVenta);
-  const contenido = 'Nombre, NuevoPrecio\n' + (lista.length ? lista.join('\n') : 'Refresco Cola 500ml, 1.75\nPan de molde, 2.50\n');
+  const contenido = 'Nombre, NuevoPrecio\n' + (lista.length ? lista.join('\n') : 'Refresco Cola 500ml, 1.75\n');
   descargarTxtPC(contenido, 'Plantilla - Precios.csv');
-  mostrarToast('📄 Plantilla descargada con tus productos.', 'info');
+  mostrarToast('📄 Plantilla descargada.', 'info');
 }
 function importarPreciosPorLote() {
   if (!db.productos.length) { mostrarToast('No hay productos.', 'warn'); return; }
@@ -2800,7 +2989,6 @@ function importarPreciosPorLote() {
     let ini = 0;
     if (prim.some(c => c.includes('nombre') || c.includes('precio') || c === 'id')) ini = 1;
     let actualizados = 0, sinCambio = 0, noEncontrados = 0, invalidos = 0;
-    const ejemplosNoEnc = [], ejemplosInv = [];
     for (let i = ini; i < lineas.length; i++) {
       const cs = parsearLineaCSV(lineas[i]);
       if (cs.length < 2) { invalidos++; continue; }
@@ -2808,20 +2996,17 @@ function importarPreciosPorLote() {
       const col2 = (cs[1] || '').replace(',', '.').trim();
       if (!col1 || !col2) { invalidos++; continue; }
       const nuevo = parseFloat(col2);
-      if (isNaN(nuevo) || nuevo < 0) { invalidos++; if (ejemplosInv.length < 5) ejemplosInv.push(col1 + ' → ' + col2); continue; }
+      if (isNaN(nuevo) || nuevo < 0) { invalidos++; continue; }
       let producto = null;
       if (/^\d+$/.test(col1)) producto = db.productos.find(p => String(p.id) === col1);
       if (!producto) producto = db.productos.find(p => p.nombre.toLowerCase() === col1.toLowerCase());
-      if (!producto) { noEncontrados++; if (ejemplosNoEnc.length < 5) ejemplosNoEnc.push(col1); continue; }
+      if (!producto) { noEncontrados++; continue; }
       if (Math.abs(producto.precioVenta - nuevo) < 0.0001) { sinCambio++; continue; }
-      producto.precioVenta = nuevo;
-      actualizados++;
+      producto.precioVenta = nuevo; actualizados++;
     }
     if (actualizados > 0) saveDB();
     renderTodo();
-    let msg = '✅ Cambio de precios\n\n• Actualizados: ' + actualizados + '\n• Sin cambio: ' + sinCambio + '\n• No encontrados: ' + noEncontrados + '\n• Inválidos: ' + invalidos;
-    if (ejemplosNoEnc.length) msg += '\n\n❓ No encontrados: ' + ejemplosNoEnc.join(', ') + (noEncontrados > 5 ? '…' : '');
-    if (ejemplosInv.length) msg += '\n\n⚠️ Inválidos: ' + ejemplosInv.join(' · ') + (invalidos > 5 ? '…' : '');
+    let msg = '✅ Cambio de precios\n• Actualizados: ' + actualizados + '\n• Sin cambio: ' + sinCambio + '\n• No encontrados: ' + noEncontrados + '\n• Inválidos: ' + invalidos;
     pedirConfirmacion('💲 Precios por lote', msg, () => {}, { textoSi: 'Cerrar', textoNo: 'Cerrar', tipo: 'normal' });
   });
 }
@@ -2831,25 +3016,25 @@ function aplicarCambioPrecioPorcentaje() {
   const bts = [{ texto: '🌐 Todos los productos', clase: 'azul', accion: () => _pedirPorcentajeYPrecio('') }];
   cats.slice(0, 8).forEach(c => bts.push({ texto: '🏷️ ' + c, clase: 'gris', accion: () => _pedirPorcentajeYPrecio(c) }));
   bts.push({ texto: '✖ Cancelar', clase: 'gris', accion: () => {} });
-  mostrarModalOpciones('💲 Cambiar precios por %', '¿A qué productos aplicar el cambio?', bts);
+  mostrarModalOpciones('💲 Cambiar precios por %', '¿A qué productos?', bts);
 }
 function _pedirPorcentajeYPrecio(categoria) {
   const etiqueta = categoria ? 'en "' + categoria + '"' : 'en todos los productos';
-  pedirValor('💲 Cambio masivo de precios', 'Porcentaje a aplicar ' + etiqueta + '.\nEj: 10 = +10%, -5 = -5%.\n\nUsa punto para decimales.', '10', (v) => {
+  pedirValor('💲 Cambio masivo', 'Porcentaje a aplicar ' + etiqueta + '.\nEj: 10 = +10%, -5 = -5%.', '10', (v) => {
     const pct = parseFloat(v);
     if (isNaN(pct) || pct === 0) { mostrarToast('Porcentaje inválido.', 'error'); return; }
     if (pct <= -100) { mostrarToast('No puede ser ≤ -100%.', 'error'); return; }
     const lista = categoria ? db.productos.filter(p => p.categoria === categoria) : db.productos.slice();
-    if (!lista.length) { mostrarToast('Sin productos en esa categoría.', 'warn'); return; }
+    if (!lista.length) { mostrarToast('Sin productos.', 'warn'); return; }
     const factor = 1 + pct / 100;
-    pedirConfirmacion('Confirmar cambio', 'Se aplicará ' + (pct > 0 ? '+' : '') + pct + '% a ' + lista.length + ' producto(s)' + (categoria ? ' de "' + categoria + '"' : '') + '.\n\n¿Continuar?', (ok) => {
+    pedirConfirmacion('Confirmar', 'Se aplicará ' + (pct > 0 ? '+' : '') + pct + '% a ' + lista.length + ' producto(s).', (ok) => {
       if (!ok) return;
       let n = 0;
       lista.forEach(p => { const nuevo = Math.round(p.precioVenta * factor * 100) / 100; if (nuevo >= 0 && Math.abs(nuevo - p.precioVenta) > 0.0001) { p.precioVenta = nuevo; n++; } });
       saveDB(); renderTodo();
       mostrarToast('✅ ' + n + ' precio(s) actualizados (' + (pct > 0 ? '+' : '') + pct + '%).');
     }, { textoSi: 'Aplicar', tipo: 'normal' });
-  }, (v) => { const n = parseFloat(v); if (isNaN(n) || n === 0) return 'Introduce un número distinto de 0.'; if (n <= -100) return 'Debe ser mayor que -100.'; return null; });
+  }, (v) => { const n = parseFloat(v); if (isNaN(n) || n === 0) return 'Número distinto de 0.'; if (n <= -100) return 'Mayor que -100.'; return null; });
 }
 const REPORT_CSS = `body{font-family:Arial,sans-serif;font-size:11pt;color:#222;margin:0;padding:10px}h1{font-size:17pt;text-align:center;color:#1a4d80;margin:0 0 2pt 0}.subt{text-align:center;font-size:11pt;color:#555;margin:0 0 14pt 0}h2{font-size:13pt;margin:14pt 0 6pt 0;color:#1a4d80}table{border-collapse:collapse;width:100%;margin:0 0 10pt 0}th,td{border:1px solid #8fa8c4;padding:5pt 8pt;font-size:10.5pt}th{background:#dbe8f5;font-weight:bold;color:#12395e}td.num,th.num{text-align:center}td.mon,th.mon{text-align:right}tr.total td{font-weight:bold;background:#eef4fb}tr.total-perdida td{font-weight:bold;background:#fdecea;color:#c0392b}tr.total-neto td{font-weight:bold;background:#e3f3ea;color:#217a44}td.vacio{text-align:center;font-style:italic;color:#777}.pie{font-size:8.5pt;color:#666;font-style:italic;margin-top:12pt;text-align:center}`;
 let tipoReporte = 'dia';
@@ -2912,14 +3097,15 @@ function copiarReporte() { const r = obtenerRangoFechas(); if (!r) return; const
 function imprimirReporte() { try { const c = $('#contenidoReporte').innerHTML; const w = window.open('', '_blank'); if (!w) throw new Error('Bloqueado'); w.document.write('<html><head><meta charset="utf-8"><title>Reporte</title><style>' + REPORT_CSS + '</style></head><body>' + c + '</body></html>'); w.document.close(); setTimeout(() => { w.focus(); w.print(); }, 400); } catch (e) { pedirConfirmacion('Impresión no disponible', '¿Copiar reporte?', (ok) => { if (ok) copiarReporte(); }); } }
 function descargarComoDocRango(r) { const cuerpo = construirCuerpoReporteRango(r); const html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>Reporte</title><style>' + REPORT_CSS + '</style></head><body>' + cuerpo + '</body></html>'; const blob = new Blob(['\ufeff', html], { type: 'application/msword' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'Reporte - ' + r.desde + '_a_' + r.hasta + '.doc'; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(url), 3000); mostrarToast('📄 Reporte guardado.', 'info'); }
 function reporteComoTextoPlanoRango(r) { const b = calcularBalanceRango(r.desde, r.hasta); const c = obtenerCuenta(); const neg = c ? c.nombre : 'miNegocito'; let t = '🏪 ' + neg + '\n📊 Reporte — ' + r.etiqueta + '\n═════════════\n\n'; t += '💰 Ventas: ' + money(b.totalVentas) + '\n'; if (b.totalDevolucionesVenta > 0) t += '↩️ Devoluciones: -' + money(b.totalDevolucionesVenta) + '\n'; t += '💸 Costo: ' + money(b.totalCosto) + '\n💚 Ganancia Bruta: ' + money(b.ganancia) + '\n'; if (b.totalPerdidas > 0) t += '📉 Pérdidas: -' + money(b.totalPerdidas) + '\n'; if (b.totalGastos > 0) t += '💸 Gastos: -' + money(b.totalGastos) + '\n💚 Beneficio Neto: ' + money(b.beneficioNeto) + '\n'; t += '📦 Inversión: ' + money(b.totalInversion) + '\n\n'; t += '— ' + new Date().toLocaleString('es-ES'); return t; }
-const TEXTO_NOVEDADES = `🆕 Novedades miNegocito v1.53
 
+const TEXTO_NOVEDADES = `🆕 Novedades miNegocito v1.54
+
+🔐 Licencias portables en GitHub
+📲 Activación sin Device ID
+🏪 Activación con nombre, teléfono e ID
 📱 Registro con teléfono o correo
-🏪 Activación con nombre, ID y teléfono
-🖼️ Catálogo centrado bajo cada imagen
-📢 Catálogo filtrado por categoría
-🖼️ Catálogo 2×2, 3×3 y 3×4
-💲 Precios por lote y masivo por %
+🧮 Cantidades fraccionarias (libras, litros)
+🖼️ Catálogo centrado bajo la imagen
 💱 20 monedas · 🎨 8 colores
 
 📲 +53 5 318 6004 · miNegocito 🇨🇺`;
@@ -2928,15 +3114,19 @@ function abrirManual() {
   const c = document.getElementById('contenidoManual'); const cuenta = obtenerCuenta(); const neg = cuenta ? cuenta.nombre : 'miNegocito'; const anio = new Date().getFullYear();
   const sec = (icono, titulo, contenido) => `<div style="background:#fff;border-radius:12px;padding:18px 20px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.06)"><h3 style="color:#1a4d80;margin:0 0 10px 0;font-size:16px">${icono} ${titulo}</h3><div style="font-size:14px;line-height:1.65;color:#333">${contenido}</div></div>`;
   const ul = (items) => '<ul style="margin:6px 0 8px 0;padding-left:22px">' + items.map(i => '<li style="margin-bottom:4px">' + i + '</li>').join('') + '</ul>';
-  c.innerHTML = '<div style="max-width:820px;margin:0 auto;padding:8px 0"><div style="background:linear-gradient(135deg,#1a4d80,#2d7ac0);color:#fff;padding:26px 20px;text-align:center;border-radius:14px;margin-bottom:20px"><h1 style="margin:0 0 6px 0;font-size:22px">📖 Manual de miNegocito</h1><p style="margin:0;opacity:.9;font-size:14px">Negocio: ' + esc(neg) + '</p><p style="margin:6px 0 0 0;opacity:.85;font-size:12px">Versión 1.53</p></div><div style="background:linear-gradient(135deg,#7b3fa0,#5d2d7a);color:#fff;border-radius:12px;padding:20px;margin-bottom:20px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px"><h3 style="margin:0;font-size:17px">🆕 Novedades v1.53</h3><button onclick="copiarNovedades()" style="background:#fff;color:#7b3fa0;border:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer">📋 Copiar</button></div><div style="font-size:13px;line-height:1.8;opacity:.96">📱 Registro con teléfono o correo · 🏪 Activación con más datos · 🖼️ Catálogo centrado</div></div>' +
-    sec('📱', '1. Registro con teléfono o correo', ul(['Al crear la cuenta ahora puedes registrarte con teléfono o correo.', 'El sistema detecta automáticamente el tipo de contacto mientras escribes.', 'El otro dato se puede completar después en Ayuda → ✏️ Editar datos del negocio.', 'En el login acepta ambos formatos indistintamente.'])) +
-    sec('🏪', '2. Activación con más datos', ul(['El mensaje de WhatsApp de solicitud de activación ahora incluye:', 'Nombre del negocio.', 'ID del dispositivo.', 'Teléfono (si lo configuraste).'])) +
-    sec('🖼️', '3. Catálogo en imagen centrado', ul(['Nombre y precio de cada producto ahora se muestran centrados, exactamente debajo de la imagen.', 'Aplica a los tres formatos: 2×2, 3×3 y 3×4.', 'El nombre se recorta automáticamente al ancho disponible para no salirse.'],)) +
+  c.innerHTML = '<div style="max-width:820px;margin:0 auto;padding:8px 0"><div style="background:linear-gradient(135deg,#1a4d80,#2d7ac0);color:#fff;padding:26px 20px;text-align:center;border-radius:14px;margin-bottom:20px"><h1 style="margin:0 0 6px 0;font-size:22px">📖 Manual de miNegocito</h1><p style="margin:0;opacity:.9;font-size:14px">Negocio: ' + esc(neg) + '</p><p style="margin:6px 0 0 0;opacity:.85;font-size:12px">Versión 1.54</p></div><div style="background:linear-gradient(135deg,#7b3fa0,#5d2d7a);color:#fff;border-radius:12px;padding:20px;margin-bottom:20px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px"><h3 style="margin:0;font-size:17px">🆕 Novedades v1.54</h3><button onclick="copiarNovedades()" style="background:#fff;color:#7b3fa0;border:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer">📋 Copiar</button></div><div style="font-size:13px;line-height:1.8;opacity:.96">🔐 Licencias portables · 🧮 Cantidades fraccionarias</div></div>' +
+    sec('🔐', '1. Licencia portable', ul(['Tu código de activación NO está atado a un solo dispositivo.', 'Puedes activar en cualquier móvil o navegador con el mismo código.', 'Guarda tu código: lo necesitarás si cambias de móvil.', 'En Ayuda → Licencia puedes ver y copiar tu código en cualquier momento.'])) +
+    sec('🧮', '2. Cantidades fraccionarias', ul(['Ahora puedes vender y registrar productos por libras, litros, kilos, etc.', 'Ejemplos: 0.5 lb, 1.25 kg, 2.75 litros.', 'El teclado del POS tiene un botón "." para escribir decimales.', 'Los totales se calculan automáticamente con la cantidad exacta.'],)) +
+    sec('📱', '3. Registro y contacto', ul(['Regístrate con teléfono o correo. El otro lo completas después.', 'En el login puedes entrar con cualquiera de los dos.'])) +
     sec('💬', '4. Soporte', '<table style="width:100%;font-size:14px"><tr><td style="padding:6px 0"><b>📲 WhatsApp</b></td><td>+53 5 318 6004</td></tr><tr><td style="padding:6px 0"><b>📧 Correo</b></td><td>solucionesalrohi@gmail.com</td></tr></table>') +
-    '<div style="text-align:center;font-size:12px;color:#6b7a90;padding:16px">miNegocito — Manual v1.53 · ' + anio + '</div></div>';
+    '<div style="text-align:center;font-size:12px;color:#6b7a90;padding:16px">miNegocito — Manual v1.54 · ' + anio + '</div></div>';
   document.getElementById('vistaManual').classList.add('activo'); document.getElementById('vistaManual').scrollTop = 0; registrarEstado(obtenerPestanaActiva(), 'manual');
 }
 function cerrarManual() { document.getElementById('vistaManual').classList.remove('activo'); irAPestana('ayuda'); }
+
+// ═══════════════════════════════════════════════════════════
+// CATÁLOGO
+// ═══════════════════════════════════════════════════════════
 function compartirCatalogo() { if (!requerirActivacion('Para enviar promociones debes activar la app.')) return; const disp = db.productos.filter(p => p.stock > 0); if (!disp.length) { mostrarToast('Sin productos con stock.', 'warn'); return; } abrirModalCatalogoCompartir(); }
 function abrirModalCatalogoCompartir() {
   const c = document.getElementById('modalCatalogoCompartirWrapper'); if (c) c.remove();
@@ -2955,7 +3145,7 @@ function renderListaCatalogoCompartir() {
   if (f) l = l.filter(p => p.nombre.toLowerCase().indexOf(f) !== -1);
   l.sort((a, b) => a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' }));
   if (!l.length) { c.innerHTML = '<div style="padding:30px;text-align:center;color:#999;font-style:italic">' + (f || cat ? 'Sin resultados' : 'Sin productos con stock') + '</div>'; return; }
-  c.innerHTML = l.map(p => { const ih = p.imagen ? '<img src="' + p.imagen + '" style="width:100%;height:100%;object-fit:contain;background:#fff">' : '📷'; const aviso = (!puedeCompartirArchivos() && p.imagen) ? '<span style="font-size:10px;color:#e08a1e;font-weight:600">⚠️ Se descargará foto</span>' : ''; return `<div style="display:flex;gap:10px;align-items:center;padding:10px 12px;border-bottom:1px solid #eef2f8"><div style="width:52px;height:52px;border-radius:8px;border:1px solid #eaf1f9;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;font-size:24px">${ih}</div><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:700;color:#1a4d80;line-height:1.2;margin-bottom:2px">${esc(p.nombre)}</div>${p.categoria ? '<div style="font-size:11px;color:#2d7ac0;font-weight:700;margin-bottom:2px">🏷️ ' + esc(p.categoria) + '</div>' : ''}<div style="font-size:12px;color:#6b7a90"><span style="color:#217a44;font-weight:800;font-size:14px">${money(p.precioVenta)}</span> · Stock: ${cant(p.stock)}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px"><button onclick="compartirUnProductoDelCatalogo(${p.id})" style="padding:8px 14px;border:none;border-radius:8px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;font-weight:700;cursor:pointer;font-size:13px;white-space:nowrap">📤 Enviar</button>${aviso}</div></div>`; }).join('');
+  c.innerHTML = l.map(p => { const ih = p.imagen ? '<img src="' + p.imagen + '" style="width:100%;height:100%;object-fit:contain;background:#fff">' : '📷'; return `<div style="display:flex;gap:10px;align-items:center;padding:10px 12px;border-bottom:1px solid #eef2f8"><div style="width:52px;height:52px;border-radius:8px;border:1px solid #eaf1f9;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;font-size:24px">${ih}</div><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:700;color:#1a4d80;line-height:1.2;margin-bottom:2px">${esc(p.nombre)}</div>${p.categoria ? '<div style="font-size:11px;color:#2d7ac0;font-weight:700;margin-bottom:2px">🏷️ ' + esc(p.categoria) + '</div>' : ''}<div style="font-size:12px;color:#6b7a90"><span style="color:#217a44;font-weight:800;font-size:14px">${money(p.precioVenta)}</span> · Stock: ${cant(p.stock)}</div></div><button onclick="compartirUnProductoDelCatalogo(${p.id})" style="padding:8px 14px;border:none;border-radius:8px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;font-weight:700;cursor:pointer;font-size:13px;white-space:nowrap">📤 Enviar</button></div>`; }).join('');
 }
 function _roundRect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
 function _dibujarImagenEnCanvas(ctx, dataUrl, x, y, w, h) { return new Promise((resolve) => { const img = new Image(); img.onload = () => { try { const ratio = Math.min(w / img.width, h / img.height); const dw = img.width * ratio; const dh = img.height * ratio; const dx = x + (w - dw) / 2; const dy = y + (h - dh) / 2; ctx.drawImage(img, dx, dy, dw, dh); } catch (e) {} resolve(); }; img.onerror = () => resolve(); img.src = dataUrl; }); }
@@ -3022,7 +3212,6 @@ async function generarImagenesCatalogo(productos, titulo, layoutKey) {
         ctx.fillText('📷', imgX + imgW/2, imgY + imgH/2);
       }
 
-      // Nombre y precio — CENTRADOS bajo la imagen
       const textTop = imgY + imgH + 14;
       const centerX = imgX + imgW / 2;
       const maxTextW = imgW - 8;
@@ -3079,7 +3268,7 @@ async function compartirCatalogoComoImagen() {
     } catch (e) { if (e.name === 'AbortError') return; }
   }
   for (let i = 0; i < pages.length; i++) { const canvas = pages[i]; const link = document.createElement('a'); link.download = 'catalogo-' + (i + 1) + '.png'; link.href = canvas.toDataURL('image/png'); document.body.appendChild(link); link.click(); document.body.removeChild(link); await new Promise(r => setTimeout(r, 400)); }
-  mostrarToast('✅ ' + pages.length + ' imagen(es) descargada(s). Adjúntalas en WhatsApp.', 'info');
+  mostrarToast('✅ ' + pages.length + ' imagen(es) descargada(s).', 'info');
 }
 async function compartirUnProductoDelCatalogo(id) {
   if (!requerirActivacion('Para enviar promociones debes activar la app.')) return;
@@ -3087,14 +3276,12 @@ async function compartirUnProductoDelCatalogo(id) {
   const cuenta = obtenerCuenta(); const neg = cuenta ? cuenta.nombre : 'miNegocito'; const dir = cuenta && cuenta.direccion ? cuenta.direccion.trim() : '';
   const texto = generarTextoProductoIndividual(p, neg, dir, true);
   if (!p.imagen) { if (esDispositivoMovil() && navigator.share) { try { await navigator.share({ title: p.nombre, text: texto }); } catch (err) { if (err.name !== 'AbortError') abrirWhatsAppConTexto(texto); } } else abrirWhatsAppConTexto(texto); mostrarToast('📤 Enviado: ' + p.nombre, 'info'); return; }
-  const sup = puedeCompartirArchivos();
-  if (sup) { try { const file = await base64ToFile(p.imagen, 'producto-' + p.id + '.jpg'); if (navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], title: p.nombre, text: texto }); mostrarToast('✅ Compartido: ' + p.nombre, 'info'); return; } catch (err) { if (err && err.name === 'AbortError') return; } } } catch (err) { if (err && err.name === 'AbortError') return; } }
+  if (puedeCompartirArchivos()) { try { const file = await base64ToFile(p.imagen, 'producto-' + p.id + '.jpg'); if (navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], title: p.nombre, text: texto }); mostrarToast('✅ Compartido: ' + p.nombre, 'info'); return; } catch (err) { if (err && err.name === 'AbortError') return; } } } catch (err) { if (err && err.name === 'AbortError') return; } }
   copiarTexto(texto); descargarImagenProducto(p);
-  pedirConfirmacion('📲 Compartir en WhatsApp', 'Tu navegador no permite adjuntar la imagen automáticamente.\n\n✅ El texto ya está copiado.\n🖼️ La imagen se descargó a tu galería.\n\nAbre WhatsApp, pega el texto y adjunta la foto desde la galería.', (ok) => { if (ok) abrirWhatsAppConTexto(texto); }, { textoSi: 'Abrir WhatsApp', textoNo: 'Cerrar', tipo: 'normal' });
+  pedirConfirmacion('📲 Compartir en WhatsApp', 'El texto ya está copiado y la imagen descargada. Pega el texto y adjunta la foto.', (ok) => { if (ok) abrirWhatsAppConTexto(texto); }, { textoSi: 'Abrir WhatsApp', textoNo: 'Cerrar', tipo: 'normal' });
 }
 function descargarImagenProducto(p) { if (!p || !p.imagen) return; try { const link = document.createElement('a'); link.href = p.imagen; link.download = 'producto-' + p.id + '.jpg'; document.body.appendChild(link); link.click(); document.body.removeChild(link); } catch (e) {} }
 function generarTextoProductoIndividual(p, neg, dir, inclCar) { let t = '🏪 *' + neg + '*\n\n▪️ *' + p.nombre + '*\n💵 Precio: ' + money(p.precioVenta) + '\n'; if (inclCar && p.caracteristicas) t += '📝 ' + p.caracteristicas + '\n'; if (p.stock > 0 && p.stock <= 5) t += '⚡ Últimas ' + cant(p.stock) + ' unidades\n'; if (dir) t += '\n📍 ' + dir + '\n'; t += '\n_Responde para hacer tu pedido_ 💙\n\n⚙️ *miNegocito*'; return t; }
-function base64ToFile(dataUrl, nombre) { return new Promise((res, rej) => { try { const ps = dataUrl.split(','); const mm = ps[0].match(/:(.*?);/); const mime = mm ? mm[1] : 'image/jpeg'; const bin = atob(ps[1]); const bytes = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i); res(new File([new Blob([bytes], { type: mime })], nombre, { type: mime })); } catch (e) { rej(e); } }); }
 function generarTextoCatalogo(categoria) {
   const cuenta = obtenerCuenta();
   const neg = cuenta ? cuenta.nombre : 'miNegocito';
@@ -3142,14 +3329,18 @@ function verCatalogo(categoria) {
 }
 function copiarTexto(t) { if (navigator.clipboard) navigator.clipboard.writeText(t).catch(() => copiarTextoFallback(t)); else copiarTextoFallback(t); }
 function copiarTextoFallback(t) { const ta = document.createElement('textarea'); ta.value = t; ta.style.position = 'fixed'; ta.style.left = '-9999px'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(ta); }
+
+// ═══════════════════════════════════════════════════════════
+// RESPALDO
+// ═══════════════════════════════════════════════════════════
 const ULTIMO_RESPALDO_KEY = 'ultimo_respaldo_v1';
 function obtenerUltimoRespaldo() { try { return parseInt(localStorage.getItem(ULTIMO_RESPALDO_KEY), 10) || 0; } catch (e) { return 0; } }
 function registrarRespaldoHecho() { try { localStorage.setItem(ULTIMO_RESPALDO_KEY, String(Date.now())); } catch (e) {} actualizarAvisoRespaldo(); notificaciones = notificaciones.filter(n => n.tipo !== 'respaldo'); guardarNotificaciones(); actualizarFAB(); }
 function diasSinRespaldo() { const u = obtenerUltimoRespaldo(); if (!u) return null; return Math.floor((Date.now() - u) / (24 * 60 * 60 * 1000)); }
 function actualizarAvisoRespaldo() { const el = document.getElementById('ultimoRespaldo'); if (!el) return; const d = diasSinRespaldo(); if (d === null) { el.textContent = '📌 Aún no has hecho respaldo.'; el.style.color = '#c0392b'; } else if (d === 0) { el.textContent = '✅ Último respaldo: hoy.'; el.style.color = '#217a44'; } else if (d < DIAS_RECORDATORIO_RESPALDO) { el.textContent = '✅ Último respaldo: hace ' + d + ' días.'; el.style.color = '#217a44'; } else { el.textContent = '⚠️ ' + d + ' días sin respaldar.'; el.style.color = '#c0392b'; } }
-function verificarRecordatorioRespaldo() { const d = diasSinRespaldo(); if (d === null) { agregarNotificacion('respaldo', '💾', 'Aún no has hecho respaldo. Te recomendamos guardar tu información para no perderla.', 'irARespaldo'); setTimeout(() => { pedirConfirmacion('💾 Recordatorio', 'Aún no has hecho respaldo. ¿Hacerlo ahora?', (ok) => { if (ok) irARespaldo(); }, { textoSi: 'Sí', tipo: 'normal' }); }, 60000); } else if (d >= DIAS_RECORDATORIO_RESPALDO) { agregarNotificacion('respaldo', '💾', 'Llevas ' + d + ' días sin respaldar. Te recomendamos hacerlo ahora.', 'irARespaldo'); setTimeout(() => { pedirConfirmacion('💾 Recordatorio', d + ' días sin respaldar. ¿Hacerlo ahora?', (ok) => { if (ok) irARespaldo(); }, { textoSi: 'Sí', tipo: 'normal' }); }, 60000); } }
+function verificarRecordatorioRespaldo() { const d = diasSinRespaldo(); if (d === null) { agregarNotificacion('respaldo', '💾', 'Aún no has hecho respaldo. Te recomendamos guardar tu información.', 'irARespaldo'); } else if (d >= DIAS_RECORDATORIO_RESPALDO) { agregarNotificacion('respaldo', '💾', 'Llevas ' + d + ' días sin respaldar. Te recomendamos hacerlo.', 'irARespaldo'); } }
 function irARespaldo() { irAPestana('ayuda'); setTimeout(() => { const b = document.getElementById('btnExportar'); if (b) b.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 200); }
-function generarRespaldoJSON() { const cuenta = obtenerCuenta(); return JSON.stringify({ ...db, cuenta: cuenta ? { id: cuenta.id, nombre: cuenta.nombre, negocio: cuenta.nombre, correo: cuenta.correo, telefonoPagos: cuenta.telefonoPagos || '', direccion: cuenta.direccion || '', claveHash: cuenta.claveHash || '', comisionPorciento: cuenta.comisionPorciento || 0, pagoFijoDiario: cuenta.pagoFijoDiario || 0, tasaCambioPorciento: cuenta.tasaCambioPorciento || 0, tema: cuenta.tema || 'azul', moneda: cuenta.moneda || 'USD', cuentasBancarias: cuenta.cuentasBancarias || [], logo: cuenta.logo || null } : null, fecha: new Date().toISOString() }, null, 2); }
+function generarRespaldoJSON() { const cuenta = obtenerCuenta(); return JSON.stringify({ ...db, cuenta: cuenta ? { id: cuenta.id, nombre: cuenta.nombre, correo: cuenta.correo, telefonoPagos: cuenta.telefonoPagos || '', direccion: cuenta.direccion || '', claveHash: cuenta.claveHash || '', comisionPorciento: cuenta.comisionPorciento || 0, pagoFijoDiario: cuenta.pagoFijoDiario || 0, tasaCambioPorciento: cuenta.tasaCambioPorciento || 0, tema: cuenta.tema || 'azul', moneda: cuenta.moneda || 'USD', cuentasBancarias: cuenta.cuentasBancarias || [], logo: cuenta.logo || null } : null, fecha: new Date().toISOString() }, null, 2); }
 function exportarDatos() { const data = generarRespaldoJSON(); const cuenta = obtenerCuenta(); const nb = cuenta ? cuenta.nombre.replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '_') : 'Negocio'; const nf = 'Respaldo - ' + nb + ' - ' + fechaArchivo(fechaISO()) + '.txt'; registrarRespaldoHecho(); if (esDispositivoMovil()) compartirRespaldoEnMovil(data, nf, 'Respaldo'); else { descargarTxtPC(data, nf); pedirConfirmacion('Respaldo guardado', '¿Enviar por correo?', (ok) => { if (ok) abrirCorreoConRespaldo(data, nf); }); } }
 function enviarRespaldoPorCorreo() { if (!requerirActivacion('Para enviar respaldo debes activar la app.')) return; const data = generarRespaldoJSON(); const cuenta = obtenerCuenta(); const nb = cuenta ? cuenta.nombre.replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '_') : 'Negocio'; const nf = 'Respaldo - ' + nb + ' - ' + fechaArchivo(fechaISO()) + '.txt'; registrarRespaldoHecho(); if (esDispositivoMovil()) compartirRespaldoEnMovil(data, nf, 'Respaldo'); else { descargarTxtPC(data, nf); setTimeout(() => abrirCorreoConRespaldo(data, nf), 800); } }
 async function compartirRespaldoEnMovil(data, nf, t) { if (navigator.share && window.File) { try { const file = new File([data], nf, { type: 'text/plain' }); if (navigator.canShare && navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], title: t, text: 'Respaldo' }); mostrarToast('✅ Compartido.'); return; } catch (err) { if (err.name === 'AbortError') return; } } } catch (e) {} } if (navigator.share) { try { await navigator.share({ title: t, text: data }); mostrarToast('✅ Compartido.'); return; } catch (err) { if (err.name === 'AbortError') return; } } descargarTxtPC(data, nf); mostrarToast('💾 Archivo descargado.', 'info'); }
@@ -3159,25 +3350,19 @@ function validarJSONInput() { const ta = document.getElementById('textoJSON'); i
 function aplicarImportacion() { const t = document.getElementById('textoJSON').value.trim(); const es = document.getElementById('estadoJSON'); if (!t) { es.innerHTML = '<span style="color:#c0392b">Vacío.</span>'; return; } let d; try { d = JSON.parse(t); } catch (err) { es.innerHTML = '<span style="color:#c0392b">Inválido.</span>'; return; } if (!d.productos || !d.entradas || !d.ventas) { es.innerHTML = '<span style="color:#c0392b">Formato incorrecto.</span>'; return; } if (es.dataset.confirmado !== 'si') { es.innerHTML = '<span style="color:#b56b0d">⚠️ Pulsa otra vez "Importar" para confirmar.</span>'; es.dataset.confirmado = 'si'; return; } es.dataset.confirmado = ''; const nr = (d.cuenta && (d.cuenta.nombre || d.cuenta.negocio)) || null; mostrarDialogoImportacion(d, nr); }
 function compararRespaldoConActual(d, id) {
   const raw = localStorage.getItem(LS_KEY_PREFIX + id); if (!raw) return null; let actual; try { actual = JSON.parse(raw); } catch (e) { return null; }
-  const diffs = []; const arrays = [{ key: 'productos', label: '📦 Productos' }, { key: 'ventas', label: '💰 Ventas' }, { key: 'entradas', label: '📥 Entradas' }, { key: 'clientes', label: '👥 Clientes' }, { key: 'proveedores', label: '🚚 Proveedores' }, { key: 'gastos', label: '💸 Gastos' }, { key: 'perdidas', label: '📉 Pérdidas' }, { key: 'devoluciones', label: '↩️ Devoluciones' }, { key: 'facturasMulti', label: '🧾 Facturas' }];
+  const diffs = []; const arrays = [{ key: 'productos', label: '📦 Productos' }, { key: 'ventas', label: '💰 Ventas' }, { key: 'entradas', label: '📥 Entradas' }, { key: 'clientes', label: '👥 Clientes' }, { key: 'proveedores', label: '🚚 Proveedores' }, { key: 'gastos', label: '💸 Gastos' }];
   arrays.forEach(a => { const nA = (actual[a.key] || []).length; const nN = (d[a.key] || []).length; if (nA !== nN) { const signo = nN > nA ? '+' : ''; diffs.push('  ' + a.label + ': ' + nA + ' → ' + nN + ' (' + signo + (nN - nA) + ')'); } });
-  const setA = new Set((actual.productos || []).map(p => p.nombre)); const setN = new Set((d.productos || []).map(p => p.nombre));
-  const nuevos = [...setN].filter(n => !setA.has(n)); const eliminados = [...setA].filter(n => !setN.has(n));
-  if (nuevos.length) diffs.push('  🟢 Nuevos: ' + nuevos.slice(0, 5).join(', ') + (nuevos.length > 5 ? '… (+' + (nuevos.length - 5) + ')' : ''));
-  if (eliminados.length) diffs.push('  🔴 Eliminados: ' + eliminados.slice(0, 5).join(', ') + (eliminados.length > 5 ? '… (+' + (eliminados.length - 5) + ')' : ''));
-  const sumV = arr => (arr || []).reduce((s, v) => s + (Number(v.total) || 0), 0);
-  const vAct = sumV(actual.ventas); const vNew = sumV(d.ventas); const totVentas = '  💵 Total ventas: ' + money(vAct) + ' → ' + money(vNew);
-  return { diffs, vAct, vNew, totVentas };
+  return { diffs };
 }
 function mostrarDialogoImportacion(d, nr) {
   const r = obtenerRegistro(); const act = negocioActivo();
   const ex = nr ? r.lista.find(n => n.nombre.toLowerCase() === nr.toLowerCase()) : null;
-  if (ex) { const cmp = compararRespaldoConActual(d, ex.id); let msg = 'El negocio "' + ex.nombre + '" ya existe.'; if (cmp && cmp.diffs.length) { msg += '\n\n📊 Cambios detectados:\n' + cmp.diffs.join('\n') + '\n' + cmp.totVentas + '\n\n⚠️ ¿Sobreescribir los datos actuales?'; } else if (cmp) { msg += '\n\nSin diferencias significativas en cantidades.\n💵 ' + cmp.totVentas.trim() + '\n\n¿Sobreescribir de todas formas?'; } else msg += '\n\nNo se pudo comparar. ¿Sobreescribir?';
-    mostrarModalOpciones('📂 Importar — Comparar', msg, [{ texto: '🔄 Sobreescribir "' + ex.nombre + '"', clase: 'rojo', accion: () => ejecutarImportacion(d, { modo: 'sobreescribir', negocioId: ex.id }) }, { texto: '➕ Crear nuevo', clase: 'verde', accion: () => pedirNombreYImportar(d) }, { texto: '✖ Cancelar', clase: 'gris', accion: () => {} }]); return; }
+  if (ex) { const cmp = compararRespaldoConActual(d, ex.id); let msg = 'El negocio "' + ex.nombre + '" ya existe.'; if (cmp && cmp.diffs.length) msg += '\n\n📊 Cambios:\n' + cmp.diffs.join('\n'); msg += '\n\n¿Sobreescribir?';
+    mostrarModalOpciones('📂 Importar', msg, [{ texto: '🔄 Sobreescribir', clase: 'rojo', accion: () => ejecutarImportacion(d, { modo: 'sobreescribir', negocioId: ex.id }) }, { texto: '➕ Crear nuevo', clase: 'verde', accion: () => pedirNombreYImportar(d) }, { texto: '✖ Cancelar', clase: 'gris', accion: () => {} }]); return; }
   if (nr) { const bts = [{ texto: '➕ Crear "' + nr + '"', clase: 'verde', accion: () => ejecutarImportacion(d, { modo: 'crear', nombre: nr }) }]; if (act) bts.push({ texto: '🔄 Sobreescribir actual', clase: 'rojo', accion: () => ejecutarImportacion(d, { modo: 'sobreescribir', negocioId: act.id }) }); bts.push({ texto: '✖ Cancelar', clase: 'gris', accion: () => {} }); mostrarModalOpciones('📂 Importar', '"' + nr + '" no existe. ¿Qué hacer?', bts); return; }
   const bts = [{ texto: '➕ Crear nuevo negocio', clase: 'verde', accion: () => pedirNombreYImportar(d) }];
   if (act) bts.push({ texto: '🔄 Sobreescribir actual', clase: 'rojo', accion: () => ejecutarImportacion(d, { modo: 'sobreescribir', negocioId: act.id }) });
-  bts.push({ texto: '✖ Cancelar', clase: 'gris', accion: () => {} }); mostrarModalOpciones('📂 Importar', 'El respaldo no tiene nombre de negocio. ¿Qué hacer?', bts);
+  bts.push({ texto: '✖ Cancelar', clase: 'gris', accion: () => {} }); mostrarModalOpciones('📂 Importar', 'El respaldo no tiene nombre. ¿Qué hacer?', bts);
 }
 function pedirNombreYImportar(d) { const sug = (d.cuenta && (d.cuenta.nombre || d.cuenta.negocio)) || ''; pedirValor('Nombre del nuevo negocio', 'Introduce un nombre:', sug, (n) => { const nn = (n || '').trim(); if (!nn) return; const r = obtenerRegistro(); if (r.lista.some(x => x.nombre.toLowerCase() === nn.toLowerCase())) { mostrarToast('Ya existe.', 'error'); return; } ejecutarImportacion(d, { modo: 'crear', nombre: nn }); }, (v) => !v.trim() ? 'Introduce un nombre.' : null); }
 function ejecutarImportacion(d, o) {
@@ -3191,7 +3376,7 @@ function ejecutarImportacion(d, o) {
   if (o.modo === 'sobreescribir' && id === r.activo) loadDB();
   cerrarModalJSON(); actualizarHeader(); cargarTemaGuardado(); cargarMoneda(); renderTodo();
   if (document.getElementById('tab-negocios').classList.contains('active')) renderPanelNegocios();
-  mostrarToast('✅ Importado (' + o.modo + ').');
+  mostrarToast('✅ Importado.');
 }
 function cerrarModalJSON() { document.getElementById('modalJSON').style.display = 'none'; const ta = document.getElementById('textoJSON'); ta.readOnly = false; document.getElementById('btnCopiarJSON').style.display = 'inline-block'; const es = document.getElementById('estadoJSON'); es.innerHTML = ''; es.dataset.confirmado = ''; }
 function copiarJSONaPortapapeles() { const t = document.getElementById('textoJSON').value; if (!t) return; copiarTexto(t); document.getElementById('estadoJSON').innerHTML = '<span style="color:#2e9e5b">✅ Copiado.</span>'; }
@@ -3203,6 +3388,10 @@ function mostrarModalOpciones(tit, msg, bts) {
   c.querySelectorAll('button[data-opcion]').forEach(btn => { btn.onclick = () => { const i = parseInt(btn.dataset.opcion, 10); cerrarModalOpciones(); if (bts[i] && typeof bts[i].accion === 'function') bts[i].accion(); }; });
 }
 function cerrarModalOpciones() { const c = document.getElementById('modalOpcionesWrapper'); if (c) c.remove(); }
+
+// ═══════════════════════════════════════════════════════════
+// NOTIFICACIONES
+// ═══════════════════════════════════════════════════════════
 const NOTIF_KEY = 'notificaciones_v1';
 let notificaciones = [];
 function cargarNotificaciones() { try { const raw = localStorage.getItem(NOTIF_KEY); if (raw) { const arr = JSON.parse(raw); if (Array.isArray(arr)) notificaciones = arr; } } catch (e) {} }
@@ -3217,7 +3406,7 @@ function actualizarFAB() {
   if ((pc && pc.style.display === 'flex') || (sb && sb.classList.contains('abierto'))) { cont.style.display = 'none'; return; }
   cont.style.display = '';
   const totalCar = carritoPOS.reduce((s, i) => s + i.cantidad, 0);
-  if (totalCar > 0) { fabCar.classList.add('visible'); document.getElementById('fabCarritoBadge').textContent = totalCar; } else fabCar.classList.remove('visible');
+  if (totalCar > 0) { fabCar.classList.add('visible'); document.getElementById('fabCarritoBadge').textContent = cant(totalCar); } else fabCar.classList.remove('visible');
   const noLeidas = notificaciones.filter(n => !n.leida).length;
   if (notificaciones.length > 0) { fabNot.classList.add('visible'); const bd = document.getElementById('fabNotifBadge'); if (noLeidas > 0) { bd.textContent = noLeidas; bd.style.display = ''; } else bd.style.display = 'none'; } else fabNot.classList.remove('visible');
 }
@@ -3225,7 +3414,7 @@ function abrirCarritoDesdeFAB() { if (!carritoPOS.length) { mostrarToast('Carrit
 function abrirPanelNotificaciones() {
   if (document.getElementById('panelNotificaciones')) { cerrarPanelNotificaciones(); return; }
   const panel = document.createElement('div'); panel.id = 'panelNotificaciones';
-  panel.innerHTML = '<div class="modal-overlay" onclick="if(event.target===this) cerrarPanelNotificaciones()"><div class="modal-caja" style="max-width:460px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><h3 style="margin:0">🔔 Notificaciones</h3><button onclick="cerrarPanelNotificaciones()" style="background:#f0f4fa;border:none;border-radius:8px;padding:6px 12px;font-weight:800;color:#6b7a90;cursor:pointer">✖</button></div><div id="panelNotifLista" style="max-height:60vh;overflow-y:auto"></div><div class="botones" style="justify-content:space-between;margin-top:14px"><button class="btn gris" onclick="marcarTodasLeidas()">✓ Marcar leídas</button><button class="btn gris" onclick="limpiarNotificaciones()">🗑️ Limpiar todo</button></div></div></div>';
+  panel.innerHTML = '<div class="modal-overlay" onclick="if(event.target===this) cerrarPanelNotificaciones()"><div class="modal-caja" style="max-width:460px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><h3 style="margin:0">🔔 Notificaciones</h3><button onclick="cerrarPanelNotificaciones()" style="background:#f0f4fa;border:none;border-radius:8px;padding:6px 12px;font-weight:800;color:#6b7a90;cursor:pointer">✖</button></div><div id="panelNotifLista" style="max-height:60vh;overflow-y:auto"></div><div class="botones" style="justify-content:space-between;margin-top:14px"><button class="btn gris" onclick="marcarTodasLeidas()">✓ Marcar leídas</button><button class="btn gris" onclick="limpiarNotificaciones()">🗑️ Limpiar</button></div></div></div>';
   document.body.appendChild(panel); renderPanelNotificaciones();
 }
 function renderPanelNotificaciones() {
@@ -3235,6 +3424,10 @@ function renderPanelNotificaciones() {
 }
 function notifAccion(id) { const n = notificaciones.find(x => x.id === id); if (!n) return; n.leida = true; guardarNotificaciones(); actualizarFAB(); cerrarPanelNotificaciones(); if (typeof n.accion === 'function') { try { n.accion(); } catch (e) {} } else if (typeof n.accion === 'string' && typeof window[n.accion] === 'function') { try { window[n.accion](); } catch (e) {} } }
 function cerrarPanelNotificaciones() { const p = document.getElementById('panelNotificaciones'); if (p) p.remove(); }
+
+// ═══════════════════════════════════════════════════════════
+// POS
+// ═══════════════════════════════════════════════════════════
 function abrirPOS() { if (!db.productos.length) { mostrarToast('Sin productos.', 'warn'); return; } document.getElementById('buscadorPOS').value = ''; renderGrillaPOS(); actualizarContadorCarritoPOS(); document.getElementById('vistaPOS').classList.add('activo'); document.getElementById('vistaPOS').scrollTop = 0; registrarEstado(obtenerPestanaActiva(), 'pos'); }
 function cerrarPOS() { document.getElementById('vistaPOS').classList.remove('activo'); cerrarModalCantidadPOS(); cerrarModalCarritoPOS(); if (carritoPOS.length > 0) mostrarToast('ℹ️ Carrito: ' + carritoPOS.length + ' producto(s).', 'info'); actualizarFAB(); }
 function renderGrillaPOS() {
@@ -3245,25 +3438,40 @@ function renderGrillaPOS() {
   if (!l.length) { c.innerHTML = '<div class="pos-vacio" style="grid-column:1/-1">Sin resultados</div>'; return; }
   c.innerHTML = l.map(p => { const ss = p.stock <= 0; let cs = 'tarjeta-stock'; if (ss) cs += ' agotado-txt'; else if (p.stock <= 5) cs += ' bajo'; const ih = p.imagen ? '<img src="' + p.imagen + '" alt="' + esc(p.nombre) + '" loading="lazy">' : '📷'; return `<button type="button" class="tarjeta-prod${ss ? ' agotado' : ''}" onclick="seleccionarProductoPOS(${p.id})"><div class="tarjeta-img">${ih}</div><div class="tarjeta-nombre">${esc(p.nombre)}</div><div class="tarjeta-precio">${money(p.precioVenta)}</div><div class="${cs}">${ss ? 'Sin stock' : 'Stock: ' + cant(p.stock)}</div></button>`; }).join('');
 }
-function actualizarContadorCarritoPOS() { const c = document.getElementById('contadorCarritoPOS'); const b = document.getElementById('btnCarritoPOS'); if (c && b) { const t = carritoPOS.reduce((s, i) => s + i.cantidad, 0); c.textContent = t; if (t > 0) b.classList.add('con-items'); else b.classList.remove('con-items'); } actualizarFAB(); }
+function actualizarContadorCarritoPOS() { const c = document.getElementById('contadorCarritoPOS'); const b = document.getElementById('btnCarritoPOS'); if (c && b) { const t = carritoPOS.reduce((s, i) => s + i.cantidad, 0); c.textContent = cant(t); if (t > 0) b.classList.add('con-items'); else b.classList.remove('con-items'); } actualizarFAB(); }
 function seleccionarProductoPOS(id) { const p = getProducto(id); if (!p) return; if (p.stock <= 0) { mostrarToast('"' + p.nombre + '" sin stock.', 'warn'); return; } productoPOSActual = p; cantidadPOSActual = '0'; document.getElementById('mcpImg').innerHTML = p.imagen ? '<img src="' + p.imagen + '">' : '📷'; document.getElementById('mcpNombre').textContent = p.nombre; document.getElementById('mcpPrecio').textContent = money(p.precioVenta); document.getElementById('mcpStock').textContent = 'Stock: ' + cant(p.stock) + ' uds.'; document.getElementById('mcpError').textContent = ''; actualizarDisplayCantidadPOS(); document.getElementById('modalCantidadPOS').style.display = 'block'; }
 function cerrarModalCantidadPOS() { document.getElementById('modalCantidadPOS').style.display = 'none'; productoPOSActual = null; cantidadPOSActual = '0'; }
-function teclaCantidad(t) { if (t === 'back') cantidadPOSActual = cantidadPOSActual.length > 1 ? cantidadPOSActual.slice(0, -1) : '0'; else if (t === 'clear') cantidadPOSActual = '0'; else if (/^[0-9]$/.test(t)) { if (cantidadPOSActual === '0') cantidadPOSActual = t; else cantidadPOSActual += t; if (cantidadPOSActual.length > 6) cantidadPOSActual = cantidadPOSActual.slice(0, 6); } actualizarDisplayCantidadPOS(); }
-function actualizarDisplayCantidadPOS() { document.getElementById('mcpDisplay').textContent = cantidadPOSActual; const c = parseInt(cantidadPOSActual, 10) || 0; const p = productoPOSActual; document.getElementById('mcpSubtotal').textContent = p ? money(c * p.precioVenta) : money(0); document.getElementById('mcpError').textContent = ''; }
+function teclaCantidad(t) {
+  if (t === 'back') cantidadPOSActual = cantidadPOSActual.length > 1 ? cantidadPOSActual.slice(0, -1) : '0';
+  else if (t === 'clear') cantidadPOSActual = '0';
+  else if (t === '.') {
+    if (cantidadPOSActual.indexOf('.') === -1) {
+      if (cantidadPOSActual === '0' || cantidadPOSActual === '') cantidadPOSActual = '0.';
+      else cantidadPOSActual += '.';
+    }
+  }
+  else if (/^[0-9]$/.test(t)) {
+    if (cantidadPOSActual === '0') cantidadPOSActual = t;
+    else cantidadPOSActual += t;
+    if (cantidadPOSActual.length > 8) cantidadPOSActual = cantidadPOSActual.slice(0, 8);
+  }
+  actualizarDisplayCantidadPOS();
+}
+function actualizarDisplayCantidadPOS() { document.getElementById('mcpDisplay').textContent = cantidadPOSActual; const c = parseFloat(cantidadPOSActual) || 0; const p = productoPOSActual; document.getElementById('mcpSubtotal').textContent = p ? money(c * p.precioVenta) : money(0); document.getElementById('mcpError').textContent = ''; }
 function confirmarCantidadPOS() {
-  const p = productoPOSActual; if (!p) return; const c = parseInt(cantidadPOSActual, 10) || 0; const e = document.getElementById('mcpError');
+  const p = productoPOSActual; if (!p) return; const c = parseFloat(cantidadPOSActual) || 0; const e = document.getElementById('mcpError');
   if (c <= 0) { e.textContent = 'Cantidad > 0.'; return; }
   const yc = carritoPOS.filter(x => x.productoId === p.id).reduce((s, x) => s + x.cantidad, 0);
   if (yc + c > p.stock) { e.textContent = 'Stock insuficiente. Disponible: ' + cant(p.stock - yc); return; }
   const ex = carritoPOS.find(x => x.productoId === p.id && x.precioUnitario === p.precioVenta);
   if (ex) ex.cantidad += c; else carritoPOS.push({ productoId: p.id, cantidad: c, precioUnitario: p.precioVenta });
-  cerrarModalCantidadPOS(); actualizarContadorCarritoPOS(); mostrarToast('➕ ' + c + ' × ' + p.nombre, 'info');
+  cerrarModalCantidadPOS(); actualizarContadorCarritoPOS(); mostrarToast('➕ ' + cant(c) + ' × ' + p.nombre, 'info');
 }
 function abrirModalCarritoPOS() { if (!carritoPOS.length) { mostrarToast('Carrito vacío.', 'info'); return; } renderListaCarritoPOS(); document.getElementById('modalCarritoPOS').style.display = 'block'; }
 function cerrarModalCarritoPOS() { document.getElementById('modalCarritoPOS').style.display = 'none'; }
 function renderListaCarritoPOS() {
   const c = document.getElementById('listaCarritoPOS'); const t = carritoPOS.reduce((s, i) => s + i.cantidad * i.precioUnitario, 0); const tu = carritoPOS.reduce((s, i) => s + i.cantidad, 0);
-  document.getElementById('carritoTituloCant').textContent = '(' + tu + ' uds.)'; document.getElementById('totalCarritoPOS').textContent = money(t);
+  document.getElementById('carritoTituloCant').textContent = '(' + cant(tu) + ' uds.)'; document.getElementById('totalCarritoPOS').textContent = money(t);
   const cuentaTC = obtenerCuenta(); const tasaTC = cuentaTC ? Number(cuentaTC.tasaCambioPorciento) || 0 : 0;
   const elTasa = document.getElementById('totalTasaCarritoPOS');
   if (elTasa) { if (tasaTC > 0 && t > 0) { elTasa.style.display = 'block'; elTasa.innerHTML = '💱 Tasa ' + tasaTC + '%: <b style="color:#217a44;font-size:15px">' + money(t * (1 + tasaTC / 100)) + '</b>'; } else elTasa.style.display = 'none'; }
@@ -3295,6 +3503,30 @@ function pagarCarritoPOS() {
     }
   }, { textoSi: 'Sí, facturar', textoNo: 'No, solo registrar', tipo: 'normal' });
 }
+
+// ═══════════════════════════════════════════════════════════
+// VENTA/ENTRADA RÁPIDA
+// ═══════════════════════════════════════════════════════════
+function abrirVentaRapida() { if (!db.productos.length) { mostrarToast('Sin productos.', 'warn'); return; } const s = document.getElementById('vrProducto'); s.innerHTML = '<option value="">-- Seleccione --</option>' + db.productos.map(p => `<option value="${p.id}">${esc(p.nombre)} (Stock: ${cant(p.stock)})</option>`).join(''); s.value = ''; document.getElementById('vrCantidad').value = 1; document.getElementById('vrPrecio').value = ''; document.getElementById('vrTotal').textContent = money(0); document.getElementById('vrError').textContent = ''; document.getElementById('vrStockInfo').textContent = ''; document.getElementById('modalVentaRapida').style.display = 'block'; registrarEstado(obtenerPestanaActiva(), 'ventaRapida'); }
+function cerrarVentaRapida() { document.getElementById('modalVentaRapida').style.display = 'none'; }
+function recalcularVentaRapida() { const c = parseFloat(document.getElementById('vrCantidad').value) || 0; const p = parseFloat(document.getElementById('vrPrecio').value) || 0; document.getElementById('vrTotal').textContent = money(c * p); }
+function confirmarVentaRapida() { const pid = Number(document.getElementById('vrProducto').value); const c = parseFloat(document.getElementById('vrCantidad').value) || 0; const pr = parseFloat(document.getElementById('vrPrecio').value) || 0; const er = document.getElementById('vrError'); if (!pid) { er.textContent = 'Selecciona producto.'; return; } const p = getProducto(pid); if (!p) { er.textContent = 'No encontrado.'; return; } if (c <= 0 || pr <= 0) { er.textContent = 'Cantidad y precio > 0.'; return; } if (p.stock < c) { er.textContent = 'Stock insuficiente. Disponible: ' + cant(p.stock); return; } _addVenta(pid, c, pr, fechaISO(), null); renderTodo(); cerrarVentaRapida(); mostrarToast('✅ Venta: ' + cant(c) + ' × ' + p.nombre, 'info'); }
+function abrirEntradaRapida(pidPreseleccionado) {
+  if (!db.productos.length) { mostrarToast('Sin productos.', 'warn'); return; }
+  const s = document.getElementById('erProducto'); s.innerHTML = '<option value="">-- Seleccione --</option>' + db.productos.map(p => `<option value="${p.id}">${esc(p.nombre)} (Stock: ${cant(p.stock)})</option>`).join('');
+  s.value = pidPreseleccionado ? String(pidPreseleccionado) : ''; document.getElementById('erCantidad').value = 1;
+  if (pidPreseleccionado) { const c = costoPromedio(pidPreseleccionado); document.getElementById('erCosto').value = c > 0 ? c.toFixed(2) : ''; document.getElementById('erCostoInfo').textContent = c > 0 ? '💡 Costo actual: ' + money(c) : '💡 Primera compra.'; }
+  else { document.getElementById('erCosto').value = ''; document.getElementById('erCostoInfo').textContent = ''; }
+  document.getElementById('erTotal').textContent = money(parseFloat(document.getElementById('erCosto').value) || 0); document.getElementById('erError').textContent = '';
+  document.getElementById('modalEntradaRapida').style.display = 'block'; registrarEstado(obtenerPestanaActiva(), 'entradaRapida');
+}
+function cerrarEntradaRapida() { document.getElementById('modalEntradaRapida').style.display = 'none'; _modoAltaContinuo = false; }
+function recalcularEntradaRapida() { const c = parseFloat(document.getElementById('erCantidad').value) || 0; const co = parseFloat(document.getElementById('erCosto').value) || 0; document.getElementById('erTotal').textContent = money(c * co); }
+function confirmarEntradaRapida() { const pid = Number(document.getElementById('erProducto').value); const c = parseFloat(document.getElementById('erCantidad').value) || 0; const co = parseFloat(document.getElementById('erCosto').value) || 0; const er = document.getElementById('erError'); if (!pid) { er.textContent = 'Selecciona producto.'; return; } if (c <= 0 || co <= 0) { er.textContent = 'Cantidad y costo > 0.'; return; } _addEntrada(pid, c, co, fechaISO(), null); const continuar = _modoAltaContinuo; document.getElementById('modalEntradaRapida').style.display = 'none'; renderTodo(); mostrarToast('✅ Entrada registrada.', 'info'); if (continuar) { setTimeout(() => { _modoEscaneoAlta = true; abrirLectorCodigo(); }, 400); } }
+
+// ═══════════════════════════════════════════════════════════
+// INICIAR APP
+// ═══════════════════════════════════════════════════════════
 function iniciarApp() {
   if (!verificarActivacion() && !obtenerTrial()) iniciarTrial();
   inicializarHistorial();
@@ -3322,7 +3554,7 @@ function iniciarApp() {
   $('#bFecha').onchange = renderBalance;
   $('#btnVerReporte').onclick = verReporte; $('#btnWord').onclick = compartirReporte;
   $('#btnExportar').onclick = exportarDatos; $('#btnEnviarRespaldo').onclick = enviarRespaldoPorCorreo; $('#btnImportar').onclick = importarDatos;
-  $('#btnBorrar').onclick = () => { pedirConfirmacion('Borrar datos del negocio activo', '⚠️ Se borrarán TODOS los datos del negocio actual.\n\n¿Seguro?', (ok) => { if (!ok) return; pedirConfirmacion('Última confirmación', '¿Borrar definitivamente?', (ok2) => { if (!ok2) return; db = { productos: [], entradas: [], ventas: [], perdidas: [], devoluciones: [], gastos: [], facturas: [], clientes: [], proveedores: [], facturasMulti: [], seq: { p: 1, e: 1, v: 1, d: 1, dev: 1, g: 1, f: 1, c: 1, pv: 1, fm: 1 } }; carritoPOS = []; saveDB(); renderTodo(); mostrarToast('🗑️ Datos borrados.', 'info'); }, { textoSi: 'Sí, borrar todo', tipo: 'danger' }); }, { textoSi: 'Continuar', tipo: 'danger' }); };
+  $('#btnBorrar').onclick = () => { pedirConfirmacion('Borrar datos', '⚠️ Se borrarán TODOS los datos del negocio actual.\n\n¿Seguro?', (ok) => { if (!ok) return; pedirConfirmacion('Última confirmación', '¿Borrar definitivamente?', (ok2) => { if (!ok2) return; db = { productos: [], entradas: [], ventas: [], perdidas: [], devoluciones: [], gastos: [], facturas: [], clientes: [], proveedores: [], facturasMulti: [], seq: { p: 1, e: 1, v: 1, d: 1, dev: 1, g: 1, f: 1, c: 1, pv: 1, fm: 1 } }; carritoPOS = []; saveDB(); renderTodo(); mostrarToast('🗑️ Datos borrados.', 'info'); }, { textoSi: 'Sí, borrar todo', tipo: 'danger' }); }, { textoSi: 'Continuar', tipo: 'danger' }); };
   document.getElementById('vrProducto').addEventListener('change', () => { const p = getProducto(Number(document.getElementById('vrProducto').value)); if (p) { document.getElementById('vrPrecio').value = p.precioVenta; const info = document.getElementById('vrStockInfo'); if (p.stock <= 0) info.innerHTML = '<span style="color:#c0392b;font-weight:700">⚠️ Sin stock</span>'; else if (p.stock <= 5) info.innerHTML = '<span style="color:#e08a1e;font-weight:700">⚠️ Stock bajo: ' + cant(p.stock) + '</span>'; else info.textContent = '📦 Stock: ' + cant(p.stock); } else { document.getElementById('vrPrecio').value = ''; document.getElementById('vrStockInfo').textContent = ''; } recalcularVentaRapida(); });
   document.getElementById('vrCantidad').addEventListener('input', recalcularVentaRapida);
   document.getElementById('vrPrecio').addEventListener('input', recalcularVentaRapida);
@@ -3351,24 +3583,11 @@ function iniciarApp() {
   window.addEventListener('beforeunload', function() { try { saveDB(); } catch (e) {} });
   verificarRecordatorioRespaldo(); actualizarBannerTrial(); actualizarBotonesLogo();
   if (!verificarAcceso()) setTimeout(() => mostrarModalActivacion(true), 400);
-  setInterval(() => { if (verificarActivacion()) return; if (diasRestantesTrial() <= 0) { const modal = document.getElementById('modalActivacion'); if (modal && !modal.classList.contains('activo')) mostrarModalActivacion(true); } actualizarBannerTrial(); }, 5 * 60 * 1000);
+  // Actualizar caché de licencias al iniciar (silencioso)
+  descargarLicenciasGitHub().catch(() => {});
+  setInterval(() => { if (verificarActivacion()) { descargarLicenciasGitHub().catch(() => {}); return; } if (diasRestantesTrial() <= 0) { const modal = document.getElementById('modalActivacion'); if (modal && !modal.classList.contains('activo')) mostrarModalActivacion(true); } actualizarBannerTrial(); }, 5 * 60 * 1000);
 }
-function abrirVentaRapida() { if (!db.productos.length) { mostrarToast('Sin productos.', 'warn'); return; } const s = document.getElementById('vrProducto'); s.innerHTML = '<option value="">-- Seleccione --</option>' + db.productos.map(p => `<option value="${p.id}">${esc(p.nombre)} (Stock: ${cant(p.stock)})</option>`).join(''); s.value = ''; document.getElementById('vrCantidad').value = 1; document.getElementById('vrPrecio').value = ''; document.getElementById('vrTotal').textContent = money(0); document.getElementById('vrError').textContent = ''; document.getElementById('vrStockInfo').textContent = ''; document.getElementById('modalVentaRapida').style.display = 'block'; registrarEstado(obtenerPestanaActiva(), 'ventaRapida'); }
-function cerrarVentaRapida() { document.getElementById('modalVentaRapida').style.display = 'none'; }
-function recalcularVentaRapida() { const c = parseFloat(document.getElementById('vrCantidad').value) || 0; const p = parseFloat(document.getElementById('vrPrecio').value) || 0; document.getElementById('vrTotal').textContent = money(c * p); }
-function confirmarVentaRapida() { const pid = Number(document.getElementById('vrProducto').value); const c = parseFloat(document.getElementById('vrCantidad').value) || 0; const pr = parseFloat(document.getElementById('vrPrecio').value) || 0; const er = document.getElementById('vrError'); if (!pid) { er.textContent = 'Selecciona producto.'; return; } const p = getProducto(pid); if (!p) { er.textContent = 'No encontrado.'; return; } if (c <= 0 || pr <= 0) { er.textContent = 'Cantidad y precio > 0.'; return; } if (p.stock < c) { er.textContent = 'Stock insuficiente. Disponible: ' + cant(p.stock); return; } _addVenta(pid, c, pr, fechaISO(), null); renderTodo(); cerrarVentaRapida(); mostrarToast('✅ Venta: ' + c + ' × ' + p.nombre, 'info'); }
-function abrirEntradaRapida(pidPreseleccionado) {
-  if (!db.productos.length) { mostrarToast('Sin productos.', 'warn'); return; }
-  const s = document.getElementById('erProducto'); s.innerHTML = '<option value="">-- Seleccione --</option>' + db.productos.map(p => `<option value="${p.id}">${esc(p.nombre)} (Stock: ${cant(p.stock)})</option>`).join('');
-  s.value = pidPreseleccionado ? String(pidPreseleccionado) : ''; document.getElementById('erCantidad').value = 1;
-  if (pidPreseleccionado) { const c = costoPromedio(pidPreseleccionado); document.getElementById('erCosto').value = c > 0 ? c.toFixed(2) : ''; document.getElementById('erCostoInfo').textContent = c > 0 ? '💡 Costo actual: ' + money(c) : '💡 Primera compra.'; }
-  else { document.getElementById('erCosto').value = ''; document.getElementById('erCostoInfo').textContent = ''; }
-  document.getElementById('erTotal').textContent = money(parseFloat(document.getElementById('erCosto').value) || 0); document.getElementById('erError').textContent = '';
-  document.getElementById('modalEntradaRapida').style.display = 'block'; registrarEstado(obtenerPestanaActiva(), 'entradaRapida');
-}
-function cerrarEntradaRapida() { document.getElementById('modalEntradaRapida').style.display = 'none'; _modoAltaContinuo = false; }
-function recalcularEntradaRapida() { const c = parseFloat(document.getElementById('erCantidad').value) || 0; const co = parseFloat(document.getElementById('erCosto').value) || 0; document.getElementById('erTotal').textContent = money(c * co); }
-function confirmarEntradaRapida() { const pid = Number(document.getElementById('erProducto').value); const c = parseFloat(document.getElementById('erCantidad').value) || 0; const co = parseFloat(document.getElementById('erCosto').value) || 0; const er = document.getElementById('erError'); if (!pid) { er.textContent = 'Selecciona producto.'; return; } if (c <= 0 || co <= 0) { er.textContent = 'Cantidad y costo > 0.'; return; } _addEntrada(pid, c, co, fechaISO(), null); const continuar = _modoAltaContinuo; document.getElementById('modalEntradaRapida').style.display = 'none'; renderTodo(); mostrarToast('✅ Entrada registrada.', 'info'); if (continuar) { setTimeout(() => { _modoEscaneoAlta = true; abrirLectorCodigo(); }, 400); } }
+
 function arrancar() {
   document.querySelector('header').style.display = 'none';
   document.querySelector('main').style.display = 'none';
@@ -3380,7 +3599,7 @@ function arrancar() {
   else if (sesionActiva()) { ocultarPantallaCuenta(); iniciarApp(); }
   else mostrarLogin();
 
-  // Feedback en vivo del tipo de contacto en el setup
+  // Feedback del tipo de contacto en setup
   const sc = document.getElementById('setupContacto');
   if (sc && !sc.dataset.listener) {
     sc.addEventListener('input', function() {
