@@ -5,6 +5,12 @@
       "cliente": "Soluciones ALROHI",
       "activo": true,
       "fecha_emision": "2026-10-28"
+    },
+    {
+      "hash": "feba79b69bd666d97c0e55e541c31fe7a5028b4e4ac5b490483fe1fd090b46f8",
+      "cliente": "Yune's store",
+      "activo": true,
+      "fecha_emision": "2026-10-29"
     }
   ]
 }
