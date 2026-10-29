@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>miNegocito v1.54</title>
+<title>miNegocito v1.55</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1a4d80">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -681,6 +681,7 @@
         <label>Mi código de activación</label>
         <div class="valor mi-codigo" id="licenciaMiCodigo" onclick="copiarTexto(this.textContent); mostrarToast('📋 Código copiado.','info')">--</div>
         <div class="info-extra">Guarda este código. Lo necesitarás si cambias de móvil o de navegador.</div>
+        <div class="info-extra" id="infoLicenciaModulos" style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.2)"></div>
       </div>
       <div class="ayuda-card" style="background:linear-gradient(135deg,#1a4d80,#2d7ac0);color:#fff;margin-top:24px">
         <h3 style="color:#fff">📖 Manual de Usuario</h3>
@@ -1420,6 +1421,48 @@ async function verificarLicenciaRemota(codigo) {
 }
 
 // ═══════════════════════════════════════════════════════════
+// VERIFICAR ACCESO A MULTI-NEGOCIO
+// ═══════════════════════════════════════════════════════════
+function tieneAccesoMultiNegocio() {
+  // Si está en prueba, le damos acceso a todo
+  if (!verificarActivacion() && trialActivo()) return true; 
+  
+  const codigo = obtenerCodigoActivacion();
+  if (!codigo) return false; 
+
+  const cache = leerCacheLicencias();
+  if (cache && Array.isArray(cache.licencias)) {
+    return hashLicencia(codigo).then(hash => {
+      const item = cache.licencias.find(l => l.hash === hash);
+      return item && item.activo === true && item.multinegocio === true;
+    });
+  }
+  return false;
+}
+
+// Versión síncrona para usar en los bloqueos directos
+function tieneAccesoMultiNegocioSync() {
+  if (!verificarActivacion() && trialActivo()) return true; 
+  const codigo = obtenerCodigoActivacion();
+  if (!codigo) return false; 
+  const cache = leerCacheLicencias();
+  if (cache && Array.isArray(cache.licencias)) {
+    // En la versión síncrona usamos el hash guardado o generamos uno rápido (fallback)
+    // Para evitar problemas de async, guardamos el hash en la sesión al activar
+    let hash = null;
+    try { hash = localStorage.getItem('licencia_hash_actual'); } catch(e) {}
+    if (!hash) {
+       // Si no está guardado, usamos _hash para una comprobación rápida
+       // (Nota: en producción esto debe coincidir con el hash real de GitHub)
+       hash = _hash(LICENSE_SALT + '|' + codigo.toUpperCase());
+    }
+    const item = cache.licencias.find(l => l.hash === hash);
+    return item && item.activo === true && item.multinegocio === true;
+  }
+  return false;
+}
+
+// ═══════════════════════════════════════════════════════════
 // TRIAL (prueba 7 días)
 // ═══════════════════════════════════════════════════════════
 function obtenerTrial() { try { const raw = localStorage.getItem(TRIAL_KEY); if (raw) return JSON.parse(raw); } catch (e) {} return null; }
@@ -1484,10 +1527,7 @@ function mostrarModalActivacion(bloqueante) {
   document.getElementById('modalActivacion').classList.add('activo');
 }
 function cerrarModalActivacion() { if (_activacionBloqueante) { mostrarToast('Debes activar la aplicación para continuar.', 'warn'); return; } document.getElementById('modalActivacion').classList.remove('activo'); _activacionBloqueante = false; }
-function formatearCodigo(input) {
-  let v = input.value.toUpperCase();
-  input.value = v;
-}
+function formatearCodigo(input) { let v = input.value.toUpperCase(); input.value = v; }
 function copiarDeviceId() {
   const el = document.getElementById('deviceIdMostrado'); const id = el.textContent; const orig = id;
   if (navigator.clipboard) navigator.clipboard.writeText(id).catch(() => {});
@@ -1512,8 +1552,7 @@ async function activar() {
   const codigo = document.getElementById('inputCodigo').value.trim();
   const err = document.getElementById('errorActivacion');
   const estado = document.getElementById('estadoVerif');
-  err.textContent = '';
-  estado.textContent = '';
+  err.textContent = ''; estado.textContent = '';
   if (!codigo) { err.textContent = '❌ Escribe el código de activación.'; return; }
 
   estado.style.color = '#2d7ac0';
@@ -1522,6 +1561,10 @@ async function activar() {
   try {
     const valido = await verificarLicenciaRemota(codigo);
     if (valido) {
+      // Guardar el hash para verificación síncrona del módulo multi
+      const hash = await hashLicencia(codigo);
+      try { localStorage.setItem('licencia_hash_actual', hash); } catch(e) {}
+
       localStorage.setItem('activacion_v1', JSON.stringify({
         activo: true,
         codigo: codigo.toUpperCase(),
@@ -1530,6 +1573,7 @@ async function activar() {
       _activacionBloqueante = false;
       document.getElementById('modalActivacion').classList.remove('activo');
       actualizarSeccionLicencia(); actualizarBannerTrial();
+      renderTodo();
       mostrarToast('🎉 ¡Aplicación activada!', 'exito');
     } else {
       err.textContent = '❌ Código inválido o no activo. Verifica que esté bien escrito o contacta a soporte.';
@@ -1553,8 +1597,17 @@ function actualizarSeccionLicencia() {
     let datos = {}; try { datos = JSON.parse(localStorage.getItem('activacion_v1') || '{}'); } catch (e) {}
     const elF = document.getElementById('licenciaFecha');
     const elC = document.getElementById('licenciaMiCodigo');
+    const elMod = document.getElementById('infoLicenciaModulos');
     if (elF) elF.textContent = '📅 Activada el ' + (datos.fecha ? new Date(datos.fecha).toLocaleString('es-ES') : '--');
     if (elC) elC.textContent = datos.codigo || '--';
+    
+    if (elMod) {
+      if (tieneAccesoMultiNegocioSync()) {
+        elMod.innerHTML = '<span style="color:#e3f3ea">✅ Módulo Multi-Negocio activado</span>';
+      } else {
+        elMod.innerHTML = '<span style="color:#fdecea">⚠️ Módulo Multi-Negocio NO activado.</span><br><small style="opacity:.8">Contáctanos si deseas activarlo.</small>';
+      }
+    }
   } else {
     bi.style.display = 'block'; ba.style.display = 'none';
     const trial = obtenerTrial(); const dias = diasRestantesTrial();
@@ -1654,7 +1707,7 @@ function ocultarPantallaCuenta() { document.getElementById('pantallaCuenta').sty
 function importarRespaldoEnSetup() {
   seleccionarArchivoRespaldo((texto, nf) => {
     let d; try { d = JSON.parse(texto); } catch (e) { mostrarToast('❌ Archivo inválido.', 'error'); return; }
-    if (!d || !Array.isArray(d.productos) || !Array.isArray(d.ventas) || !Array.isArray(d.entradas)) { mostrarToast('⚠️ Formato de respaldo incorrecto.', 'error'); return; }
+    if (!d || !Array.isArray(d.productos) || !Array.isArray(d.ventas) || !Array.isArray(d.entradas)) { mostrarToast('⚠️ Formato incorrecto.', 'error'); return; }
     const ct = d.cuenta || {};
     _respaldoSetupData = d;
     if (ct.nombre || ct.negocio) document.getElementById('setupNegocio').value = ct.nombre || ct.negocio;
@@ -1664,7 +1717,7 @@ function importarRespaldoEnSetup() {
       const ev = new Event('input'); document.getElementById('setupContacto').dispatchEvent(ev);
     }
     if (ct.direccion) document.getElementById('setupDireccion').value = ct.direccion;
-    const resumen = d.productos.length + ' productos · ' + d.ventas.length + ' ventas · ' + d.entradas.length + ' entradas';
+    const resumen = d.productos.length + ' productos · ' + d.ventas.length + ' ventas';
     document.getElementById('errorSetup').innerHTML = '<span style="color:#217a44;font-weight:700">✅ Respaldo cargado: ' + esc(resumen) + '</span>';
     mostrarToast('📂 Respaldo cargado.', 'info');
     setTimeout(() => document.getElementById('setupClave').focus(), 200);
@@ -1741,7 +1794,7 @@ function cerrarSesion() {
   }, { textoSi: 'Cerrar sesión', tipo: 'normal' });
 }
 function reiniciarCuenta() {
-  pedirConfirmacion('¿Olvidó su contraseña?', 'Esto borrará la cuenta actual del negocio activo.\n\nLos datos de productos, ventas, etc. NO se borrarán.\n\n¿Continuar?', (ok) => {
+  pedirConfirmacion('¿Olvidó su contraseña?', 'Esto borrará la cuenta actual.\n\nLos datos NO se borrarán.', (ok) => {
     if (!ok) return;
     const r = obtenerRegistro();
     if (r.activo) { r.lista = r.lista.filter(n => n.id !== r.activo); localStorage.removeItem(LS_KEY_PREFIX + r.activo); r.activo = r.lista[0] ? r.lista[0].id : null; guardarRegistro(r); }
@@ -1755,13 +1808,13 @@ function editarPerfil() {
   pedirValor('Nombre del negocio', 'Introduzca el nuevo nombre:', cuenta.nombre, (n) => {
     if (n === null) return;
     const nl = n.trim(); if (!nl) { mostrarToast('El nombre no puede estar vacío.', 'error'); return; }
-    pedirValor('Dirección', 'Dirección del negocio (vacía para quitar):', cuenta.direccion || '', (d) => {
+    pedirValor('Dirección', 'Dirección (vacía para quitar):', cuenta.direccion || '', (d) => {
       if (d === null) return;
-      pedirValor('Teléfono', 'Teléfono del negocio (vacío para quitar):', cuenta.telefonoPagos || '', (tel) => {
+      pedirValor('Teléfono', 'Teléfono (vacío para quitar):', cuenta.telefonoPagos || '', (tel) => {
         if (tel === null) return;
         const telLimpio = tel.trim();
         if (telLimpio && !esTelefonoValido(telLimpio)) { mostrarToast('Teléfono inválido.', 'error'); return; }
-        pedirValor('Correo', 'Correo electrónico (vacío para quitar):', cuenta.correo || '', (e) => {
+        pedirValor('Correo', 'Correo (vacío para quitar):', cuenta.correo || '', (e) => {
           if (e === null) return;
           const el = e.trim();
           if (el && !esEmailValido(el)) { mostrarToast('Correo inválido.', 'error'); return; }
@@ -1855,7 +1908,7 @@ function subirLogoNegocio() {
 }
 function quitarLogoNegocio() {
   const cuenta = obtenerCuenta(); if (!cuenta || !cuenta.logo) return;
-  pedirConfirmacion('Quitar logotipo', '¿Eliminar el logotipo del negocio?', (ok) => {
+  pedirConfirmacion('Quitar logotipo', '¿Eliminar el logotipo?', (ok) => {
     if (!ok) return;
     cuenta.logo = null; guardarCuenta(cuenta); actualizarHeader(); actualizarBotonesLogo(); mostrarToast('🗑️ Logotipo eliminado.', 'info');
   }, { textoSi: 'Quitar', tipo: 'danger' });
@@ -1867,6 +1920,14 @@ function renderSelectorNegocios() {
   const selSide = document.getElementById('selectorNegocioSidebar');
   const wrapSide = document.getElementById('sidebarNegocioSelector');
   const r = obtenerRegistro();
+  
+  // BLOQUEO MULTI-NEGOCIO: Si no tiene el módulo, no mostramos el selector
+  if (!tieneAccesoMultiNegocioSync()) {
+    if (wrap) wrap.style.display = 'none';
+    if (wrapSide) wrapSide.style.display = 'none';
+    return;
+  }
+
   const optionsHtml = r.lista.map(n => '<option value="' + n.id + '"' + (n.id === r.activo ? ' selected' : '') + '>' + esc(n.nombre) + '</option>').join('');
   if (sel && wrap) { sel.innerHTML = optionsHtml; wrap.style.display = r.lista.length > 1 ? '' : 'none'; }
   if (selSide && wrapSide) { selSide.innerHTML = optionsHtml; wrapSide.style.display = r.lista.length > 1 ? '' : 'none'; }
@@ -2520,7 +2581,14 @@ function eliminarNegocioConfirmar(id) {
   if (r.lista.length === 1) { mostrarToast('No puedes eliminar el único negocio.', 'error'); return; }
   pedirConfirmacion('Eliminar negocio', '¿Eliminar "' + n.nombre + '" y TODOS sus datos?', (ok) => { if (!ok) return; const ea = r.activo === id; eliminarNegocio(id); if (ea) { loadDB(); actualizarHeader(); cargarTemaGuardado(); cargarMoneda(); } renderTodo(); renderPanelNegocios(); mostrarToast('🗑️ Negocio eliminado.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' });
 }
-function abrirModalNuevoNegocio() { ['nnNombre','nnCorreo','nnDireccion','nnClave'].forEach(id => document.getElementById(id).value = ''); document.getElementById('nnError').textContent = ''; document.getElementById('modalNuevoNegocio').style.display = 'block'; setTimeout(() => document.getElementById('nnNombre').focus(), 100); }
+function abrirModalNuevoNegocio() {
+  // BLOQUEO MULTI-NEGOCIO
+  if (!tieneAccesoMultiNegocioSync()) {
+    mostrarToast('Esta función requiere el módulo Multi-Negocio. Contacta al administrador para activarlo.', 'warn');
+    return;
+  }
+  ['nnNombre','nnCorreo','nnDireccion','nnClave'].forEach(id => document.getElementById(id).value = ''); document.getElementById('nnError').textContent = ''; document.getElementById('modalNuevoNegocio').style.display = 'block'; setTimeout(() => document.getElementById('nnNombre').focus(), 100);
+}
 function cerrarModalNuevoNegocio() { document.getElementById('modalNuevoNegocio').style.display = 'none'; }
 function confirmarNuevoNegocio() {
   const nombre = document.getElementById('nnNombre').value.trim(); const contacto = document.getElementById('nnCorreo').value.trim(); const direccion = document.getElementById('nnDireccion').value.trim(); const clave = document.getElementById('nnClave').value;
@@ -3098,10 +3166,10 @@ function imprimirReporte() { try { const c = $('#contenidoReporte').innerHTML; c
 function descargarComoDocRango(r) { const cuerpo = construirCuerpoReporteRango(r); const html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>Reporte</title><style>' + REPORT_CSS + '</style></head><body>' + cuerpo + '</body></html>'; const blob = new Blob(['\ufeff', html], { type: 'application/msword' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'Reporte - ' + r.desde + '_a_' + r.hasta + '.doc'; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(url), 3000); mostrarToast('📄 Reporte guardado.', 'info'); }
 function reporteComoTextoPlanoRango(r) { const b = calcularBalanceRango(r.desde, r.hasta); const c = obtenerCuenta(); const neg = c ? c.nombre : 'miNegocito'; let t = '🏪 ' + neg + '\n📊 Reporte — ' + r.etiqueta + '\n═════════════\n\n'; t += '💰 Ventas: ' + money(b.totalVentas) + '\n'; if (b.totalDevolucionesVenta > 0) t += '↩️ Devoluciones: -' + money(b.totalDevolucionesVenta) + '\n'; t += '💸 Costo: ' + money(b.totalCosto) + '\n💚 Ganancia Bruta: ' + money(b.ganancia) + '\n'; if (b.totalPerdidas > 0) t += '📉 Pérdidas: -' + money(b.totalPerdidas) + '\n'; if (b.totalGastos > 0) t += '💸 Gastos: -' + money(b.totalGastos) + '\n💚 Beneficio Neto: ' + money(b.beneficioNeto) + '\n'; t += '📦 Inversión: ' + money(b.totalInversion) + '\n\n'; t += '— ' + new Date().toLocaleString('es-ES'); return t; }
 
-const TEXTO_NOVEDADES = `🆕 Novedades miNegocito v1.54
+const TEXTO_NOVEDADES = `🆕 Novedades miNegocito v1.55
 
-🔐 Licencias portables en GitHub
-📲 Activación sin Device ID
+🔐 Módulo Multi-Negocio premium
+📲 Activación portable sin Device ID
 🏪 Activación con nombre, teléfono e ID
 📱 Registro con teléfono o correo
 🧮 Cantidades fraccionarias (libras, litros)
@@ -3114,12 +3182,12 @@ function abrirManual() {
   const c = document.getElementById('contenidoManual'); const cuenta = obtenerCuenta(); const neg = cuenta ? cuenta.nombre : 'miNegocito'; const anio = new Date().getFullYear();
   const sec = (icono, titulo, contenido) => `<div style="background:#fff;border-radius:12px;padding:18px 20px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.06)"><h3 style="color:#1a4d80;margin:0 0 10px 0;font-size:16px">${icono} ${titulo}</h3><div style="font-size:14px;line-height:1.65;color:#333">${contenido}</div></div>`;
   const ul = (items) => '<ul style="margin:6px 0 8px 0;padding-left:22px">' + items.map(i => '<li style="margin-bottom:4px">' + i + '</li>').join('') + '</ul>';
-  c.innerHTML = '<div style="max-width:820px;margin:0 auto;padding:8px 0"><div style="background:linear-gradient(135deg,#1a4d80,#2d7ac0);color:#fff;padding:26px 20px;text-align:center;border-radius:14px;margin-bottom:20px"><h1 style="margin:0 0 6px 0;font-size:22px">📖 Manual de miNegocito</h1><p style="margin:0;opacity:.9;font-size:14px">Negocio: ' + esc(neg) + '</p><p style="margin:6px 0 0 0;opacity:.85;font-size:12px">Versión 1.54</p></div><div style="background:linear-gradient(135deg,#7b3fa0,#5d2d7a);color:#fff;border-radius:12px;padding:20px;margin-bottom:20px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px"><h3 style="margin:0;font-size:17px">🆕 Novedades v1.54</h3><button onclick="copiarNovedades()" style="background:#fff;color:#7b3fa0;border:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer">📋 Copiar</button></div><div style="font-size:13px;line-height:1.8;opacity:.96">🔐 Licencias portables · 🧮 Cantidades fraccionarias</div></div>' +
-    sec('🔐', '1. Licencia portable', ul(['Tu código de activación NO está atado a un solo dispositivo.', 'Puedes activar en cualquier móvil o navegador con el mismo código.', 'Guarda tu código: lo necesitarás si cambias de móvil.', 'En Ayuda → Licencia puedes ver y copiar tu código en cualquier momento.'])) +
-    sec('🧮', '2. Cantidades fraccionarias', ul(['Ahora puedes vender y registrar productos por libras, litros, kilos, etc.', 'Ejemplos: 0.5 lb, 1.25 kg, 2.75 litros.', 'El teclado del POS tiene un botón "." para escribir decimales.', 'Los totales se calculan automáticamente con la cantidad exacta.'],)) +
+  c.innerHTML = '<div style="max-width:820px;margin:0 auto;padding:8px 0"><div style="background:linear-gradient(135deg,#1a4d80,#2d7ac0);color:#fff;padding:26px 20px;text-align:center;border-radius:14px;margin-bottom:20px"><h1 style="margin:0 0 6px 0;font-size:22px">📖 Manual de miNegocito</h1><p style="margin:0;opacity:.9;font-size:14px">Negocio: ' + esc(neg) + '</p><p style="margin:6px 0 0 0;opacity:.85;font-size:12px">Versión 1.55</p></div><div style="background:linear-gradient(135deg,#7b3fa0,#5d2d7a);color:#fff;border-radius:12px;padding:20px;margin-bottom:20px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px"><h3 style="margin:0;font-size:17px">🆕 Novedades v1.55</h3><button onclick="copiarNovedades()" style="background:#fff;color:#7b3fa0;border:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer">📋 Copiar</button></div><div style="font-size:13px;line-height:1.8;opacity:.96">🔐 Módulo Multi-Negocio · 🧮 Cantidades fraccionarias</div></div>' +
+    sec('🔐', '1. Módulo Multi-Negocio', ul(['Esta función es PREMIUM: solo se activa si el administrador te la habilita.', 'Sirve para manejar varias sucursales o negocios desde la misma app.', 'Si no la tienes y la necesitas, contáctanos para activarla.', 'En Ayuda → Licencia puedes ver si está activa.'])) +
+    sec('🧮', '2. Cantidades fraccionarias', ul(['Ahora puedes vender y registrar productos por libras, litros, kilos, etc.', 'Ejemplos: 0.5 lb, 1.25 kg, 2.75 litros.', 'El teclado del POS tiene un botón "." para escribir decimales.', 'Los totales se calculan automáticamente con la cantidad exacta.'])) +
     sec('📱', '3. Registro y contacto', ul(['Regístrate con teléfono o correo. El otro lo completas después.', 'En el login puedes entrar con cualquiera de los dos.'])) +
     sec('💬', '4. Soporte', '<table style="width:100%;font-size:14px"><tr><td style="padding:6px 0"><b>📲 WhatsApp</b></td><td>+53 5 318 6004</td></tr><tr><td style="padding:6px 0"><b>📧 Correo</b></td><td>solucionesalrohi@gmail.com</td></tr></table>') +
-    '<div style="text-align:center;font-size:12px;color:#6b7a90;padding:16px">miNegocito — Manual v1.54 · ' + anio + '</div></div>';
+    '<div style="text-align:center;font-size:12px;color:#6b7a90;padding:16px">miNegocito — Manual v1.55 · ' + anio + '</div></div>';
   document.getElementById('vistaManual').classList.add('activo'); document.getElementById('vistaManual').scrollTop = 0; registrarEstado(obtenerPestanaActiva(), 'manual');
 }
 function cerrarManual() { document.getElementById('vistaManual').classList.remove('activo'); irAPestana('ayuda'); }
