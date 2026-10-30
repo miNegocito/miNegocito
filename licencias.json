@@ -31,6 +31,13 @@
       "cliente": "Venta de medicina",
       "activo": true,
       "fecha_emision": "2026-10-29"
+    },
+    {
+      "hash": "a2e95f7d693aa5b7fb89bdb9dba757e81ab983e5a271240cf88f4ae3cae46bc3",
+      "cliente": "Soluciones ALROHI",
+      "activo": true,
+      "multinegocio": true,
+      "fecha_emision": "2026-10-30"
     }
   ]
 }
