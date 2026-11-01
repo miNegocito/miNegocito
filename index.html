@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>miNegocito v1.55</title>
+<title>miNegocito v1.56</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1a4d80">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -1442,22 +1442,22 @@ function tieneAccesoMultiNegocio() {
 
 // Versión síncrona para usar en los bloqueos directos
 function tieneAccesoMultiNegocioSync() {
-  if (!verificarActivacion() && trialActivo()) return true; 
+  // Durante el período de prueba NO se permite multiNegocio
+  if (!verificarActivacion() && trialActivo()) return false;
+  // Si no está activado, no hay acceso
+  if (!verificarActivacion()) return false;
+  // Verificar que la licencia tenga el módulo multinegocio activo
   const codigo = obtenerCodigoActivacion();
-  if (!codigo) return false; 
+  if (!codigo) return false;
   const cache = leerCacheLicencias();
   if (cache && Array.isArray(cache.licencias)) {
-    // En la versión síncrona usamos el hash guardado o generamos uno rápido (fallback)
-    // Para evitar problemas de async, guardamos el hash en la sesión al activar
     let hash = null;
     try { hash = localStorage.getItem('licencia_hash_actual'); } catch(e) {}
     if (!hash) {
-       // Si no está guardado, usamos _hash para una comprobación rápida
-       // (Nota: en producción esto debe coincidir con el hash real de GitHub)
-       hash = _hash(LICENSE_SALT + '|' + codigo.toUpperCase());
+      hash = _hash(LICENSE_SALT + '|' + codigo.toUpperCase());
     }
     const item = cache.licencias.find(l => l.hash === hash);
-    return item && item.activo === true && item.multinegocio === true;
+    return !!(item && item.activo === true && item.multinegocio === true);
   }
   return false;
 }
@@ -1723,6 +1723,15 @@ function importarRespaldoEnSetup() {
     setTimeout(() => document.getElementById('setupClave').focus(), 200);
   });
 }
+
+function mostrarBienvenidaInicial() {
+  const html = '<div id="modalBienvenida" style="position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:100070;padding:20px;overflow-y:auto;display:flex;align-items:center;justify-content:center"><div style="background:#fff;border-radius:16px;padding:28px 24px;max-width:480px;width:100%;margin:auto;box-shadow:0 10px 40px rgba(0,0,0,.35);text-align:center"><div style="font-size:52px;margin-bottom:8px">🎉</div><h2 style="color:#1a4d80;margin:0 0 10px 0;font-size:21px">¡Bienvenido a miNegocito!</h2><p style="color:#555;font-size:14px;line-height:1.6;margin:0 0 16px 0">Gracias por instalar miNegocito, a partir de ahora tienes <b style="color:#217a44">7 días de prueba gratis</b>.</p><div style="background:#f8faff;border-radius:10px;padding:14px 16px;text-align:left;font-size:13px;color:#333;line-height:1.7;margin-bottom:16px"><div>✅ Puedes solicitar la activación en cualquier momento desde la pestaña <b>Ayuda</b>.</div><div style="margin-top:8px">✅ Si tienes varios negocios, puedes solicitar además la activación del módulo <b>multiNegocio</b>.</div><div style="margin-top:8px">✅ Si decides activar el módulo multiNegocio y tienes empleados o dependientes que atienden tus negocios, puedes solicitar además la activación de miNegocito en cada móvil de tus empleados por un importe preferencial.</div></div><p style="color:#555;font-size:13px;line-height:1.6;margin:0 0 6px 0">Gracias por confiar en miNegocito.</p><p style="color:#1a4d80;font-weight:700;font-size:14px;margin:0 0 16px 0">Soluciones ALROHI<br><span style="font-weight:500;font-size:12px">📱 +53 53186004<br>📧 solucionesalrohi@gmail.com</span></p><button onclick="document.getElementById(\'modalBienvenida\').remove()" style="width:100%;padding:13px;border:none;border-radius:10px;background:linear-gradient(135deg,#2e9e5b,#217a44);color:#fff;font-weight:700;font-size:15px;cursor:pointer;font-family:inherit">✅ Entendido, empezar</button></div></div>';
+  const ct = document.createElement('div');
+  ct.id = 'modalBienvenidaWrapper';
+  ct.innerHTML = html;
+  document.body.appendChild(ct);
+}
+
 function guardarSetup() {
   const negocio = document.getElementById('setupNegocio').value.trim();
   const contacto = document.getElementById('setupContacto').value.trim();
@@ -1760,6 +1769,8 @@ function guardarSetup() {
   _respaldoSetupData = null;
   activarSesion(); ocultarPantallaCuenta(); iniciarApp();
   mostrarToast('✅ Cuenta creada. 🎁 Prueba de 7 días activada.');
+
+  mostrarBienvenidaInicial();
 }
 function iniciarSesion() {
   const contacto = document.getElementById('loginContacto').value.trim();
@@ -1920,7 +1931,7 @@ function renderSelectorNegocios() {
   const selSide = document.getElementById('selectorNegocioSidebar');
   const wrapSide = document.getElementById('sidebarNegocioSelector');
   const r = obtenerRegistro();
-  
+
   // BLOQUEO MULTI-NEGOCIO: Si no tiene el módulo, no mostramos el selector
   if (!tieneAccesoMultiNegocioSync()) {
     if (wrap) wrap.style.display = 'none';
@@ -1933,6 +1944,10 @@ function renderSelectorNegocios() {
   if (selSide && wrapSide) { selSide.innerHTML = optionsHtml; wrapSide.style.display = r.lista.length > 1 ? '' : 'none'; }
 }
 function cambiarNegocioDesdeSelector(id) {
+  if (!tieneAccesoMultiNegocioSync()) {
+    mostrarToast('🔒 El módulo multiNegocio no está activado.', 'warn');
+    return;
+  }
   if (!cambiarNegocio(id)) return;
   actualizarHeader(); cargarTemaGuardado(); cargarMoneda(); renderTodo(); renderSelectorNegocios();
   const cta = obtenerCuenta();
@@ -2582,7 +2597,12 @@ function eliminarNegocioConfirmar(id) {
   pedirConfirmacion('Eliminar negocio', '¿Eliminar "' + n.nombre + '" y TODOS sus datos?', (ok) => { if (!ok) return; const ea = r.activo === id; eliminarNegocio(id); if (ea) { loadDB(); actualizarHeader(); cargarTemaGuardado(); cargarMoneda(); } renderTodo(); renderPanelNegocios(); mostrarToast('🗑️ Negocio eliminado.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' });
 }
 function abrirModalNuevoNegocio() {
-  // BLOQUEO MULTI-NEGOCIO
+  // BLOQUEO: Si está en trial, no puede agregar negocios
+  if (!verificarActivacion() && trialActivo()) {
+    mostrarToast('🔒 El módulo multiNegocio solo está disponible después de activar la aplicación. Ve a Ayuda para activar.', 'warn');
+    return;
+  }
+  // BLOQUEO MULTI-NEGOCIO: Si no tiene el módulo, no puede agregar
   if (!tieneAccesoMultiNegocioSync()) {
     mostrarToast('Esta función requiere el módulo Multi-Negocio. Contacta al administrador para activarlo.', 'warn');
     return;
@@ -3182,12 +3202,12 @@ function abrirManual() {
   const c = document.getElementById('contenidoManual'); const cuenta = obtenerCuenta(); const neg = cuenta ? cuenta.nombre : 'miNegocito'; const anio = new Date().getFullYear();
   const sec = (icono, titulo, contenido) => `<div style="background:#fff;border-radius:12px;padding:18px 20px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.06)"><h3 style="color:#1a4d80;margin:0 0 10px 0;font-size:16px">${icono} ${titulo}</h3><div style="font-size:14px;line-height:1.65;color:#333">${contenido}</div></div>`;
   const ul = (items) => '<ul style="margin:6px 0 8px 0;padding-left:22px">' + items.map(i => '<li style="margin-bottom:4px">' + i + '</li>').join('') + '</ul>';
-  c.innerHTML = '<div style="max-width:820px;margin:0 auto;padding:8px 0"><div style="background:linear-gradient(135deg,#1a4d80,#2d7ac0);color:#fff;padding:26px 20px;text-align:center;border-radius:14px;margin-bottom:20px"><h1 style="margin:0 0 6px 0;font-size:22px">📖 Manual de miNegocito</h1><p style="margin:0;opacity:.9;font-size:14px">Negocio: ' + esc(neg) + '</p><p style="margin:6px 0 0 0;opacity:.85;font-size:12px">Versión 1.55</p></div><div style="background:linear-gradient(135deg,#7b3fa0,#5d2d7a);color:#fff;border-radius:12px;padding:20px;margin-bottom:20px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px"><h3 style="margin:0;font-size:17px">🆕 Novedades v1.55</h3><button onclick="copiarNovedades()" style="background:#fff;color:#7b3fa0;border:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer">📋 Copiar</button></div><div style="font-size:13px;line-height:1.8;opacity:.96">🔐 Módulo Multi-Negocio · 🧮 Cantidades fraccionarias</div></div>' +
+  c.innerHTML = '<div style="max-width:820px;margin:0 auto;padding:8px 0"><div style="background:linear-gradient(135deg,#1a4d80,#2d7ac0);color:#fff;padding:26px 20px;text-align:center;border-radius:14px;margin-bottom:20px"><h1 style="margin:0 0 6px 0;font-size:22px">📖 Manual de miNegocito</h1><p style="margin:0;opacity:.9;font-size:14px">Negocio: ' + esc(neg) + '</p><p style="margin:6px 0 0 0;opacity:.85;font-size:12px">Versión 1.56</p></div><div style="background:linear-gradient(135deg,#7b3fa0,#5d2d7a);color:#fff;border-radius:12px;padding:20px;margin-bottom:20px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px"><h3 style="margin:0;font-size:17px">🆕 Novedades v1.56</h3><button onclick="copiarNovedades()" style="background:#fff;color:#7b3fa0;border:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer">📋 Copiar</button></div><div style="font-size:13px;line-height:1.8;opacity:.96">🔐 Módulo Multi-Negocio · 🧮 Cantidades fraccionarias</div></div>' +
     sec('🔐', '1. Módulo Multi-Negocio', ul(['Esta función es PREMIUM: solo se activa si el administrador te la habilita.', 'Sirve para manejar varias sucursales o negocios desde la misma app.', 'Si no la tienes y la necesitas, contáctanos para activarla.', 'En Ayuda → Licencia puedes ver si está activa.'])) +
     sec('🧮', '2. Cantidades fraccionarias', ul(['Ahora puedes vender y registrar productos por libras, litros, kilos, etc.', 'Ejemplos: 0.5 lb, 1.25 kg, 2.75 litros.', 'El teclado del POS tiene un botón "." para escribir decimales.', 'Los totales se calculan automáticamente con la cantidad exacta.'])) +
     sec('📱', '3. Registro y contacto', ul(['Regístrate con teléfono o correo. El otro lo completas después.', 'En el login puedes entrar con cualquiera de los dos.'])) +
     sec('💬', '4. Soporte', '<table style="width:100%;font-size:14px"><tr><td style="padding:6px 0"><b>📲 WhatsApp</b></td><td>+53 5 318 6004</td></tr><tr><td style="padding:6px 0"><b>📧 Correo</b></td><td>solucionesalrohi@gmail.com</td></tr></table>') +
-    '<div style="text-align:center;font-size:12px;color:#6b7a90;padding:16px">miNegocito — Manual v1.55 · ' + anio + '</div></div>';
+    '<div style="text-align:center;font-size:12px;color:#6b7a90;padding:16px">miNegocito — Manual v1.56 · ' + anio + '</div></div>';
   document.getElementById('vistaManual').classList.add('activo'); document.getElementById('vistaManual').scrollTop = 0; registrarEstado(obtenerPestanaActiva(), 'manual');
 }
 function cerrarManual() { document.getElementById('vistaManual').classList.remove('activo'); irAPestana('ayuda'); }
@@ -3360,16 +3380,35 @@ function generarTextoCatalogo(categoria) {
 
   const bloque = bloqueDatosNegocioParaPromo();
   let t = bloque ? bloque + '\n' : '🏪 *' + neg + '*\n';
-  if (categoria) t += '🏷️ *Categoría: ' + categoria + '*\n';
   t += '📋 Lista de productos\n━━━━━━━━━━━━━━━━━━━━\n\n';
 
-  disp.sort((a,b) => a.nombre.localeCompare(b.nombre,'es',{sensitivity:'base'})).forEach(p => {
-    t += '▪️ *' + p.nombre + '*\n   💵 ' + money(p.precioVenta);
-    if (p.stock > 0 && p.stock <= 5) t += '\n   ⚡ Últimas ' + cant(p.stock) + ' uds.';
+  // Agrupar por categoría
+  const grupos = {};
+  disp.forEach(p => {
+    const cat = (p.categoria && p.categoria.trim()) ? p.categoria.trim() : 'SIN CATEGORÍA';
+    if (!grupos[cat]) grupos[cat] = [];
+    grupos[cat].push(p);
+  });
+
+  // Ordenar categorías alfabéticamente (SIN CATEGORÍA al final)
+  const cats = Object.keys(grupos).sort((a, b) => {
+    if (a === 'SIN CATEGORÍA') return 1;
+    if (b === 'SIN CATEGORÍA') return -1;
+    return a.localeCompare(b, 'es', { sensitivity: 'base' });
+  });
+
+  cats.forEach(cat => {
+    t += '🏷️ *' + cat.toUpperCase() + ':*\n';
+    const prods = grupos[cat].sort((a, b) => a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' }));
+    prods.forEach(p => {
+      t += '  • ' + p.nombre + ' — ' + money(p.precioVenta);
+      if (p.stock > 0 && p.stock <= 5) t += ' ⚡ Últimas ' + cant(p.stock) + ' uds.';
+      t += '\n';
+    });
     t += '\n';
   });
 
-  t += '\n━━━━━━━━━━━━━━━━━━━━\n';
+  t += '━━━━━━━━━━━━━━━━━━━━\n';
   if (dir) t += '📍 ' + dir + '\n';
   t += '📞 _Responde para pedir_ 💙\n\n⚙️ *miNegocito*';
   return t;
