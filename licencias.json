@@ -90,10 +90,14 @@
       "fecha_emision": "2026-11-03",
       "plan": "1-5",
       "maxDispositivos": 5,
-      "dispositivos": [],
-      "dispositivosUsados": 0,
+      "dispositivos": [
+        "DEV-TEST123456"
+      ],
+      "dispositivosUsados": 1,
       "hash_anterior": "990da88760e38f2e79c9d5d7c9067460f084efee04f2484ab4f23997ef464127",
-      "fecha_regeneracion": "2026-11-03T17:04:49.386Z"
+      "fecha_regeneracion": "2026-11-03T17:04:49.386Z",
+      "ultimaActualizacion": "2026-11-03T17:37:35.441Z"
     }
-  ]
+  ],
+  "actualizado": "2026-11-03T17:37:35.441Z"
 }
