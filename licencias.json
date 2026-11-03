@@ -62,7 +62,12 @@
       "fecha_emision": "2026-11-03",
       "plan": "1-5",
       "maxDispositivos": 5,
-      "dispositivos": []
+      "dispositivos": [
+        "DEV-TEST123456"
+      ],
+      "dispositivosUsados": 1,
+      "ultimaActualizacion": "2026-11-03T14:10:37.920Z"
     }
-  ]
+  ],
+  "actualizado": "2026-11-03T14:10:37.920Z"
 }
