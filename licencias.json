@@ -62,12 +62,18 @@
       "fecha_emision": "2026-11-03",
       "plan": "1-5",
       "maxDispositivos": 5,
-      "dispositivos": [
-        "DEV-TEST123456"
-      ],
-      "dispositivosUsados": 1,
-      "ultimaActualizacion": "2026-11-03T14:10:37.920Z"
+      "dispositivos": []
+    },
+    {
+      "hash": "990da88760e38f2e79c9d5d7c9067460f084efee04f2484ab4f23997ef464127",
+      "cliente": "Punto - Los Pinos",
+      "activo": true,
+      "tipo": "colectiva",
+      "multinegocio": false,
+      "fecha_emision": "2026-11-03",
+      "plan": "1-5",
+      "maxDispositivos": 5,
+      "dispositivos": []
     }
-  ],
-  "actualizado": "2026-11-03T14:10:37.920Z"
+  ]
 }
