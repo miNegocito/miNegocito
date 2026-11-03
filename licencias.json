@@ -5,67 +5,84 @@
       "cliente": "Soluciones ALROHI",
       "activo": true,
       "fecha_emision": "2026-10-28",
-      "multinegocio": true
+      "multinegocio": true,
+      "dispositivos": [],
+      "dispositivosUsados": 0
     },
     {
       "hash": "feba79b69bd666d97c0e55e541c31fe7a5028b4e4ac5b490483fe1fd090b46f8",
       "cliente": "Yune's store",
       "activo": true,
       "fecha_emision": "2026-10-29",
-      "multinegocio": true
+      "multinegocio": true,
+      "dispositivos": [],
+      "dispositivosUsados": 0
     },
     {
       "hash": "9e902e819d7274d50124c302fc9f31b6d81e211aa2a72e0a718651b024bc1ceb",
       "cliente": "Punto - Los Pinos",
       "activo": true,
-      "fecha_emision": "2026-10-29"
+      "fecha_emision": "2026-10-29",
+      "dispositivos": [],
+      "dispositivosUsados": 0
     },
     {
       "hash": "f4d8cb439ef75a8cdc61407c05413d6f6ea9393bdfc76c2d3a9ade0798d94eb0",
       "cliente": "Venta de medicina",
       "activo": true,
-      "fecha_emision": "2026-10-29"
+      "fecha_emision": "2026-10-29",
+      "dispositivos": [],
+      "dispositivosUsados": 0
     },
     {
       "hash": "4d3d9dc705f5bbdbb1a376f3da7f4747c9e880e01c6389e9cb18bc212ab1ea43",
       "cliente": "Venta de medicina",
       "activo": true,
-      "fecha_emision": "2026-10-29"
+      "fecha_emision": "2026-10-29",
+      "dispositivos": [],
+      "dispositivosUsados": 0
     },
     {
       "hash": "a2e95f7d693aa5b7fb89bdb9dba757e81ab983e5a271240cf88f4ae3cae46bc3",
       "cliente": "Soluciones ALROHI",
       "activo": true,
       "multinegocio": true,
-      "fecha_emision": "2026-10-30"
+      "fecha_emision": "2026-10-30",
+      "dispositivos": [],
+      "dispositivosUsados": 0
     },
     {
       "hash": "d6a16869c3e3b3f6e95b4e5e915f4a5b5743fabaa7642a8887974277bedc208d",
-      "cliente": "CABIN RG ð",
+      "cliente": "CABIN RG Ã°ÂÂÂ",
       "activo": true,
       "multinegocio": true,
-      "fecha_emision": "2026-10-30"
+      "fecha_emision": "2026-10-30",
+      "dispositivos": [],
+      "dispositivosUsados": 0
     },
     {
       "hash": "a547efff19b504fd3d897d0ffa3e606ae7662255670244860c315291494c8b77",
       "cliente": "Soluciones ALROHI",
       "activo": true,
       "multinegocio": true,
-      "fecha_emision": "2026-11-01"
+      "fecha_emision": "2026-11-01",
+      "dispositivos": [],
+      "dispositivosUsados": 0
     },
     {
       "hash": "458f84b121b50acb92dc34be07e4b49e42e13c9b3053c0d7708acd23f0ced86b",
-      "cliente": "La bodeguita del Cariño",
+      "cliente": "La bodeguita del CariÃ±o",
       "activo": true,
       "tipo": "colectiva",
       "multinegocio": false,
       "fecha_emision": "2026-11-03",
       "plan": "1-5",
       "maxDispositivos": 5,
-      "dispositivos": []
+      "dispositivos": [],
+      "dispositivosUsados": 0
     },
     {
-      "hash": "990da88760e38f2e79c9d5d7c9067460f084efee04f2484ab4f23997ef464127",
+      "hash": "ccee5d286e6a16a516bd36010660c2c2b484c0a5c862f6e8fa23fc87eb3eeaef",
       "cliente": "Punto - Los Pinos",
       "activo": true,
       "tipo": "colectiva",
@@ -73,7 +90,10 @@
       "fecha_emision": "2026-11-03",
       "plan": "1-5",
       "maxDispositivos": 5,
-      "dispositivos": []
+      "dispositivos": [],
+      "dispositivosUsados": 0,
+      "hash_anterior": "990da88760e38f2e79c9d5d7c9067460f084efee04f2484ab4f23997ef464127",
+      "fecha_regeneracion": "2026-11-03T17:04:49.386Z"
     }
   ]
 }
