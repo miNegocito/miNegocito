@@ -41,7 +41,7 @@
     },
     {
       "hash": "d6a16869c3e3b3f6e95b4e5e915f4a5b5743fabaa7642a8887974277bedc208d",
-      "cliente": "CABIN RG 🌎",
+      "cliente": "CABIN RG ð",
       "activo": true,
       "multinegocio": true,
       "fecha_emision": "2026-10-30"
@@ -52,6 +52,17 @@
       "activo": true,
       "multinegocio": true,
       "fecha_emision": "2026-11-01"
+    },
+    {
+      "hash": "458f84b121b50acb92dc34be07e4b49e42e13c9b3053c0d7708acd23f0ced86b",
+      "cliente": "La bodeguita del Cariño",
+      "activo": true,
+      "tipo": "colectiva",
+      "multinegocio": false,
+      "fecha_emision": "2026-11-03",
+      "plan": "1-5",
+      "maxDispositivos": 5,
+      "dispositivos": []
     }
   ]
 }
