@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>miNegocito v1.578</title>
+<title>miNegocito v1.580</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1a4d80">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -76,6 +76,7 @@
   .kpi.verde { border-left-color: #2e9e5b; } .kpi.verde .v { color: #217a44; }
   .kpi.rojo { border-left-color: #c0392b; } .kpi.rojo .v { color: #96291d; }
   .kpi.naranja { border-left-color: #e08a1e; } .kpi.naranja .v { color: #b56b0d; }
+  .kpi.morado { border-left-color: #7b3fa0; } .kpi.morado .v { color: #5d2d7a; }
   .kpi.compacto { padding: 11px 12px; border-left-width: 4px; }
   .kpi.compacto .t { font-size: 10px; letter-spacing: .3px; }
   .kpi.compacto .v { font-size: 17px; margin-top: 3px; }
@@ -288,6 +289,27 @@
   #fabNotif .badge { position: absolute; top: -4px; right: -4px; background: #c0392b; color: #fff; padding: 2px 6px; border-radius: 10px; font-size: 11px; font-weight: 800; min-width: 18px; text-align: center; border: 2px solid #fff; }
   #btnInstalarPWA { display: none; }
 
+  /* ═══ Gráficos ═══ */
+  .chart-container { position: relative; width: 100%; height: 300px; margin-bottom: 8px; }
+  .chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; margin-bottom: 18px; }
+  .chart-card { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  .chart-card h3 { color: #1a4d80; font-size: 15px; margin: 0 0 12px 0; font-weight: 700; }
+  @media (max-width: 600px) {
+    .chart-container { height: 240px; }
+    .chart-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ═══ Búsqueda global ═══ */
+  .resultado-busqueda { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 8px; border-bottom: 1px solid #eef2f8; cursor: pointer; transition: background .15s; }
+  .resultado-busqueda:hover { background: #f8fbff; }
+  .resultado-busqueda .rb-icono { font-size: 22px; width: 32px; text-align: center; flex-shrink: 0; }
+  .resultado-busqueda .rb-info { flex: 1; min-width: 0; }
+  .resultado-busqueda .rb-titulo { font-size: 14px; font-weight: 700; color: #1a4d80; line-height: 1.25; }
+  .resultado-busqueda .rb-detalle { font-size: 12px; color: #6b7a90; margin-top: 2px; }
+  .resultado-busqueda .rb-acciones { display: flex; gap: 4px; flex-shrink: 0; }
+  .resultado-busqueda .rb-acciones button { padding: 6px 10px; border: none; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: inherit; }
+  .grupo-busqueda-titulo { font-size: 12px; font-weight: 700; color: #6b7a90; text-transform: uppercase; letter-spacing: .5px; padding: 10px 12px 6px; border-bottom: 1px solid #e3e9f2; margin-top: 8px; }
+
   /* ═══ v1.579: Acordeones (secciones colapsables) ═══ */
   .colapsable { padding: 0 !important; overflow: hidden; }
   .colapsable-header { display: flex; justify-content: space-between; align-items: center; width: 100%; background: transparent; border: none; padding: 16px 18px; cursor: pointer; font-family: inherit; font-size: 15px; font-weight: 700; color: #1a4d80; text-align: left; transition: background .15s; gap: 10px; }
@@ -356,8 +378,9 @@
   body.modo-oscuro .negocio-card,
   body.modo-oscuro .ayuda-card,
   body.modo-oscuro .modal-caja,
+  body.modo-oscuro .chart-card,
   body.modo-oscuro .caja { background: #1c2330 !important; color: #e6e9ef !important; box-shadow: 0 2px 8px rgba(0,0,0,.5) !important; }
-  body.modo-oscuro h2, body.modo-oscuro h3, body.modo-oscuro .kpi .v { color: #9ecbff !important; }
+  body.modo-oscuro h2, body.modo-oscuro h3, body.modo-oscuro .kpi .v, body.modo-oscuro .chart-card h3 { color: #9ecbff !important; }
   body.modo-oscuro .kpi .t, body.modo-oscuro .mini { color: #9aa7bd !important; }
   body.modo-oscuro label { color: #c9d1d9 !important; }
   body.modo-oscuro input, body.modo-oscuro select, body.modo-oscuro textarea {
@@ -375,9 +398,14 @@
   body.modo-oscuro footer.footer { background: #0b2a4a !important; }
   body.modo-oscuro .modal-overlay { background: rgba(0,0,0,.8) !important; }
   body.modo-oscuro #pantallaCuenta { background: linear-gradient(135deg,#0b2a4a,#1a4d80) !important; }
+  body.modo-oscuro .resultado-busqueda { border-color: #30363d !important; }
+  body.modo-oscuro .resultado-busqueda:hover { background: #21293a !important; }
+  body.modo-oscuro .resultado-busqueda .rb-titulo { color: #9ecbff !important; }
+  body.modo-oscuro .grupo-busqueda-titulo { border-color: #30363d !important; }
   /* ═══ FIN MODO OSCURO ═══ */
 </style>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -409,7 +437,6 @@
     <button data-tab="reportes" onclick="irAPestana('reportes'); cerrarSidebar();"><span class="side-emoji">📄</span> Reportes</button>
     <button data-tab="ayuda" onclick="irAPestana('ayuda'); cerrarSidebar();"><span class="side-emoji">❓</span> Ayuda</button>
   </div>
-  <!-- v1.579: Botón modo oscuro accesible desde el sidebar -->
   <div style="padding: 12px 18px 0 18px; flex-shrink: 0; border-top: 1px solid #e3e9f2;">
     <button onclick="alternarModoOscuro()" id="btnModoOscuroSidebar" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: #eaf1f9; color: #1a4d80; border: none; padding: 11px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit;">
       <span id="iconoModoOscuroSidebar" style="font-size:16px">🌙</span>
@@ -465,6 +492,14 @@
 <main>
   <section id="tab-rapido" class="tab active">
     <h2>⚡ Acceso Rápido</h2>
+
+    <!-- v1.580: Búsqueda global -->
+    <div class="card" style="margin-bottom:18px">
+      <h3 style="color:#1a4d80;margin:0 0 10px 0;font-size:16px">🔍 Búsqueda global</h3>
+      <input type="search" id="buscadorGlobal" placeholder="Buscar productos, clientes, proveedores..." style="width:100%;padding:12px 14px;font-size:15px;border:2px solid #c8d2e0;border-radius:10px;font-family:inherit;background:#fff" oninput="buscarGlobalDebounced()">
+      <div id="resultadosBusquedaGlobal" style="margin-top:12px"></div>
+    </div>
+
     <div class="acceso-rapido">
       <button class="widget" onclick="abrirPOS()"><div class="widget-icono" style="background:linear-gradient(135deg,#217a44,#2e9e5b)">🖼️</div><div class="widget-texto"><div class="widget-titulo">Punto de Venta</div><div class="widget-sub">Vende con imágenes</div></div></button>
       <button class="widget" onclick="abrirLectorCodigo()"><div class="widget-icono" style="background:linear-gradient(135deg,#2d7ac0,#1a4d80)">📷</div><div class="widget-texto"><div class="widget-titulo">Escanear código</div><div class="widget-sub">Lector de barras</div></div></button>
@@ -475,7 +510,7 @@
       <button class="widget" onclick="exportarDatos()"><div class="widget-icono" style="background:linear-gradient(135deg,#7b3fa0,#5d2d7a)">💾</div><div class="widget-texto"><div class="widget-titulo">Guardar respaldo</div><div class="widget-sub">Copia de seguridad</div></div></button>
       <button class="widget" onclick="irAPestana('facturacion')"><div class="widget-icono" style="background:linear-gradient(135deg,#7b3fa0,#5d2d7a)">🧾</div><div class="widget-texto"><div class="widget-titulo">Facturar</div><div class="widget-sub">Factura múltiple</div></div></button>
       <button class="widget" onclick="compartirDatosPago()"><div class="widget-icono" style="background:linear-gradient(135deg,#e08a1e,#b56b0d)">💳</div><div class="widget-texto"><div class="widget-titulo">Datos de pago</div><div class="widget-sub">Cuentas y QR</div></div></button>
-      <button class="widget" onclick="compartirCatalogo()"><div class="widget-icono" style="background:linear-gradient(135deg,#25D366,#128C7E)">📢</div><div class="widget-texto"><div class="widget-titulo">Compartir catálogo</div><div class="widget-sub">Promoción WhatsApp</div></div></button>
+      <button class="widget" onclick="compartirCatalogo()"><div class="widget-icono" style="background:linear-gradient(135deg,#25D366,#128C7E)">📢</div><div class="widget-texto"><div class="widget-titulo">Compartir catálogo</div><div class="widget-sub">Imagen, texto o HTML</div></div></button>
       <button class="widget" onclick="irAPestana('reportes')"><div class="widget-icono" style="background:linear-gradient(135deg,#1a4d80,#2d7ac0)">📄</div><div class="widget-texto"><div class="widget-titulo">Reportes</div><div class="widget-sub">Generar reportes</div></div></button>
     </div>
     <h2 id="tituloResumenMes">📅 Resumen del mes en curso</h2>
@@ -483,13 +518,14 @@
       <div class="kpi compacto"><div class="t">Ingresos</div><div class="v" id="kpiMesIngresos">$ 0.00</div></div>
       <div class="kpi compacto rojo"><div class="t">Costos</div><div class="v" id="kpiMesCostos">$ 0.00</div></div>
       <div class="kpi compacto verde"><div class="t">Ganancias</div><div class="v" id="kpiMesGanancias">$ 0.00</div></div>
+      <div class="kpi compacto morado" id="kpiMesMargenWrap" style="display:none"><div class="t">Margen</div><div class="v" id="kpiMesMargen">0%</div></div>
       <div class="kpi compacto naranja"><div class="t">Inversión</div><div class="v" id="kpiMesInversion">$ 0.00</div></div>
       <div class="kpi compacto rojo" id="kpiMesPerdidasWrap" style="display:none"><div class="t">Pérdidas</div><div class="v" id="kpiMesPerdidas">$ 0.00</div></div>
       <div class="kpi compacto rojo" id="kpiMesGastosWrap" style="display:none"><div class="t">Gastos</div><div class="v" id="kpiMesGastos">$ 0.00</div></div>
       <div class="kpi compacto verde" id="kpiMesNetoWrap" style="display:none"><div class="t">Benef. Neto</div><div class="v" id="kpiMesNeto">$ 0.00</div></div>
     </div>
     <h2>🔥 Top 5 más vendidos del mes</h2>
-    <div class="card tabla-wrap"><table id="tblTopVendidos"><thead><tr><th>#</th><th>Producto</th><th class="num">Vendidos</th><th class="mon">Ingresos</th></tr></thead><tbody></tbody></table></div>
+    <div class="card tabla-wrap"><table id="tblTopVendidos"><thead><tr><th>#</th><th>Producto</th><th class="num">Vendidos</th><th class="mon">Ingresos</th><th class="mon">Ganancia</th></tr></thead><tbody></tbody></table></div>
   </section>
 
   <section id="tab-balance" class="tab">
@@ -500,6 +536,7 @@
       <div class="kpi"><div class="t">Total Ventas (Ingresos)</div><div class="v" id="kpiVentas">$ 0.00</div></div>
       <div class="kpi rojo"><div class="t">Costo Mercancía Vendida</div><div class="v" id="kpiCosto">$ 0.00</div></div>
       <div class="kpi verde"><div class="t">Ganancia Bruta</div><div class="v" id="kpiGanancia">$ 0.00</div></div>
+      <div class="kpi morado" id="kpiMargenWrap" style="display:none"><div class="t">📈 Margen Ganancia (%)</div><div class="v" id="kpiMargen">0%</div></div>
       <div class="kpi naranja"><div class="t">Inversión del Día (Compras)</div><div class="v" id="kpiInversion">$ 0.00</div></div>
       <div class="kpi rojo" id="kpiPerdidasWrap" style="display:none"><div class="t">📉 Pérdidas (informativo)</div><div class="v" id="kpiPerdidas">$ 0.00</div></div>
       <div class="kpi rojo" id="kpiGastosWrap" style="display:none"><div class="t">💸 Gastos Operativos</div><div class="v" id="kpiGastos">$ 0.00</div></div>
@@ -507,10 +544,17 @@
       <div class="kpi naranja" id="kpiComisionWrap" style="display:none"><div class="t">💰 Comisión diaria (<span id="kpiComisionPct">0</span>%)</div><div class="v" id="kpiComision">$ 0.00</div></div>
       <div class="kpi naranja" id="kpiPagoFijoWrap" style="display:none"><div class="t">💵 Pago fijo diario</div><div class="v" id="kpiPagoFijo">$ 0.00</div></div>
     </div>
+
+    <!-- v1.580: Gráficos del balance -->
+    <div id="balanceChartsCard" class="chart-grid" style="display:none">
+      <div class="chart-card"><h3>📊 Resumen del día</h3><div class="chart-container"><canvas id="chartPL"></canvas></div></div>
+      <div class="chart-card"><h3>🏆 Top 5 productos por ingresos</h3><div class="chart-container"><canvas id="chartTopProd"></canvas></div></div>
+    </div>
+
     <h2>Inversión del Día (Compras)</h2>
     <div class="card tabla-wrap"><table id="tblBalEntradas"><thead><tr><th>Producto</th><th class="num">Cantidad</th><th class="mon">Costo Unit. Prom.</th><th class="mon">Total</th></tr></thead><tbody></tbody><tfoot></tfoot></table></div>
     <h2>Productos Vendidos</h2>
-    <div class="card tabla-wrap"><table id="tblBalVentas"><thead><tr><th>Producto</th><th class="num">Cantidad</th><th class="mon">Precio Prom.</th><th class="mon">Total</th></tr></thead><tbody></tbody><tfoot></tfoot></table></div>
+    <div class="card tabla-wrap"><table id="tblBalVentas"><thead><tr><th>Producto</th><th class="num">Cantidad</th><th class="mon">Precio Prom.</th><th class="mon">Total</th><th class="mon">Ganancia</th></tr></thead><tbody></tbody><tfoot></tfoot></table></div>
     <h2>Pérdidas del Día (informativo)</h2>
     <div class="card tabla-wrap"><table id="tblBalPerdidas"><thead><tr><th>Producto</th><th class="num">Cantidad</th><th class="mon">Costo Unit.</th><th class="mon">Total</th><th>Motivo</th></tr></thead><tbody></tbody><tfoot></tfoot></table></div>
     <div id="balGastosSection"><h2>Gastos del Día</h2><div class="card tabla-wrap"><table id="tblBalGastos"><thead><tr><th>Categoría</th><th>Descripción</th><th class="mon">Monto</th></tr></thead><tbody></tbody><tfoot></tfoot></table></div></div>
@@ -577,10 +621,15 @@
       <button class="btn morado" onclick="exportarCodigosBarras()">🖨️ Exportar a Word</button>
       <button class="btn rojo" onclick="exportarCodigosBarrasPDF()">📄 Exportar a PDF</button>
       <button class="btn verde" onclick="compartirCatalogo()">📤 Compartir catálogo</button>
+      <button class="btn azul" onclick="compartirCatalogoHTML()">📄 Catálogo HTML</button>
       <button class="btn gris" onclick="verCatalogo()">👁️ Ver catálogo</button>
     </div>
+    <!-- v1.580: Filtro rápido de productos -->
+    <div class="card" style="padding:10px 12px;margin-bottom:12px">
+      <input type="search" id="buscadorProductos" placeholder="🔍 Filtrar productos por nombre o código..." oninput="renderProductosDebounced()" style="width:100%;padding:9px 12px;font-size:14px;border:2px solid #c8d2e0;border-radius:8px;font-family:inherit">
+    </div>
     <div class="card tabla-wrap">
-      <table id="tblProductos"><thead><tr><th>Foto</th><th>ID</th><th>Producto</th><th class="mon">Precio Venta</th><th class="num">Stock</th><th class="num">Mínimo</th><th>Código</th><th class="mon">Costo Prom.</th><th>Acciones</th></tr></thead><tbody></tbody></table>
+      <table id="tblProductos"><thead><tr><th>Foto</th><th>ID</th><th>Producto</th><th class="mon">Precio Venta</th><th class="num">Stock</th><th class="num">Mínimo</th><th class="mon">Valor Venta</th><th class="mon">Valor Costo</th><th>Código</th><th class="mon">Costo Prom.</th><th>Acciones</th></tr></thead><tbody></tbody></table>
     </div>
   </section>
 
@@ -726,14 +775,13 @@
       <div id="filtroRango" style="display:none"><div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px"><label style="max-width:220px">Desde <input type="date" id="rFechaDesde"></label><label style="max-width:220px">Hasta <input type="date" id="rFechaHasta"></label></div></div>
       <div id="filtroMes" style="display:none"><div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px"><label style="max-width:220px">Mes <select id="rMes"><option value="1">Enero</option><option value="2">Febrero</option><option value="3">Marzo</option><option value="4">Abril</option><option value="5">Mayo</option><option value="6">Junio</option><option value="7">Julio</option><option value="8">Agosto</option><option value="9">Septiembre</option><option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option></select></label><label style="max-width:220px">Año <input type="number" id="rAnio" min="2020" max="2100" step="1"></label></div></div>
       <div class="acciones"><button class="btn" id="btnVerReporte">👁️ Ver reporte</button><button class="btn verde" id="btnWord">📤 Compartir reporte</button></div>
-      <p class="mini" id="miniReporte">El reporte se abre dentro de la app.</p>
+      <p class="mini" id="miniReporte">El reporte se abre dentro de la app con gráficos.</p>
     </div>
   </section>
 
   <section id="tab-ayuda" class="tab">
     <button class="btn-volver-balance" onclick="irAPestana('rapido')">← Volver a Acceso Rápido</button>
     <div class="ayuda-contenedor">
-      <!-- ═══ 1) LICENCIA (sin cambios) ═══ -->
       <h2 style="text-align:center;margin-bottom:14px">🔒 Licencia de la aplicación</h2>
       <div id="licenciaInvitacion" class="licencia-invitacion">
         <h3 id="licTitulo">🎁 Cargando...</h3>
@@ -749,14 +797,12 @@
         <div class="info-extra" id="infoLicenciaModulos" style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.2)"></div>
       </div>
 
-      <!-- ═══ 2) MANUAL (sin cambios) ═══ -->
       <div class="ayuda-card" style="background:linear-gradient(135deg,#1a4d80,#2d7ac0);color:#fff;margin-top:24px">
         <h3 style="color:#fff">📖 Manual de Usuario</h3>
         <p style="color:rgba(255,255,255,.9)">Aprende a usar todas las funciones del sistema.</p>
         <button class="btn" onclick="abrirManual()" style="background:#fff;color:#1a4d80;padding:12px 28px;font-size:15px;border-radius:10px;font-weight:700;cursor:pointer;border:none;margin-top:6px">📖 Ver manual completo</button>
       </div>
 
-      <!-- ═══ 3) CONFIGURACIÓN (ACORDEÓN) ═══ -->
       <div class="card colapsable" id="secConfigCuenta" style="margin-top:24px">
         <button class="colapsable-header" onclick="toggleSeccion('secConfigCuenta')" type="button">
           <span>⚙️ Configuración de la Cuenta</span>
@@ -789,7 +835,6 @@
               </select>
             </label>
           </div>
-          <!-- v1.579: Modo oscuro movido al sidebar/header -->
           <div style="margin-top:14px;padding-top:14px;border-top:1px solid #e3e9f2">
             <label style="display:flex;flex-direction:column;gap:6px">
               <span style="font-size:13px;font-weight:600;color:#444">💱 Moneda</span>
@@ -820,7 +865,6 @@
         </div>
       </div>
 
-      <!-- ═══ 4) COPIA DE SEGURIDAD (ACORDEÓN) ═══ -->
       <div class="card colapsable" id="secCopiaSeguridad">
         <button class="colapsable-header" onclick="toggleSeccion('secCopiaSeguridad')" type="button">
           <span>💾 Copia de Seguridad <span class="colapsable-badge" id="respaldoBadge">--</span></span>
@@ -838,7 +882,6 @@
         </div>
       </div>
 
-      <!-- ═══ 5) GRACIAS Y CONTACTO (sin cambios) ═══ -->
       <div class="ayuda-card" style="margin-top:24px">
         <h3>💙 Gracias por usar miNegocito</h3>
         <p>Cualquier duda, sugerencia o comentario puedes hacerlo llegar a mi WhatsApp.</p>
@@ -865,9 +908,7 @@
   </section>
 </main>
 
-<!-- El resto del HTML se mantiene idéntico al archivo original (modales, POS, etc.) -->
-<!-- ... (sin cambios en modales, POS, lector, fab, toast, footer, etc.) ... -->
-
+<!-- Modales y vistas (idénticos al original) -->
 <div id="lectorCodigo">
   <video id="lectorVideo" autoplay playsinline muted></video>
   <div class="lector-guia"></div>
@@ -1156,10 +1197,11 @@
 
 <script>
 // ═══════════════════════════════════════════════════════════════════
-// ⚙️ CONFIGURACIÓN DE LICENCIAS — DEBES CAMBIAR ESTO
+// CONFIG
 // ═══════════════════════════════════════════════════════════════════
-const LICENSE_SALT = 'miNeg_licencia_2026';
+const LICENSE_SALT = 'miNeg_licencias_2026';
 const LICENSE_URL  = 'https://raw.githubusercontent.com/miNegocito/miNegocito/main/licencias.json';
+const REGISTRO_URL = 'https://minegocito.solucionesalrohi.workers.dev';
 const WHATSAPP_ADMIN = '5353186004';
 const DIAS_RECORDATORIO_RESPALDO = 3;
 const IMG_MAX_LADO = 720;
@@ -1236,12 +1278,16 @@ let _ventaEditandoOriginal = null;
 let _imagenTempFormProducto = null;
 const _rawPorNegocio = {};
 
-// ═══ v1.578: cache de costos y versión de datos ═══
+// v1.580: caches y versión de datos
 let _costosCache = null;
 let _costosCacheVersion = -1;
 let _dataVersion = 0;
 
-// ═══ v1.578: debounce helper ═══
+// v1.580: instancias de gráficos (para destruir antes de recrear)
+let _chartPL = null;
+let _chartTopProd = null;
+let _chartBalanceLoaded = false;
+
 function _debounce(fn, ms) {
   let t;
   return function(...args) {
@@ -1251,8 +1297,9 @@ function _debounce(fn, ms) {
 }
 const _renderGrillaPOSDebounced = _debounce(function () { renderGrillaPOS(); }, 140);
 const _renderListaCatalogoDebounced = _debounce(function () { renderListaCatalogoCompartir(); }, 140);
+const _renderProductosDebounced = _debounce(function () { renderProductos(); }, 180);
+const buscarGlobalDebounced = _debounce(function () { buscarGlobal(); }, 180);
 
-// ═══ v1.578: chequeo de espacio en localStorage ═══
 function _espacioLSDisponible() {
   try {
     let total = 0;
@@ -1263,7 +1310,105 @@ function _espacioLSDisponible() {
   } catch (e) { return true; }
 }
 
-// ═══ v1.579: acordeones en Ayuda ═══
+// ═══ v1.580: Buscador global ═══
+function buscarGlobal() {
+  const cont = document.getElementById('resultadosBusquedaGlobal');
+  if (!cont) return;
+  const q = (document.getElementById('buscadorGlobal')?.value || '').trim().toLowerCase();
+  if (!q || q.length < 2) { cont.innerHTML = ''; return; }
+
+  const prodMatch = db.productos.filter(p =>
+    p.nombre.toLowerCase().includes(q) ||
+    String(p.codigoBarras || '').toLowerCase().includes(q) ||
+    String(p.categoria || '').toLowerCase().includes(q)
+  ).slice(0, 10);
+
+  const cliMatch = db.clientes.filter(c =>
+    c.nombre.toLowerCase().includes(q) ||
+    String(c.telefono || '').toLowerCase().includes(q) ||
+    String(c.correo || '').toLowerCase().includes(q)
+  ).slice(0, 8);
+
+  const provMatch = db.proveedores.filter(p =>
+    p.nombre.toLowerCase().includes(q) ||
+    String(p.telefono || '').toLowerCase().includes(q) ||
+    String(p.productos || '').toLowerCase().includes(q)
+  ).slice(0, 8);
+
+  if (!prodMatch.length && !cliMatch.length && !provMatch.length) {
+    cont.innerHTML = '<div class="vacio" style="padding:20px">Sin resultados para "' + esc(q) + '".</div>';
+    return;
+  }
+
+  const _costos = calcularCostosPromedio();
+  let html = '';
+
+  if (prodMatch.length) {
+    html += '<div class="grupo-busqueda-titulo">📦 Productos (' + prodMatch.length + ')</div>';
+    html += prodMatch.map(p => {
+      const costo = _costos[p.id] || 0;
+      const ganancia = p.precioVenta - costo;
+      const margen = p.precioVenta > 0 ? ((ganancia / p.precioVenta) * 100) : 0;
+      const ih = p.imagen ? '<img src="' + p.imagen + '" style="width:100%;height:100%;object-fit:contain;background:#fff">' : '📦';
+      return `<div class="resultado-busqueda">
+        <div style="width:44px;height:44px;border-radius:8px;background:#fff;border:1px solid #eaf1f9;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0">${ih}</div>
+        <div class="rb-info">
+          <div class="rb-titulo">${esc(p.nombre)}</div>
+          <div class="rb-detalle">
+            💵 <b style="color:#217a44">${money(p.precioVenta)}</b>
+            · Stock: <b style="color:${p.stock <= 0 ? '#c0392b' : (p.stock <= (Number(p.stockMinimo) || 0) ? '#e08a1e' : '#217a44')}">${cant(p.stock)}</b>
+            · Ganancia: <b style="color:#2d7ac0">${money(ganancia)}</b> (${margen.toFixed(1)}%)
+            ${p.categoria ? '· 🏷️ ' + esc(p.categoria) : ''}
+          </div>
+        </div>
+        <div class="rb-acciones">
+          <button style="background:#e08a1e;color:#fff" onclick="abrirEntradaRapida(${p.id})">📥</button>
+          <button style="background:#2d7ac0;color:#fff" onclick="abrirModalEditarProducto(${p.id})">✏️</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  if (cliMatch.length) {
+    html += '<div class="grupo-busqueda-titulo">👥 Clientes (' + cliMatch.length + ')</div>';
+    html += cliMatch.map(c => {
+      const vd = db.ventas.filter(v => v.clienteId === c.id);
+      const total = vd.reduce((s, v) => s + v.total, 0);
+      return `<div class="resultado-busqueda">
+        <div class="rb-icono">👤</div>
+        <div class="rb-info">
+          <div class="rb-titulo">${esc(c.nombre)}</div>
+          <div class="rb-detalle">${c.telefono ? '📞 ' + esc(c.telefono) : ''} ${c.correo ? '· 📧 ' + esc(c.correo) : ''} · Compras: ${vd.length} · Total: <b style="color:#217a44">${money(total)}</b></div>
+        </div>
+        <div class="rb-acciones">
+          <button style="background:#2d7ac0;color:#fff" onclick="irAPestana('clientes')">Ver</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  if (provMatch.length) {
+    html += '<div class="grupo-busqueda-titulo">🚚 Proveedores (' + provMatch.length + ')</div>';
+    html += provMatch.map(p => {
+      const compras = db.entradas.filter(e => e.proveedorId === p.id);
+      const total = compras.reduce((s, e) => s + e.total, 0);
+      return `<div class="resultado-busqueda">
+        <div class="rb-icono">🚚</div>
+        <div class="rb-info">
+          <div class="rb-titulo">${esc(p.nombre)}</div>
+          <div class="rb-detalle">${p.telefono ? '📞 ' + esc(p.telefono) : ''} ${p.productos ? '· ' + esc(p.productos) : ''} · Compras: ${compras.length} · Total: <b>${money(total)}</b></div>
+        </div>
+        <div class="rb-acciones">
+          <button style="background:#2d7ac0;color:#fff" onclick="irAPestana('proveedores')">Ver</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  cont.innerHTML = html;
+}
+
+// ═══ v1.580: Acordeones ═══
 function toggleSeccion(id, forceOpen) {
   const el = document.getElementById(id);
   if (!el) return;
@@ -1334,7 +1479,7 @@ function aplicarTema(tema) {
     th { background: ${c.tint} !important; color: ${c.dark} !important; }
     .kpi .v { color: ${c.dark} !important; }
     .kpi { border-left-color: ${c.light} !important; }
-    .negocio-card h3, .ayuda-card h3 { color: ${c.dark} !important; }
+    .negocio-card h3, .ayuda-card h3, .chart-card h3 { color: ${c.dark} !important; }
     #pantallaCuenta { background: linear-gradient(135deg, ${c.dark}, ${c.light}) !important; }
     #pantallaCuenta h2 { color: ${c.dark} !important; }
     .licencia-invitacion { background: linear-gradient(135deg, ${c.dark}, ${c.light}) !important; }
@@ -1375,8 +1520,7 @@ function cambiarMoneda(moneda) {
   mostrarToast('💱 Moneda: ' + MONEDAS[moneda].nombre, 'info');
 }
 
-
-// ═══ MODO OSCURO (v1.579: botones en sidebar + header) ═══
+// ═══ MODO OSCURO ═══
 function aplicarModoOscuro(activar) {
   if (activar) document.body.classList.add('modo-oscuro');
   else document.body.classList.remove('modo-oscuro');
@@ -1389,19 +1533,14 @@ function cargarModoOscuroGuardado() {
 function actualizarBotonesModoOscuro() {
   const cuenta = obtenerCuenta();
   const activo = !!(cuenta && cuenta.modoOscuro);
-  // Header
   const iconH = document.getElementById('iconoModoOscuroHeader');
   if (iconH) iconH.textContent = activo ? '☀️' : '🌙';
   const btnH = document.getElementById('btnModoOscuroHeader');
   if (btnH) btnH.title = activo ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro';
-  // Sidebar
   const iconS = document.getElementById('iconoModoOscuroSidebar');
   if (iconS) iconS.textContent = activo ? '☀️' : '🌙';
   const textS = document.getElementById('textoModoOscuroSidebar');
   if (textS) textS.textContent = activo ? 'Modo claro' : 'Modo oscuro';
-  // Compatibilidad con checkbox antiguo si aún existiera
-  const cb = document.getElementById('toggleModoOscuro');
-  if (cb) cb.checked = activo;
 }
 function alternarModoOscuro() {
   const cuenta = obtenerCuenta();
@@ -1466,7 +1605,7 @@ function cerrarPrompt(valor) {
 }
 
 // ═══════════════════════════════════════════════════════════
-// HISTORIAL / POPSTATE
+// HISTORIAL
 // ═══════════════════════════════════════════════════════════
 let _historialListo = false;
 function inicializarHistorial() {
@@ -1477,11 +1616,8 @@ function registrarEstado(vista, modal) {
   try {
     const st = history.state || {};
     const nuevo = { vista: vista || 'rapido', modal: modal || null };
-    if (st.vista === nuevo.vista && st.modal === nuevo.modal) {
-      history.replaceState(nuevo, '');
-    } else {
-      history.pushState(nuevo, '');
-    }
+    if (st.vista === nuevo.vista && st.modal === nuevo.modal) history.replaceState(nuevo, '');
+    else history.pushState(nuevo, '');
   } catch (e) {}
 }
 function obtenerPestanaActiva() { const b = document.querySelector('nav button.active'); return b ? b.dataset.tab : null; }
@@ -1544,7 +1680,6 @@ function obtenerDeviceId() {
   try { localStorage.setItem(KEY, idCorto); } catch (e) {}
   return idCorto;
 }
-
 async function sha256Hex(texto) {
   if (window.crypto && crypto.subtle) {
     const buf = new TextEncoder().encode(texto);
@@ -1554,97 +1689,119 @@ async function sha256Hex(texto) {
   }
   return 'FALLBACK_' + _hash(texto);
 }
-async function hashLicencia(codigo) {
-  return await sha256Hex(LICENSE_SALT + '|' + String(codigo).trim().toUpperCase());
-}
+async function hashLicencia(codigo) { return await sha256Hex(LICENSE_SALT + '|' + String(codigo).trim().toUpperCase()); }
 
 // ═══════════════════════════════════════════════════════════
-// LICENCIAS — VERIFICACIÓN CONTRA GITHUB
+// LICENCIAS
 // ═══════════════════════════════════════════════════════════
-function leerCacheLicencias() {
-  try {
-    const raw = localStorage.getItem(LICENCIAS_CACHE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch (e) {}
-  return null;
-}
-function guardarCacheLicencias(data) {
-  try { localStorage.setItem(LICENCIAS_CACHE_KEY, JSON.stringify(data)); } catch (e) {}
-}
-
+function leerCacheLicencias() { try { const raw = localStorage.getItem(LICENCIAS_CACHE_KEY); if (raw) return JSON.parse(raw); } catch (e) {} return null; }
+function guardarCacheLicencias(data) { try { localStorage.setItem(LICENCIAS_CACHE_KEY, JSON.stringify(data)); } catch (e) {} }
 async function descargarLicenciasGitHub() {
   if (!LICENSE_URL || LICENSE_URL.indexOf('TU-USUARIO') !== -1) return null;
   try {
     const resp = await fetch(LICENSE_URL, { cache: 'no-store' });
     if (!resp.ok) return null;
     const data = await resp.json();
-    if (data && Array.isArray(data.licencias)) {
-      guardarCacheLicencias(data);
-      return data;
-    }
+    if (data && Array.isArray(data.licencias)) { guardarCacheLicencias(data); return data; }
   } catch (e) {}
   return null;
 }
-
 async function verificarLicenciaRemota(codigo) {
-  const hash = await hashLicencia(codigo);
+  const codigoUpper = String(codigo).trim().toUpperCase();
+  if (!codigoUpper) return false;
+  const hash = await hashLicencia(codigoUpper);
   const esVerdadero = (v) => v === true || v === 'true' || v === 1 || v === '1';
+
+  // 1. Caché local
   const cache = leerCacheLicencias();
   if (cache && Array.isArray(cache.licencias)) {
     const item = cache.licencias.find(l => l.hash === hash);
     if (item) return esVerdadero(item.activo);
   }
-  const fresh = await descargarLicenciasGitHub();
-  if (fresh) {
-    const item = fresh.licencias.find(l => l.hash === hash);
-    return item ? esVerdadero(item.activo) : false;
-  }
-  return false;
-}
 
-function _licBool(v) { return v === true || v === 'true' || v === 1 || v === '1'; }
-
-async function tieneAccesoMultiNegocio() {
-  if (!verificarActivacion()) return false;
-  const codigo = obtenerCodigoActivacion();
-  if (!codigo) return false;
-  const hash = await hashLicencia(codigo);
-  const cache = leerCacheLicencias();
-  if (cache && Array.isArray(cache.licencias)) {
-    const item = cache.licencias.find(l => l.hash === hash);
-    if (item) return _licBool(item.activo) && _licBool(item.multinegocio);
-  }
-  const fresh = await descargarLicenciasGitHub();
-  if (fresh) {
-    const item = fresh.licencias.find(l => l.hash === hash);
-    return item ? (_licBool(item.activo) && _licBool(item.multinegocio)) : false;
-  }
-  return false;
-}
-
-function tieneAccesoMultiNegocioSync() {
-  if (!verificarActivacion()) return false;
+  // 2. Worker (licencias colectivas) — v4: usa data.ok
   try {
-    const raw = localStorage.getItem('activacion_v1');
-    if (raw) {
-      const data = JSON.parse(raw);
-      if (typeof data.multinegocio === 'boolean') return data.multinegocio;
+    const deviceId = obtenerDeviceId();
+    const resp = await fetch(REGISTRO_URL + '/verificar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ codigo: codigoUpper, deviceId, hash }),
+      cache: 'no-store'
+    });
+    if (resp.ok) {
+      const data = await resp.json();
+      // v4: el Worker devuelve {ok: true/false}, no {valido/activo}
+      if (data && typeof data.ok !== 'undefined') return !!data.ok;
+    }
+  } catch (e) {
+    console.warn('[verificarLicenciaRemota] Worker no disponible:', e);
+  }
+
+  // 3. Fallback GitHub (compatibilidad)
+  try {
+    const fresh = await descargarLicenciasGitHub();
+    if (fresh) {
+      const item = fresh.licencias.find(l => l.hash === hash);
+      return item ? esVerdadero(item.activo) : false;
     }
   } catch (e) {}
+
+  return false;
+}
+async function sincronizarLicencia() {
+  const raw = localStorage.getItem('activacion_v1');
+  if (!raw) return false;
+  let act;
+  try { act = JSON.parse(raw); } catch (e) { return false; }
+  if (!act || !act.activo || !act.codigo) return false;
+
+  const codigo = act.codigo;
+  const deviceId = obtenerDeviceId();
+  const hash = await hashLicencia(codigo);
+
+  try {
+    const resp = await fetch(REGISTRO_URL + '/verificar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ codigo, deviceId, hash }),
+      cache: 'no-store'
+    });
+    if (!resp.ok) return false;
+    const data = await resp.json();
+    if (!data) return false;
+
+    if (data.valido === false || data.activo === false) {
+      localStorage.removeItem('activacion_v1');
+      mostrarToast('⚠️ Tu licencia fue desactivada. Contacta al administrador.', 'warn');
+      setTimeout(() => mostrarModalActivacion(true), 1200);
+      return false;
+    }
+
+    if (typeof data.multinegocio !== 'undefined' && act.multinegocio !== !!data.multinegocio) {
+      act.multinegocio = !!data.multinegocio;
+      localStorage.setItem('activacion_v1', JSON.stringify(act));
+      renderSelectorNegocios();
+    }
+    return true;
+  } catch (e) {
+    console.warn('[sincronizarLicencia] error:', e);
+    return false;
+  }
+}
+function _licBool(v) { return v === true || v === 'true' || v === 1 || v === '1'; }
+function tieneAccesoMultiNegocioSync() {
+  if (!verificarActivacion()) return false;
+  try { const raw = localStorage.getItem('activacion_v1'); if (raw) { const data = JSON.parse(raw); if (typeof data.multinegocio === 'boolean') return data.multinegocio; } } catch (e) {}
   const cache = leerCacheLicencias();
   if (cache && Array.isArray(cache.licencias)) {
-    let hash = null;
-    try { hash = localStorage.getItem('licencia_hash_actual'); } catch (e) {}
-    if (hash) {
-      const item = cache.licencias.find(l => l.hash === hash);
-      if (item) return _licBool(item.activo) && _licBool(item.multinegocio);
-    }
+    let hash = null; try { hash = localStorage.getItem('licencia_hash_actual'); } catch (e) {}
+    if (hash) { const item = cache.licencias.find(l => l.hash === hash); if (item) return _licBool(item.activo) && _licBool(item.multinegocio); }
   }
   return false;
 }
 
 // ═══════════════════════════════════════════════════════════
-// TRIAL (prueba 7 días)
+// TRIAL
 // ═══════════════════════════════════════════════════════════
 function obtenerTrial() { try { const raw = localStorage.getItem(TRIAL_KEY); if (raw) return JSON.parse(raw); } catch (e) {} return null; }
 function iniciarTrial() {
@@ -1665,23 +1822,8 @@ function diasRestantesTrial() {
   return Math.max(0, Math.ceil(restante / (24 * 60 * 60 * 1000)));
 }
 function trialActivo() { const trial = obtenerTrial(); if (!trial) return true; return diasRestantesTrial() > 0; }
-
-function verificarActivacion() {
-  const raw = localStorage.getItem('activacion_v1');
-  if (!raw) return false;
-  try {
-    const data = JSON.parse(raw);
-    return data.activo === true && !!data.codigo;
-  } catch (e) { return false; }
-}
-function obtenerCodigoActivacion() {
-  try {
-    const raw = localStorage.getItem('activacion_v1');
-    if (!raw) return null;
-    const data = JSON.parse(raw);
-    return data.codigo || null;
-  } catch (e) { return null; }
-}
+function verificarActivacion() { const raw = localStorage.getItem('activacion_v1'); if (!raw) return false; try { const data = JSON.parse(raw); return data.activo === true && !!data.codigo; } catch (e) { return false; } }
+function obtenerCodigoActivacion() { try { const raw = localStorage.getItem('activacion_v1'); if (!raw) return null; const data = JSON.parse(raw); return data.codigo || null; } catch (e) { return null; } }
 function verificarAcceso() { return verificarActivacion() || trialActivo(); }
 
 // ═══════════════════════════════════════════════════════════
@@ -1735,39 +1877,83 @@ async function activar() {
   const estado = document.getElementById('estadoVerif');
   err.textContent = ''; estado.textContent = '';
   if (!codigo) { err.textContent = '❌ Escribe el código de activación.'; return; }
+
   estado.style.color = '#2d7ac0';
-  estado.textContent = '🔄 Verificando en línea...';
+  estado.textContent = '🔄 Verificando con el servidor...';
+
   try {
-    try { await descargarLicenciasGitHub(); } catch (e) {}
-    const valido = await verificarLicenciaRemota(codigo);
-    if (valido) {
-      const hash = await hashLicencia(codigo);
-      try { localStorage.setItem('licencia_hash_actual', hash); } catch(e) {}
-      let flagMulti = false;
-      try {
+    const deviceId = obtenerDeviceId();
+    const hash = await hashLicencia(codigo);
+
+    let data = null, workerOk = false;
+    try {
+      const resp = await fetch(REGISTRO_URL + '/registrar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ codigo: codigo.toUpperCase(), deviceId, hash }),
+        cache: 'no-store'
+      });
+      if (resp.ok) { data = await resp.json(); workerOk = true; }
+      else {
+        // El Worker puede devolver 4xx con motivo JSON
+        try { data = await resp.json(); workerOk = true; } catch (e) {}
+      }
+    } catch (e) { console.warn('[activar] Worker no disponible:', e); }
+
+    let valido = false, flagMulti = false, mensaje = '';
+
+    if (workerOk && data) {
+      // v4: el Worker devuelve {ok: true/false, motivo, tipo, multinegocio}
+      valido = !!data.ok;
+      flagMulti = !!data.multinegocio;
+
+      if (!valido) {
+        const motivos = {
+          no_existe: 'Código no registrado. Verifica que lo copiaste correctamente.',
+          inactiva: 'Licencia revocada. Contacta a Soporte: +53 53186004.',
+          lleno: 'Límite de dispositivos alcanzado para esta licencia colectiva.',
+          error: 'Error del servidor. Reintenta en un momento.'
+        };
+        mensaje = motivos[data.motivo] || data.error || 'Código inválido';
+        err.textContent = '❌ ' + mensaje;
+        estado.textContent = '';
+        return;
+      }
+    } else {
+      // Fallback al sistema anterior (GitHub)
+      try { await descargarLicenciasGitHub(); } catch (e) {}
+      valido = await verificarLicenciaRemota(codigo);
+      if (valido) {
         const cache = leerCacheLicencias();
         if (cache && Array.isArray(cache.licencias)) {
           const item = cache.licencias.find(l => l.hash === hash);
           flagMulti = !!(item && _licBool(item.activo) && _licBool(item.multinegocio));
         }
-      } catch (e) {}
+      }
+    }
+
+    if (valido) {
+      try { localStorage.setItem('licencia_hash_actual', hash); } catch (e) {}
       localStorage.setItem('activacion_v1', JSON.stringify({
         activo: true,
         codigo: codigo.toUpperCase(),
         fecha: new Date().toISOString(),
-        multinegocio: flagMulti
+        multinegocio: flagMulti,
+        deviceId: deviceId
       }));
       _activacionBloqueante = false;
       document.getElementById('modalActivacion').classList.remove('activo');
-      actualizarSeccionLicencia(); actualizarBannerTrial();
+      actualizarSeccionLicencia();
+      actualizarBannerTrial();
       renderTodo();
       mostrarToast('🎉 ¡Aplicación activada!', 'exito');
+      sincronizarLicencia().catch(() => {});
     } else {
-      err.textContent = '❌ Código inválido o no activo. Verifica que esté bien escrito o contacta a soporte.';
+      err.textContent = '❌ Código inválido o no activo.';
       estado.textContent = '';
     }
   } catch (e) {
-    err.textContent = '❌ Error de verificación. Revisa tu conexión o intenta más tarde.';
+    err.textContent = '❌ Error de verificación: ' + (e.message || 'conexión fallida');
     estado.textContent = '';
   }
 }
@@ -1787,19 +1973,13 @@ function actualizarSeccionLicencia() {
     const elMod = document.getElementById('infoLicenciaModulos');
     if (elF) elF.textContent = '📅 Activada el ' + (datos.fecha ? new Date(datos.fecha).toLocaleString('es-ES') : '--');
     if (elC) elC.textContent = datos.codigo || '--';
-    if (elMod) {
-      if (tieneAccesoMultiNegocioSync()) {
-        elMod.innerHTML = '<span style="color:#e3f3ea">✅ Módulo Multi-Negocio activado</span>';
-      } else {
-        elMod.innerHTML = '<span style="color:#fdecea">⚠️ Módulo Multi-Negocio NO activado.</span><br><small style="opacity:.8">Contáctanos si deseas activarlo.</small>';
-      }
-    }
+    if (elMod) { if (tieneAccesoMultiNegocioSync()) elMod.innerHTML = '<span style="color:#e3f3ea">✅ Módulo Multi-Negocio activado</span>'; else elMod.innerHTML = '<span style="color:#fdecea">⚠️ Módulo Multi-Negocio NO activado.</span><br><small style="opacity:.8">Contáctanos si deseas activarlo.</small>'; }
   } else {
     bi.style.display = 'block'; ba.style.display = 'none';
     const trial = obtenerTrial(); const dias = diasRestantesTrial();
     const titulo = document.getElementById('licTitulo'); const mensaje = document.getElementById('licMensaje');
     if (!trial) { if (titulo) titulo.textContent = '🎁 Prueba gratis de ' + TRIAL_DIAS + ' días'; if (mensaje) mensaje.textContent = 'Al empezar a usar la app se activará automáticamente tu prueba con todas las funciones.'; }
-    else if (dias > 0) { if (titulo) titulo.textContent = '🎁 Prueba gratis — ' + dias + ' día' + (dias === 1 ? '' : 's') + ' restante' + (dias === 1 ? '' : 's'); if (mensaje) mensaje.textContent = 'Estás usando la versión completa de prueba. Activa en cualquier momento para conservar tu acceso y tus datos.'; }
+    else if (dias > 0) { if (titulo) titulo.textContent = '🎁 Prueba gratis — ' + dias + ' día' + (dias === 1 ? '' : 's') + ' restante' + (dias === 1 ? '' : 's'); if (mensaje) mensaje.textContent = 'Estás usando la versión completa de prueba. Activa en cualquier momento para conservar tu acceso.'; }
     else { if (titulo) titulo.textContent = '⏰ Prueba terminada'; if (mensaje) mensaje.textContent = 'Los ' + TRIAL_DIAS + ' días de prueba han finalizado. Activa la aplicación para seguir usando todas las funciones.'; }
   }
 }
@@ -1816,26 +1996,13 @@ function cerrarBloqueoActivacion() { document.getElementById('modalBloqueoActiva
 function irActivarDesdeBloqueo() { cerrarBloqueoActivacion(); irAPestana('ayuda'); setTimeout(() => { const el = document.getElementById('licenciaInvitacion'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 250); }
 
 // ═══════════════════════════════════════════════════════════
-// CUENTAS / REGISTRO
+// CUENTAS
 // ═══════════════════════════════════════════════════════════
 function generarIdNegocio() { return 'b' + Date.now().toString(36) + Math.random().toString(36).substring(2, 6); }
-async function hashClave(clave, contacto) {
-  return await sha256Hex(SALT + '|' + String(contacto).toLowerCase().trim() + '|' + String(clave));
-}
+async function hashClave(clave, contacto) { return await sha256Hex(SALT + '|' + String(contacto).toLowerCase().trim() + '|' + String(clave)); }
 function esEmailValido(s) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(s || '').trim()); }
-function esTelefonoValido(s) {
-  const t = String(s || '').trim();
-  if (!/^[+\d\s\-()]{7,25}$/.test(t)) return false;
-  const digitos = t.replace(/\D/g, '');
-  return digitos.length >= 7 && digitos.length <= 15;
-}
-function clasificarContacto(s) {
-  const t = String(s || '').trim();
-  if (!t) return null;
-  if (esEmailValido(t)) return 'correo';
-  if (esTelefonoValido(t)) return 'telefono';
-  return null;
-}
+function esTelefonoValido(s) { const t = String(s || '').trim(); if (!/^[+\d\s\-()]{7,25}$/.test(t)) return false; const digitos = t.replace(/\D/g, ''); return digitos.length >= 7 && digitos.length <= 15; }
+function clasificarContacto(s) { const t = String(s || '').trim(); if (!t) return null; if (esEmailValido(t)) return 'correo'; if (esTelefonoValido(t)) return 'telefono'; return null; }
 function normalizarContacto(s) { return String(s || '').trim().toLowerCase(); }
 function obtenerRegistro() { try { const raw = localStorage.getItem(REGISTRY_KEY); if (raw) { const r = JSON.parse(raw); if (r && Array.isArray(r.lista)) return r; } } catch (e) {} return { activo: null, lista: [] }; }
 function guardarRegistro(r) { localStorage.setItem(REGISTRY_KEY, JSON.stringify(r)); }
@@ -1857,14 +2024,7 @@ function cambiarNegocio(id) {
   if (!negocio) return false;
   if (r.activo === id) return true;
   const negocioAnterior = r.activo;
-  try {
-    if (negocioAnterior) {
-      const _keyAnt = LS_KEY_PREFIX + negocioAnterior;
-      const _jsonAnt = JSON.stringify(db);
-      localStorage.setItem(_keyAnt, _jsonAnt);
-      _rawPorNegocio[negocioAnterior] = _jsonAnt;
-    }
-  } catch (e) { console.warn('No se pudo guardar negocio anterior:', e); }
+  try { if (negocioAnterior) { const _keyAnt = LS_KEY_PREFIX + negocioAnterior; const _jsonAnt = JSON.stringify(db); localStorage.setItem(_keyAnt, _jsonAnt); _rawPorNegocio[negocioAnterior] = _jsonAnt; } } catch (e) { console.warn('No se pudo guardar negocio anterior:', e); }
   document.getElementById('vistaPOS').classList.remove('activo');
   document.getElementById('vistaReporte').classList.remove('activo');
   document.getElementById('vistaManual').classList.remove('activo');
@@ -1884,19 +2044,8 @@ function mostrarLogin() {
   document.getElementById('formLogin').style.display = 'block';
   document.getElementById('pantallaCuenta').style.display = 'flex';
   const r = obtenerRegistro(); const ci = document.getElementById('loginContacto');
-  if (ci) {
-    let dl = document.getElementById('listaContactosLogin');
-    if (!dl) { dl = document.createElement('datalist'); dl.id = 'listaContactosLogin'; document.body.appendChild(dl); }
-    const opts = [];
-    r.lista.forEach(n => {
-      if (n.correo) opts.push('<option value="' + esc(n.correo) + '">');
-      if (n.telefonoPagos && n.telefonoPagos !== n.correo) opts.push('<option value="' + esc(n.telefonoPagos) + '">');
-    });
-    dl.innerHTML = opts.join('');
-    ci.setAttribute('list', 'listaContactosLogin');
-  }
-  const subt = document.getElementById('subtLogin');
-  if (subt) subt.textContent = r.lista.length > 1 ? 'Tienes ' + r.lista.length + ' negocios registrados' : 'Ingrese sus credenciales';
+  if (ci) { let dl = document.getElementById('listaContactosLogin'); if (!dl) { dl = document.createElement('datalist'); dl.id = 'listaContactosLogin'; document.body.appendChild(dl); } const opts = []; r.lista.forEach(n => { if (n.correo) opts.push('<option value="' + esc(n.correo) + '">'); if (n.telefonoPagos && n.telefonoPagos !== n.correo) opts.push('<option value="' + esc(n.telefonoPagos) + '">'); }); dl.innerHTML = opts.join(''); ci.setAttribute('list', 'listaContactosLogin'); }
+  const subt = document.getElementById('subtLogin'); if (subt) subt.textContent = r.lista.length > 1 ? 'Tienes ' + r.lista.length + ' negocios registrados' : 'Ingrese sus credenciales';
   setTimeout(() => document.getElementById('loginClave').focus(), 200);
   actualizarFAB();
 }
@@ -1909,10 +2058,7 @@ function importarRespaldoEnSetup() {
     _respaldoSetupData = d;
     if (ct.nombre || ct.negocio) document.getElementById('setupNegocio').value = ct.nombre || ct.negocio;
     const contactoRespaldo = ct.correo || ct.telefonoPagos || '';
-    if (contactoRespaldo) {
-      document.getElementById('setupContacto').value = contactoRespaldo;
-      const ev = new Event('input'); document.getElementById('setupContacto').dispatchEvent(ev);
-    }
+    if (contactoRespaldo) { document.getElementById('setupContacto').value = contactoRespaldo; const ev = new Event('input'); document.getElementById('setupContacto').dispatchEvent(ev); }
     if (ct.direccion) document.getElementById('setupDireccion').value = ct.direccion;
     const resumen = d.productos.length + ' productos · ' + d.ventas.length + ' ventas';
     document.getElementById('errorSetup').innerHTML = '<span style="color:#217a44;font-weight:700">✅ Respaldo cargado: ' + esc(resumen) + '</span>';
@@ -1920,7 +2066,6 @@ function importarRespaldoEnSetup() {
     setTimeout(() => document.getElementById('setupClave').focus(), 200);
   });
 }
-
 function mostrarBienvenidaInicial() {
   const html = '<div id="modalBienvenida" style="position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:100070;padding:20px;overflow-y:auto;display:flex;align-items:center;justify-content:center"><div style="background:#fff;border-radius:16px;padding:28px 24px;max-width:480px;width:100%;margin:auto;box-shadow:0 10px 40px rgba(0,0,0,.35);text-align:center"><div style="font-size:52px;margin-bottom:8px">🎉</div><h2 style="color:#1a4d80;margin:0 0 10px 0;font-size:21px">¡Bienvenido a miNegocito!</h2><p style="color:#555;font-size:14px;line-height:1.6;margin:0 0 16px 0">Gracias por instalar miNegocito, a partir de ahora tienes <b style="color:#217a44">7 días de prueba gratis</b>.</p><div style="background:#f8faff;border-radius:10px;padding:14px 16px;text-align:left;font-size:13px;color:#333;line-height:1.7;margin-bottom:16px"><div>✅ Puedes solicitar la activación en cualquier momento desde la pestaña <b>Ayuda</b>.</div><div style="margin-top:8px">✅ Si tienes varios negocios, puedes solicitar además la activación del módulo <b>multiNegocio</b>.</div><div style="margin-top:8px">✅ Si decides activar el módulo multiNegocio y tienes empleados o dependientes que atienden tus negocios, puedes solicitar además la activación de miNegocito en cada móvil de tus empleados por un importe preferencial.</div></div><p style="color:#555;font-size:13px;line-height:1.6;margin:0 0 6px 0">Gracias por confiar en miNegocito.</p><p style="color:#1a4d80;font-weight:700;font-size:14px;margin:0 0 16px 0">Soluciones ALROHI<br><span style="font-weight:500;font-size:12px">📱 +53 53186004<br>📧 solucionesalrohi@gmail.com</span></p><button onclick="document.getElementById(\'modalBienvenida\').remove()" style="width:100%;padding:13px;border:none;border-radius:10px;background:linear-gradient(135deg,#2e9e5b,#217a44);color:#fff;font-weight:700;font-size:15px;cursor:pointer;font-family:inherit">✅ Entendido, empezar</button></div></div>';
   const ct = document.createElement('div');
@@ -1928,7 +2073,6 @@ function mostrarBienvenidaInicial() {
   ct.innerHTML = html;
   document.body.appendChild(ct);
 }
-
 async function guardarSetup() {
   const negocio = document.getElementById('setupNegocio').value.trim();
   const contacto = document.getElementById('setupContacto').value.trim();
@@ -1945,15 +2089,7 @@ async function guardarSetup() {
   const id = generarIdNegocio();
   const correoFinal = tipo === 'correo' ? contacto : (ct.correo || '');
   const telefonoFinal = tipo === 'telefono' ? contacto : (ct.telefonoPagos || '');
-  guardarRegistro({ activo: id, lista: [{
-    id, nombre: negocio, correo: correoFinal, telefonoPagos: telefonoFinal,
-    direccion: (direccion || '').trim(),
-    claveHash: await hashClave(clave, contacto),
-    comisionPorciento: ct.comisionPorciento || 0, pagoFijoDiario: ct.pagoFijoDiario || 0,
-    tasaCambioPorciento: ct.tasaCambioPorciento || 0, tema: ct.tema || 'azul', moneda: ct.moneda || 'USD',
-    cuentasBancarias: ct.cuentasBancarias || [], logo: ct.logo || null,
-    fechaCreacion: new Date().toISOString()
-  }] });
+  guardarRegistro({ activo: id, lista: [{ id, nombre: negocio, correo: correoFinal, telefonoPagos: telefonoFinal, direccion: (direccion || '').trim(), claveHash: await hashClave(clave, contacto), comisionPorciento: ct.comisionPorciento || 0, pagoFijoDiario: ct.pagoFijoDiario || 0, tasaCambioPorciento: ct.tasaCambioPorciento || 0, tema: ct.tema || 'azul', moneda: ct.moneda || 'USD', cuentasBancarias: ct.cuentasBancarias || [], logo: ct.logo || null, fechaCreacion: new Date().toISOString() }] });
   let estadoInicial;
   if (_respaldoSetupData) {
     estadoInicial = { productos: _respaldoSetupData.productos || [], entradas: _respaldoSetupData.entradas || [], ventas: _respaldoSetupData.ventas || [], perdidas: _respaldoSetupData.perdidas || [], devoluciones: _respaldoSetupData.devoluciones || [], gastos: _respaldoSetupData.gastos || [], facturas: _respaldoSetupData.facturas || [], clientes: _respaldoSetupData.clientes || [], proveedores: _respaldoSetupData.proveedores || [], facturasMulti: _respaldoSetupData.facturasMulti || [], seq: _respaldoSetupData.seq || { p: 1, e: 1, v: 1, d: 1, dev: 1, g: 1, f: 1, c: 1, pv: 1, fm: 1 } };
@@ -1976,23 +2112,11 @@ async function iniciarSesion() {
   const r = obtenerRegistro();
   if (!r.lista.length) { mostrarSetup(); return; }
   const nc = normalizarContacto(contacto);
-  const negocio = r.lista.find(n =>
-    normalizarContacto(n.correo || '') === nc ||
-    normalizarContacto(n.telefonoPagos || '') === nc
-  );
+  const negocio = r.lista.find(n => normalizarContacto(n.correo || '') === nc || normalizarContacto(n.telefonoPagos || '') === nc);
   if (!negocio) { err.textContent = 'Teléfono o correo no registrado.'; return; }
-  const candidatos = [
-    negocio.correo || negocio.telefonoPagos || '',
-    negocio.correo || '',
-    negocio.telefonoPagos || '',
-    normalizarContacto(negocio.correo || ''),
-    normalizarContacto(negocio.telefonoPagos || '')
-  ].filter(Boolean);
+  const candidatos = [negocio.correo || negocio.telefonoPagos || '', negocio.correo || '', negocio.telefonoPagos || '', normalizarContacto(negocio.correo || ''), normalizarContacto(negocio.telefonoPagos || '')].filter(Boolean);
   let ok = false;
-  for (const c of candidatos) {
-    const h = await hashClave(clave, c);
-    if (h === negocio.claveHash) { ok = true; break; }
-  }
+  for (const c of candidatos) { const h = await hashClave(clave, c); if (h === negocio.claveHash) { ok = true; break; } }
   if (!ok) { err.textContent = 'Contraseña incorrecta.'; return; }
   r.activo = negocio.id; guardarRegistro(r); activarSesion();
   ocultarPantallaCuenta(); iniciarApp();
@@ -2053,9 +2177,7 @@ function editarPerfil() {
               const h1 = await hashClave(clave, contactoViejo);
               const h2 = await hashClave(clave, cuenta.correo || '');
               const h3 = await hashClave(clave, cuenta.telefonoPagos || '');
-              if (h1 !== cuenta.claveHash && h2 !== cuenta.claveHash && h3 !== cuenta.claveHash) {
-                mostrarToast('Contraseña incorrecta.', 'error'); return;
-              }
+              if (h1 !== cuenta.claveHash && h2 !== cuenta.claveHash && h3 !== cuenta.claveHash) { mostrarToast('Contraseña incorrecta.', 'error'); return; }
               await aplicar(clave);
             }, (v) => !v ? 'Introduzca su contraseña.' : null);
           } else { aplicar(null); }
@@ -2101,11 +2223,11 @@ function editarComisionDiaria() {
 }
 function editarTasaCambio() {
   const cuenta = obtenerCuenta(); if (!cuenta) return;
-  const actual = Number(cuenta.tasaCambioPorciento) || 0;
+  const actual = Number(cuenta.tasaCambioPorcentaje) || 0;
   pedirValor('💱 Tasa de cambio (%)', 'Porcentaje que se aplica al total del carrito.\nEj: 10 = +10% sobre el total.\nPon 0 para desactivar.', actual, (v) => {
     const n = parseFloat(v);
     if (isNaN(n) || n < 0 || n > 1000) { mostrarToast('Valor inválido.', 'error'); return; }
-    cuenta.tasaCambioPorciento = n; guardarCuenta(cuenta); actualizarMiniComision();
+    cuenta.tasaCambioPorcentaje = n; guardarCuenta(cuenta); actualizarMiniComision();
     if (document.getElementById('modalCarritoPOS').style.display === 'block') renderListaCarritoPOS();
     mostrarToast('✅ Tasa de cambio guardada: ' + n + '%');
   }, (v) => (isNaN(parseFloat(v)) || parseFloat(v) < 0) ? 'Número inválido.' : null);
@@ -2113,29 +2235,18 @@ function editarTasaCambio() {
 function actualizarMiniComision() {
   const el = document.getElementById('miniComisionDiaria'); if (!el) return;
   const c = obtenerCuenta();
-  const p = (c && Number(c.comisionPorciento)) || 0; const f = (c && Number(c.pagoFijoDiario)) || 0; const tc = (c && Number(c.tasaCambioPorciento)) || 0;
+  const p = (c && Number(c.comisionPorciento)) || 0; const f = (c && Number(c.pagoFijoDiario)) || 0; const tc = (c && Number(c.tasaCambioPorcentaje)) || 0;
   const partes = []; if (p > 0) partes.push('Comisión: ' + p + '%'); if (f > 0) partes.push('Pago fijo: ' + money(f)); if (tc > 0) partes.push('Tasa cambio: ' + tc + '%');
   el.textContent = partes.length ? '💰 ' + partes.join(' · ') : '';
 }
 function subirLogoNegocio() {
   const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*'; input.style.display = 'none';
-  input.onchange = (e) => {
-    const file = e.target.files && e.target.files[0]; if (!file) return;
-    procesarImagen(file, 256, 0.9, (dataUrl) => {
-      const cuenta = obtenerCuenta(); if (!cuenta) return;
-      cuenta.logo = dataUrl; guardarCuenta(cuenta); actualizarHeader(); actualizarBotonesLogo();
-      if (document.getElementById('vistaReporte').classList.contains('activo')) { try { verReporte(); } catch (err) {} }
-      mostrarToast('✅ Logotipo guardado.');
-    });
-  };
+  input.onchange = (e) => { const file = e.target.files && e.target.files[0]; if (!file) return; procesarImagen(file, 256, 0.9, (dataUrl) => { const cuenta = obtenerCuenta(); if (!cuenta) return; cuenta.logo = dataUrl; guardarCuenta(cuenta); actualizarHeader(); actualizarBotonesLogo(); if (document.getElementById('vistaReporte').classList.contains('activo')) { try { verReporte(); } catch (err) {} } mostrarToast('✅ Logotipo guardado.'); }); };
   document.body.appendChild(input); input.click(); setTimeout(() => input.remove(), 2000);
 }
 function quitarLogoNegocio() {
   const cuenta = obtenerCuenta(); if (!cuenta || !cuenta.logo) return;
-  pedirConfirmacion('Quitar logotipo', '¿Eliminar el logotipo?', (ok) => {
-    if (!ok) return;
-    cuenta.logo = null; guardarCuenta(cuenta); actualizarHeader(); actualizarBotonesLogo(); mostrarToast('🗑️ Logotipo eliminado.', 'info');
-  }, { textoSi: 'Quitar', tipo: 'danger' });
+  pedirConfirmacion('Quitar logotipo', '¿Eliminar el logotipo?', (ok) => { if (!ok) return; cuenta.logo = null; guardarCuenta(cuenta); actualizarHeader(); actualizarBotonesLogo(); mostrarToast('🗑️ Logotipo eliminado.', 'info'); }, { textoSi: 'Quitar', tipo: 'danger' });
 }
 function actualizarBotonesLogo() { const btn = document.getElementById('btnQuitarLogo'); if (!btn) return; const cuenta = obtenerCuenta(); btn.style.display = (cuenta && cuenta.logo) ? 'inline-block' : 'none'; }
 function renderSelectorNegocios() {
@@ -2144,20 +2255,13 @@ function renderSelectorNegocios() {
   const selSide = document.getElementById('selectorNegocioSidebar');
   const wrapSide = document.getElementById('sidebarNegocioSelector');
   const r = obtenerRegistro();
-  if (!tieneAccesoMultiNegocioSync()) {
-    if (wrap) wrap.style.display = 'none';
-    if (wrapSide) wrapSide.style.display = 'none';
-    return;
-  }
+  if (!tieneAccesoMultiNegocioSync()) { if (wrap) wrap.style.display = 'none'; if (wrapSide) wrapSide.style.display = 'none'; return; }
   const optionsHtml = r.lista.map(n => '<option value="' + n.id + '"' + (n.id === r.activo ? ' selected' : '') + '>' + esc(n.nombre) + '</option>').join('');
   if (sel && wrap) { sel.innerHTML = optionsHtml; wrap.style.display = r.lista.length > 1 ? '' : 'none'; }
   if (selSide && wrapSide) { selSide.innerHTML = optionsHtml; wrapSide.style.display = r.lista.length > 1 ? '' : 'none'; }
 }
 function cambiarNegocioDesdeSelector(id) {
-  if (!tieneAccesoMultiNegocioSync()) {
-    mostrarToast('🔒 El módulo multiNegocio no está activado.', 'warn');
-    return;
-  }
+  if (!tieneAccesoMultiNegocioSync()) { mostrarToast('🔒 El módulo multiNegocio no está activado.', 'warn'); return; }
   if (!cambiarNegocio(id)) return;
   actualizarHeader(); cargarTemaGuardado(); cargarMoneda(); renderTodo(); renderSelectorNegocios();
   const cta = obtenerCuenta();
@@ -2171,10 +2275,7 @@ function actualizarHeader() {
   if (cuenta) {
     document.title = (cuenta.nombre || 'miNegocito') + ' — miNegocito';
     const iconSpan = document.getElementById('hNegocioIcon');
-    if (iconSpan) {
-      if (cuenta.logo) { iconSpan.innerHTML = '<img src="' + cuenta.logo + '" alt="Logo" style="height:28px;width:28px;object-fit:contain;border-radius:6px;background:#fff;padding:2px;vertical-align:middle">'; iconSpan.style.cssText = 'display:inline-flex;align-items:center;margin-right:2px'; }
-      else { iconSpan.innerHTML = '🏪'; iconSpan.style.cssText = ''; }
-    }
+    if (iconSpan) { if (cuenta.logo) { iconSpan.innerHTML = '<img src="' + cuenta.logo + '" alt="Logo" style="height:28px;width:28px;object-fit:contain;border-radius:6px;background:#fff;padding:2px;vertical-align:middle">'; iconSpan.style.cssText = 'display:inline-flex;align-items:center;margin-right:2px'; } else { iconSpan.innerHTML = '🏪'; iconSpan.style.cssText = ''; } }
     document.getElementById('hNegocio').textContent = cuenta.nombre;
     const contactoMostrar = cuenta.correo || cuenta.telefonoPagos || '(sin contacto)';
     const iconoContacto = cuenta.correo ? '📧' : '📱';
@@ -2204,6 +2305,7 @@ function loadDB() {
   ['productos','entradas','ventas','perdidas','devoluciones','gastos','facturas','clientes','proveedores','facturasMulti'].forEach(k => { if (!Array.isArray(db[k])) db[k] = []; });
   db.productos.forEach(p => { if (typeof p.stockMinimo !== 'number') p.stockMinimo = 0; if (typeof p.imagen === 'undefined') p.imagen = null; if (typeof p.caracteristicas === 'undefined') p.caracteristicas = ''; if (typeof p.codigoBarras === 'undefined') p.codigoBarras = ''; if (typeof p.categoria === 'undefined') p.categoria = ''; });
   const n = negocioActivo(); if (n) _rawPorNegocio[n.id] = raw || null;
+  _costosCache = null; _costosCacheVersion = -1;
 }
 function saveDB() {
   try {
@@ -2214,14 +2316,13 @@ function saveDB() {
     for (let i = 0; i < json.length; i += 97) h = (h * 31 + json.charCodeAt(i)) | 0;
     _lastRawHash = h ^ json.length;
     _dataVersion++;
+    _costosCache = null; _costosCacheVersion = -1;
     const n = negocioActivo();
     if (n) _rawPorNegocio[n.id] = json;
     return true;
   } catch (e) {
-    if (e.name === 'QuotaExceededError' || e.code === 22)
-      mostrarToast('⚠️ Sin espacio. Elimina imágenes o datos.', 'error');
-    else
-      mostrarToast('⚠️ No se pudo guardar: ' + e.message, 'error');
+    if (e.name === 'QuotaExceededError' || e.code === 22) mostrarToast('⚠️ Sin espacio. Elimina imágenes o datos.', 'error');
+    else mostrarToast('⚠️ No se pudo guardar: ' + e.message, 'error');
     return false;
   }
 }
@@ -2240,6 +2341,7 @@ function refrescarDesdeStorage() {
     if (!dbFresh || !Array.isArray(dbFresh.productos)) return;
     db = dbFresh;
     _dataVersion++;
+    _costosCache = null; _costosCacheVersion = -1;
     const n = negocioActivo();
     if (n) _rawPorNegocio[n.id] = raw;
   } catch (e) { console.warn('[refrescarDesdeStorage]', e); }
@@ -2251,18 +2353,15 @@ function puedeCompartirArchivos() { return !!(navigator.share && navigator.canSh
 function esIOS() { return /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); }
 function actualizarTextosBotones() {
   const btnWord = document.getElementById('btnWord'); const miniRep = document.getElementById('miniReporte'); const miniRes = document.getElementById('miniRespaldo');
-  if (esDispositivoMovil()) { if (btnWord) btnWord.innerHTML = '📤 Compartir por WhatsApp'; if (miniRep) miniRep.textContent = 'El reporte se compartirá por WhatsApp.'; if (miniRes) miniRes.textContent = 'Guarda el respaldo como .txt o envíalo por correo/WhatsApp.'; }
-  else { if (btnWord) btnWord.innerHTML = '📄 Guardar reporte en Word'; if (miniRep) miniRep.textContent = 'El reporte se guardará como Word en Descargas.'; if (miniRes) miniRes.textContent = 'Guarda el respaldo como .txt, envíalo o cárgalo después.'; }
+  if (esDispositivoMovil()) { if (btnWord) btnWord.innerHTML = '📤 Compartir por WhatsApp'; if (miniRep) miniRep.textContent = 'El reporte se compartirá por WhatsApp con gráficos.'; if (miniRes) miniRes.textContent = 'Guarda el respaldo como .txt o envíalo por correo/WhatsApp.'; }
+  else { if (btnWord) btnWord.innerHTML = '📄 Guardar reporte en Word'; if (miniRep) miniRep.textContent = 'El reporte se guardará como Word con gráficos.'; if (miniRes) miniRes.textContent = 'Guarda el respaldo como .txt, envíalo o cárgalo después.'; }
 }
 function money(n) {
   n = Number(n) || 0;
   const m = MONEDAS[_monedaActual] || MONEDAS.USD;
   let formatted = n.toFixed(2).replace('.', m.decimal);
   const partes = formatted.split(m.decimal);
-  if (partes[0].length > 3) {
-    partes[0] = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, m.miles);
-    formatted = partes.join(m.decimal);
-  }
+  if (partes[0].length > 3) { partes[0] = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, m.miles); formatted = partes.join(m.decimal); }
   return m.simbolo + ' ' + formatted;
 }
 function cant(n) { n = Number(n) || 0; return Number.isInteger(n) ? n : n.toFixed(2); }
@@ -2285,15 +2384,9 @@ function costoPromedio(productoId) { let c = 0, t = 0; db.entradas.forEach(e => 
 function calcularCostosPromedio() {
   if (_costosCache && _costosCacheVersion === _dataVersion) return _costosCache;
   const map = {};
-  db.entradas.forEach(e => {
-    if (!map[e.productoId]) map[e.productoId] = { c: 0, t: 0 };
-    map[e.productoId].c += e.cantidad;
-    map[e.productoId].t += e.total;
-  });
+  db.entradas.forEach(e => { if (!map[e.productoId]) map[e.productoId] = { c: 0, t: 0 }; map[e.productoId].c += e.cantidad; map[e.productoId].t += e.total; });
   const out = {};
-  Object.keys(map).forEach(id => {
-    out[id] = map[id].c > 0 ? map[id].t / map[id].c : 0;
-  });
+  Object.keys(map).forEach(id => { out[id] = map[id].c > 0 ? map[id].t / map[id].c : 0; });
   _costosCache = out;
   _costosCacheVersion = _dataVersion;
   return out;
@@ -2305,14 +2398,7 @@ function procesarImagen(file, maxLado, calidad, callback) {
   reader.onload = e => {
     const img = new Image();
     img.onload = () => {
-      try {
-        const canvas = document.createElement('canvas'); let w = img.width, h = img.height;
-        const ratio = Math.min(maxLado / w, maxLado / h, 1); w = Math.max(1, Math.round(w * ratio)); h = Math.max(1, Math.round(h * ratio));
-        const lado = Math.min(maxLado, Math.max(w, h)); canvas.width = lado; canvas.height = lado;
-        const ctx = canvas.getContext('2d'); ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, lado, lado);
-        ctx.drawImage(img, Math.round((lado-w)/2), Math.round((lado-h)/2), w, h);
-        callback(canvas.toDataURL('image/jpeg', calidad));
-      } catch (err) { mostrarToast('No se pudo procesar la imagen.', 'error'); }
+      try { const canvas = document.createElement('canvas'); let w = img.width, h = img.height; const ratio = Math.min(maxLado / w, maxLado / h, 1); w = Math.max(1, Math.round(w * ratio)); h = Math.max(1, Math.round(h * ratio)); const lado = Math.min(maxLado, Math.max(w, h)); canvas.width = lado; canvas.height = lado; const ctx = canvas.getContext('2d'); ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, lado, lado); ctx.drawImage(img, Math.round((lado-w)/2), Math.round((lado-h)/2), w, h); callback(canvas.toDataURL('image/jpeg', calidad)); } catch (err) { mostrarToast('No se pudo procesar la imagen.', 'error'); }
     };
     img.onerror = () => mostrarToast('No se pudo leer la imagen.', 'error'); img.src = e.target.result;
   };
@@ -2321,19 +2407,7 @@ function procesarImagen(file, maxLado, calidad, callback) {
 function procesarQR(file, callback) {
   if (!file || !file.type.startsWith('image/')) { mostrarToast('Debe ser una imagen.', 'error'); return; }
   const reader = new FileReader();
-  reader.onload = e => {
-    const img = new Image();
-    img.onload = () => {
-      try {
-        const canvas = document.createElement('canvas'); let w = img.width, h = img.height;
-        const ratio = Math.min(QR_MAX_LADO / w, QR_MAX_LADO / h, 1); w = Math.round(w * ratio); h = Math.round(h * ratio);
-        canvas.width = w; canvas.height = h; const ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h); ctx.drawImage(img, 0, 0, w, h);
-        callback(canvas.toDataURL('image/jpeg', 0.75));
-      } catch (err) {}
-    };
-    img.onerror = () => {}; img.src = e.target.result;
-  };
+  reader.onload = e => { const img = new Image(); img.onload = () => { try { const canvas = document.createElement('canvas'); let w = img.width, h = img.height; const ratio = Math.min(QR_MAX_LADO / w, QR_MAX_LADO / h, 1); w = Math.round(w * ratio); h = Math.round(h * ratio); canvas.width = w; canvas.height = h; const ctx = canvas.getContext('2d'); ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h); ctx.drawImage(img, 0, 0, w, h); callback(canvas.toDataURL('image/jpeg', 0.75)); } catch (err) {} }; img.onerror = () => {}; img.src = e.target.result; };
   reader.readAsDataURL(file);
 }
 function renderMiniatura(p, tamano) { tamano = tamano || 42; if (p && p.imagen) return '<div class="miniatura-producto" style="width:' + tamano + 'px;height:' + tamano + 'px"><img src="' + p.imagen + '" alt="' + esc(p.nombre) + '" loading="lazy"></div>'; return '<div class="miniatura-producto" style="width:' + tamano + 'px;height:' + tamano + 'px">📷</div>'; }
@@ -2344,6 +2418,7 @@ function abrirWhatsAppConTexto(texto) {
   setTimeout(() => { window.removeEventListener('blur', onBlur); if (!abierto) { try { window.open(urlWeb, '_blank'); } catch (e) {} } }, 1200);
 }
 function descargarTxtPC(data, nombreArchivo) { const blob = new Blob([data], { type: 'text/plain;charset=utf-8' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = nombreArchivo; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(url), 3000); }
+function _descargarBlob(blob, nf) { const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = nf; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(url), 3000); }
 async function seleccionarArchivoRespaldo(callback) {
   if (window.showOpenFilePicker && !esDispositivoMovil()) {
     try { const [handle] = await window.showOpenFilePicker({ startIn: 'downloads', types: [{ description: 'Archivos', accept: { 'text/plain': ['.txt', '.csv'], 'application/json': ['.json'] } }], multiple: false }); const file = await handle.getFile(); const texto = await file.text(); callback(texto, file.name); return; } catch (e) { if (e.name === 'AbortError') return; }
@@ -2367,11 +2442,7 @@ function iniciarCamaraLector() {
   msg.textContent = 'Iniciando cámara...';
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { msg.textContent = '📷 Cámara no disponible. Usa "Escribir código".'; return; }
   navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-    .then(stream => {
-      _lectorStream = stream; video.srcObject = stream; msg.textContent = 'Apunta al código de barras';
-      if ('BarcodeDetector' in window) { _lectorDetector = new BarcodeDetector({ formats: ['code_128', 'ean_13', 'ean_8', 'code_39', 'qr_code', 'upc_a', 'upc_e'] }); _lectorAnimationId = requestAnimationFrame(escanearFrame); }
-      else msg.textContent = '📷 Lector automático no soportado. Usa "Escribir código".';
-    })
+    .then(stream => { _lectorStream = stream; video.srcObject = stream; msg.textContent = 'Apunta al código de barras'; if ('BarcodeDetector' in window) { _lectorDetector = new BarcodeDetector({ formats: ['code_128', 'ean_13', 'ean_8', 'code_39', 'qr_code', 'upc_a', 'upc_e'] }); _lectorAnimationId = requestAnimationFrame(escanearFrame); } else msg.textContent = '📷 Lector automático no soportado. Usa "Escribir código".'; })
     .catch(err => { msg.textContent = '⚠️ No se pudo abrir la cámara. Usa "Escribir código".'; });
 }
 async function escanearFrame() {
@@ -2454,7 +2525,7 @@ function confirmarNuevoDesdeCodigo() {
 }
 
 // ═══════════════════════════════════════════════════════════
-// GENERAR CÓDIGOS DE BARRA SVG
+// GENERAR CÓDIGOS DE BARRA
 // ═══════════════════════════════════════════════════════════
 function generarBarcodeSVG(code, opts) {
   opts = opts || {}; if (!code) return '';
@@ -2471,9 +2542,8 @@ function exportarCodigosBarras() {
   html += '<table><thead><tr><th>#</th><th>Producto</th><th>Código</th><th>Código de barras</th><th>Precio</th></tr></thead><tbody>';
   db.productos.forEach((p, i) => { const bh = p.codigoBarras ? generarBarcodeSVG(p.codigoBarras, { height: 45 }) : '—'; html += '<tr><td>' + (i+1) + '</td><td>' + esc(p.nombre) + '</td><td style="font-family:monospace">' + esc(p.codigoBarras || '—') + '</td><td class="cb">' + bh + '</td><td>' + money(p.precioVenta) + '</td></tr>'; });
   html += '</tbody></table></body></html>';
-  const blob = new Blob(['\ufeff', html], { type: 'application/msword' }); const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'Codigos - ' + _limpiarNombreArchivo(nombreNegocio) + '.doc';
-  document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(url), 3000);
+  const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+  _descargarBlob(blob, 'Codigos - ' + _limpiarNombreArchivo(nombreNegocio) + '.doc');
   mostrarToast('🖨️ Lista generada.', 'info');
 }
 function exportarCodigosBarrasPDF() {
@@ -2542,18 +2612,8 @@ function enviarDatosPago(cuentaBancaria) {
   else abrirWhatsAppConTexto(texto);
 }
 function base64ToFile(dataUrl, nombre) {
-  return fetch(dataUrl)
-    .then(r => r.blob())
-    .then(blob => new File([blob], nombre, { type: blob.type || 'image/jpeg' }))
-    .catch(() => {
-      const ps = dataUrl.split(',');
-      const mm = ps[0].match(/:(.*?);/);
-      const mime = mm ? mm[1] : 'image/jpeg';
-      const bin = atob(ps[1]);
-      const bytes = new Uint8Array(bin.length);
-      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-      return new File([new Blob([bytes], { type: mime })], nombre, { type: mime });
-    });
+  return fetch(dataUrl).then(r => r.blob()).then(blob => new File([blob], nombre, { type: blob.type || 'image/jpeg' }))
+    .catch(() => { const ps = dataUrl.split(','); const mm = ps[0].match(/:(.*?);/); const mime = mm ? mm[1] : 'image/jpeg'; const bin = atob(ps[1]); const bytes = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i); return new File([new Blob([bytes], { type: mime })], nombre, { type: mime }); });
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -2644,13 +2704,21 @@ function llenarSelects() {
 }
 function renderProductos() {
   const tb = $('#tblProductos tbody');
-  if (!db.productos.length) { tb.innerHTML = '<tr><td colspan="9" class="vacio">Aún no hay productos.</td></tr>'; return; }
+  if (!db.productos.length) { tb.innerHTML = '<tr><td colspan="11" class="vacio">Aún no hay productos.</td></tr>'; return; }
   const _costos = calcularCostosPromedio();
-  tb.innerHTML = db.productos.map(p => {
+  const _filtroProd = (document.getElementById('buscadorProductos')?.value || '').trim().toLowerCase();
+  const _prods = _filtroProd ? db.productos.filter(p => p.nombre.toLowerCase().includes(_filtroProd) || String(p.codigoBarras || '').toLowerCase().includes(_filtroProd)) : db.productos;
+  if (!_prods.length) { tb.innerHTML = '<tr><td colspan="11" class="vacio">Sin resultados.</td></tr>'; return; }
+  let _totValVenta = 0, _totValCosto = 0;
+  const _htmlRows = _prods.map(p => {
     const min = Number(p.stockMinimo) || 0; let cs = '', ic = '';
     if (min > 0) { if (p.stock <= 0) { cs = ' style="color:#c0392b;font-weight:700"'; ic = ' 🔴'; } else if (p.stock <= min) { cs = ' style="color:#e08a1e;font-weight:700"'; ic = ' 🟠'; } else if (p.stock <= min * 1.2) { cs = ' style="color:#b56b0d;font-weight:600"'; ic = ' 🟡'; } }
     else if (p.stock <= 0) { cs = ' style="color:#c0392b;font-weight:700"'; ic = ' 🔴'; }
     const _cp = _costos[p.id] || 0;
+    const _valVenta = p.stock * p.precioVenta;
+    const _valCosto = p.stock * _cp;
+    _totValVenta += _valVenta;
+    _totValCosto += _valCosto;
     return `<tr>
       <td>${renderMiniatura(p, 42)}</td>
       <td>${p.id}</td>
@@ -2658,6 +2726,8 @@ function renderProductos() {
       <td class="mon">${money(p.precioVenta)}</td>
       <td class="num"${cs}>${cant(p.stock)}${ic}</td>
       <td class="num">${min > 0 ? cant(min) : '—'}</td>
+      <td class="mon" style="color:#2d7ac0;font-weight:700">${money(_valVenta)}</td>
+      <td class="mon" style="color:#e08a1e;font-weight:700">${money(_valCosto)}</td>
       <td style="font-family:monospace;font-size:11px">${esc(p.codigoBarras || '—')}</td>
       <td class="mon">${money(_cp)}</td>
       <td>
@@ -2666,7 +2736,8 @@ function renderProductos() {
         <button class="btn morado" style="padding:5px 9px;font-size:12px" onclick="declararPerdida(${p.id})">📉</button>
         <button class="btn rojo" style="padding:5px 9px;font-size:12px" onclick="eliminarProducto(${p.id})">🗑️</button>
       </td></tr>`;
-  }).join('');
+  });
+  tb.innerHTML = _htmlRows.join('') + `<tr style="font-weight:700;background:#f0f4fa"><td colspan="6">TOTALES (${_prods.length} productos)</td><td class="mon" style="color:#2d7ac0">${money(_totValVenta)}</td><td class="mon" style="color:#e08a1e">${money(_totValCosto)}</td><td colspan="3" style="color:#217a44">Beneficio potencial: ${money(_totValVenta - _totValCosto)}</td></tr>`;
 }
 function actualizarBadgeProductos() {
   const n = db.productos.filter(p => { const m = Number(p.stockMinimo) || 0; return m > 0 && p.stock <= m; }).length;
@@ -2702,10 +2773,7 @@ function guardarEdicionProducto() {
   cerrarModalEditarProducto(); renderTodo(); mostrarToast('✅ Producto actualizado.');
 }
 function editarImagenProducto(id) {
-  if (!_espacioLSDisponible()) {
-    mostrarToast('⚠️ Poco espacio libre. Considera hacer respaldo y limpiar fotos antiguas.', 'warn');
-    return;
-  }
+  if (!_espacioLSDisponible()) { mostrarToast('⚠️ Poco espacio libre.', 'warn'); return; }
   const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*'; input.style.display = 'none';
   input.onchange = (e) => { const file = e.target.files && e.target.files[0]; if (!file) return; procesarImagen(file, IMG_MAX_LADO, IMG_CALIDAD, (dataUrl) => { const p = getProducto(id); if (!p) { mostrarToast('Producto no encontrado.', 'error'); return; } const ant = p.imagen; p.imagen = dataUrl; if (!saveDB()) { p.imagen = ant; return; } renderTodo(); mostrarToast('✅ Imagen actualizada.', 'info'); }); };
   document.body.appendChild(input); input.click(); setTimeout(() => input.remove(), 2000);
@@ -2775,23 +2843,105 @@ function renderDevolucionesForm() { const f = document.getElementById('devFecha'
 function renderGastosForm() { const f = document.getElementById('gFecha'); if (f && !f.value) f.value = fechaISO(); }
 
 // ═══════════════════════════════════════════════════════════
-// BALANCE
+// BALANCE (v1.580 con margen y ganancia por fila)
 // ═══════════════════════════════════════════════════════════
 function calcularBalance(fecha) {
   let totalVentas = 0, totalCosto = 0, totalInversion = 0, totalPerdidas = 0, totalGastos = 0, totalDevVenta = 0;
   const ventasAgr = {}, entradasAgr = {}, perdidasAgr = {}, gastosAgr = {};
   const _costos = calcularCostosPromedio();
-  db.ventas.forEach(v => { if (v.fecha !== fecha) return; totalVentas += v.total; totalCosto += v.cantidad * (_costos[v.productoId] || 0); if (!ventasAgr[v.productoId]) ventasAgr[v.productoId] = { cantidad: 0, total: 0 }; ventasAgr[v.productoId].cantidad += v.cantidad; ventasAgr[v.productoId].total += v.total; });
+  db.ventas.forEach(v => {
+    if (v.fecha !== fecha) return;
+    const costo = v.cantidad * (_costos[v.productoId] || 0);
+    totalVentas += v.total; totalCosto += costo;
+    if (!ventasAgr[v.productoId]) ventasAgr[v.productoId] = { cantidad: 0, total: 0, costo: 0 };
+    ventasAgr[v.productoId].cantidad += v.cantidad;
+    ventasAgr[v.productoId].total += v.total;
+    ventasAgr[v.productoId].costo += costo;
+  });
   db.devoluciones.forEach(d => { if (d.fecha === fecha && d.tipo === 'venta') totalDevVenta += d.total; });
   db.entradas.forEach(e => { if (e.fecha !== fecha) return; totalInversion += e.total; if (!entradasAgr[e.productoId]) entradasAgr[e.productoId] = { cantidad: 0, total: 0 }; entradasAgr[e.productoId].cantidad += e.cantidad; entradasAgr[e.productoId].total += e.total; });
   db.perdidas.forEach(d => { if (d.fecha !== fecha) return; totalPerdidas += d.total; if (!perdidasAgr[d.productoId]) perdidasAgr[d.productoId] = { cantidad: 0, total: 0 }; perdidasAgr[d.productoId].cantidad += d.cantidad; perdidasAgr[d.productoId].total += d.total; });
   db.gastos.forEach(g => { if (g.fecha !== fecha) return; totalGastos += g.monto; if (!gastosAgr[g.categoria]) gastosAgr[g.categoria] = { monto: 0, items: [] }; gastosAgr[g.categoria].monto += g.monto; gastosAgr[g.categoria].items.push(g); });
   const ventasNetas = totalVentas - totalDevVenta; const ganancia = ventasNetas - totalCosto; const beneficioNeto = ganancia - totalPerdidas - totalGastos;
-  return { totalVentas, totalCosto, ganancia, totalInversion, totalPerdidas, totalGastos, totalDevolucionesVenta: totalDevVenta, beneficioNeto, ventasAgr, entradasAgr, perdidasAgr, gastosAgr };
+  const margen = totalVentas > 0 ? (ganancia / totalVentas) * 100 : 0;
+  return { totalVentas, totalCosto, ganancia, totalInversion, totalPerdidas, totalGastos, totalDevolucionesVenta: totalDevVenta, beneficioNeto, ventasAgr, entradasAgr, perdidasAgr, gastosAgr, margen };
+}
+function renderBalanceCharts(b) {
+  const card = document.getElementById('balanceChartsCard');
+  if (!card) return;
+  if (b.totalVentas === 0 && b.totalInversion === 0 && b.totalGastos === 0 && b.totalPerdidas === 0) {
+    card.style.display = 'none';
+    return;
+  }
+  card.style.display = 'grid';
+  if (typeof Chart === 'undefined') return;
+
+  // Destruir anteriores
+  if (_chartPL) { try { _chartPL.destroy(); } catch (e) {} _chartPL = null; }
+  if (_chartTopProd) { try { _chartTopProd.destroy(); } catch (e) {} _chartTopProd = null; }
+
+  const canvasPL = document.getElementById('chartPL');
+  if (canvasPL) {
+    _chartPL = new Chart(canvasPL.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: ['Ventas', 'Costo', 'Ganancia', 'Gastos', 'Pérdidas', 'Neto'],
+        datasets: [{
+          label: 'Monto',
+          data: [b.totalVentas, b.totalCosto, b.ganancia, b.totalGastos, b.totalPerdidas, b.beneficioNeto],
+          backgroundColor: ['#2d7ac0', '#c0392b', '#2e9e5b', '#e08a1e', '#96291d', '#217a44'],
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+  }
+
+  const topProds = Object.keys(b.ventasAgr)
+    .map(pid => ({ id: Number(pid), ...b.ventasAgr[pid] }))
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 5);
+  const canvasTop = document.getElementById('chartTopProd');
+  if (canvasTop && topProds.length) {
+    _chartTopProd = new Chart(canvasTop.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: topProds.map(p => {
+          const n = nombreProducto(p.id);
+          return n.length > 22 ? n.substring(0, 20) + '...' : n;
+        }),
+        datasets: [{
+          label: 'Ingresos',
+          data: topProds.map(p => p.total),
+          backgroundColor: '#2e9e5b',
+          borderRadius: 6
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } }
+      }
+    });
+  }
 }
 function renderBalance() {
   refrescarDesdeStorage(); const fecha = $('#bFecha').value || fechaISO(); const b = calcularBalance(fecha);
   $('#kpiVentas').textContent = money(b.totalVentas); $('#kpiCosto').textContent = money(b.totalCosto); $('#kpiGanancia').textContent = money(b.ganancia); $('#kpiInversion').textContent = money(b.totalInversion);
+
+  // Margen
+  const mW = document.getElementById('kpiMargenWrap');
+  if (mW) {
+    if (b.totalVentas > 0) {
+      mW.style.display = 'block';
+      document.getElementById('kpiMargen').textContent = b.margen.toFixed(1) + '%';
+    } else mW.style.display = 'none';
+  }
+
   const wp = document.getElementById('kpiPerdidasWrap'); if (wp) { if (b.totalPerdidas > 0) { wp.style.display = 'block'; $('#kpiPerdidas').textContent = '-' + money(b.totalPerdidas); } else wp.style.display = 'none'; }
   const wg = document.getElementById('kpiGastosWrap'); if (wg) { if (b.totalGastos > 0) { wg.style.display = 'block'; document.getElementById('kpiGastos').textContent = '-' + money(b.totalGastos); } else wg.style.display = 'none'; }
   const wn = document.getElementById('kpiNetoWrap'); if (wn) { if (b.totalGastos > 0 || b.totalPerdidas > 0 || b.totalDevolucionesVenta > 0) { wn.style.display = 'block'; document.getElementById('kpiNeto').textContent = money(b.beneficioNeto); } else wn.style.display = 'none'; }
@@ -2799,12 +2949,26 @@ function renderBalance() {
   const wc = document.getElementById('kpiComisionWrap'); const wf = document.getElementById('kpiPagoFijoWrap');
   if (wc) { if (pc > 0) { wc.style.display = 'block'; document.getElementById('kpiComisionPct').textContent = pc; document.getElementById('kpiComision').textContent = money(b.totalVentas * pc / 100); } else wc.style.display = 'none'; }
   if (wf) { if (fc > 0) { wf.style.display = 'block'; document.getElementById('kpiPagoFijo').textContent = money(fc); } else wf.style.display = 'none'; }
+
+  renderBalanceCharts(b);
+
   const keysE = Object.keys(b.entradasAgr); const tbE = $('#tblBalEntradas tbody'); const tfE = $('#tblBalEntradas tfoot');
   if (!keysE.length) { tbE.innerHTML = '<tr><td colspan="4" class="vacio">Sin compras.</td></tr>'; tfE.innerHTML = ''; }
   else { tbE.innerHTML = keysE.map(pid => { const d = b.entradasAgr[pid]; return `<tr><td>${esc(nombreProducto(Number(pid)))}</td><td class="num">${cant(d.cantidad)}</td><td class="mon">${money(d.total/d.cantidad)}</td><td class="mon">${money(d.total)}</td></tr>`; }).join(''); tfE.innerHTML = `<tr style="font-weight:700;background:#f0f4fa"><td>TOTAL INVERSIÓN</td><td></td><td></td><td class="mon">${money(b.totalInversion)}</td></tr>`; }
+
   const keysV = Object.keys(b.ventasAgr); const tbV = $('#tblBalVentas tbody'); const tfV = $('#tblBalVentas tfoot');
-  if (!keysV.length) { tbV.innerHTML = '<tr><td colspan="4" class="vacio">Sin ventas.</td></tr>'; tfV.innerHTML = ''; }
-  else { tbV.innerHTML = keysV.map(pid => { const d = b.ventasAgr[pid]; return `<tr><td>${esc(nombreProducto(Number(pid)))}</td><td class="num">${cant(d.cantidad)}</td><td class="mon">${money(d.total/d.cantidad)}</td><td class="mon">${money(d.total)}</td></tr>`; }).join(''); tfV.innerHTML = `<tr style="font-weight:700;background:#f0f4fa"><td>TOTAL VENTAS</td><td></td><td></td><td class="mon">${money(b.totalVentas)}</td></tr>`; }
+  if (!keysV.length) { tbV.innerHTML = '<tr><td colspan="5" class="vacio">Sin ventas.</td></tr>'; tfV.innerHTML = ''; }
+  else {
+    let totalGananciaBruta = 0;
+    tbV.innerHTML = keysV.map(pid => {
+      const d = b.ventasAgr[pid];
+      const gananciaProd = d.total - d.costo;
+      totalGananciaBruta += gananciaProd;
+      return `<tr><td>${esc(nombreProducto(Number(pid)))}</td><td class="num">${cant(d.cantidad)}</td><td class="mon">${money(d.total/d.cantidad)}</td><td class="mon">${money(d.total)}</td><td class="mon" style="color:#217a44;font-weight:700">${money(gananciaProd)}</td></tr>`;
+    }).join('');
+    tfV.innerHTML = `<tr style="font-weight:700;background:#f0f4fa"><td colspan="3">TOTAL VENTAS</td><td class="mon">${money(b.totalVentas)}</td><td class="mon" style="color:#217a44">${money(totalGananciaBruta)}</td></tr>`;
+  }
+
   const keysP = Object.keys(b.perdidasAgr); const tbP = document.querySelector('#tblBalPerdidas tbody'); const tfP = document.querySelector('#tblBalPerdidas tfoot');
   if (tbP) { if (!keysP.length) { tbP.innerHTML = '<tr><td colspan="5" class="vacio">Sin pérdidas.</td></tr>'; if (tfP) tfP.innerHTML = ''; }
     else { tbP.innerHTML = keysP.map(pid => { const d = b.perdidasAgr[pid]; const detalles = db.perdidas.filter(x => x.fecha === fecha && x.productoId === Number(pid)); return `<tr><td>${esc(nombreProducto(Number(pid)))}</td><td class="num">${cant(d.cantidad)}</td><td class="mon">${money(d.total/d.cantidad)}</td><td class="mon" style="color:#c0392b;font-weight:700">-${money(d.total)}</td><td>${esc(detalles.map(x=>x.motivo).join(', '))}</td></tr>`; }).join(''); if (tfP) tfP.innerHTML = `<tr style="font-weight:700;background:#fdecea"><td colspan="3">TOTAL PÉRDIDAS</td><td class="mon" style="color:#c0392b">-${money(b.totalPerdidas)}</td><td></td></tr>`; } }
@@ -2827,6 +2991,8 @@ function renderResumenMes() {
   if (document.getElementById('kpiMesCostos')) document.getElementById('kpiMesCostos').textContent = money(b.totalCosto);
   if (document.getElementById('kpiMesGanancias')) document.getElementById('kpiMesGanancias').textContent = money(b.ganancia);
   if (document.getElementById('kpiMesInversion')) document.getElementById('kpiMesInversion').textContent = money(b.totalInversion);
+  const mW = document.getElementById('kpiMesMargenWrap');
+  if (mW) { if (b.totalVentas > 0) { mW.style.display = 'block'; document.getElementById('kpiMesMargen').textContent = b.margen.toFixed(1) + '%'; } else mW.style.display = 'none'; }
   const pw = document.getElementById('kpiMesPerdidasWrap'); if (pw) { if (b.totalPerdidas > 0) { pw.style.display = 'block'; document.getElementById('kpiMesPerdidas').textContent = '-' + money(b.totalPerdidas); } else pw.style.display = 'none'; }
   const gw = document.getElementById('kpiMesGastosWrap'); if (gw) { if (b.totalGastos > 0) { gw.style.display = 'block'; document.getElementById('kpiMesGastos').textContent = '-' + money(b.totalGastos); } else gw.style.display = 'none'; }
   const nw = document.getElementById('kpiMesNetoWrap'); if (nw) { if (b.totalGastos > 0 || b.totalPerdidas > 0 || b.totalDevolucionesVenta > 0) { nw.style.display = 'block'; document.getElementById('kpiMesNeto').textContent = money(b.beneficioNeto); } else nw.style.display = 'none'; }
@@ -2834,11 +3000,22 @@ function renderResumenMes() {
 }
 function renderTopProductosMes(desde, hasta) {
   const agr = {};
-  db.ventas.forEach(v => { if (v.fecha < desde || v.fecha > hasta) return; if (!agr[v.productoId]) agr[v.productoId] = { cantidad: 0, total: 0 }; agr[v.productoId].cantidad += v.cantidad; agr[v.productoId].total += v.total; });
+  const _costos = calcularCostosPromedio();
+  db.ventas.forEach(v => {
+    if (v.fecha < desde || v.fecha > hasta) return;
+    const costo = v.cantidad * (_costos[v.productoId] || 0);
+    if (!agr[v.productoId]) agr[v.productoId] = { cantidad: 0, total: 0, costo: 0 };
+    agr[v.productoId].cantidad += v.cantidad;
+    agr[v.productoId].total += v.total;
+    agr[v.productoId].costo += costo;
+  });
   const tb = document.querySelector('#tblTopVendidos tbody'); if (!tb) return;
-  const lst = Object.keys(agr).map(pid => ({ id: Number(pid), cantidad: agr[pid].cantidad, total: agr[pid].total })).sort((a,b) => b.cantidad - a.cantidad).slice(0, 5);
-  if (!lst.length) tb.innerHTML = '<tr><td colspan="4" class="vacio">Aún no hay ventas este mes.</td></tr>';
-  else tb.innerHTML = lst.map((d, i) => `<tr><td>${i+1}</td><td>${esc(nombreProducto(d.id))}</td><td class="num">${cant(d.cantidad)}</td><td class="mon">${money(d.total)}</td></tr>`).join('');
+  const lst = Object.keys(agr).map(pid => ({ id: Number(pid), cantidad: agr[pid].cantidad, total: agr[pid].total, costo: agr[pid].costo })).sort((a,b) => b.cantidad - a.cantidad).slice(0, 5);
+  if (!lst.length) tb.innerHTML = '<tr><td colspan="5" class="vacio">Aún no hay ventas este mes.</td></tr>';
+  else tb.innerHTML = lst.map((d, i) => {
+    const ganancia = d.total - d.costo;
+    return `<tr><td>${i+1}</td><td>${esc(nombreProducto(d.id))}</td><td class="num">${cant(d.cantidad)}</td><td class="mon">${money(d.total)}</td><td class="mon" style="color:#217a44;font-weight:700">${money(ganancia)}</td></tr>`;
+  }).join('');
 }
 function renderBajoMinimo() {
   const tb = document.querySelector('#tblBajoMinimo tbody'); const sec = document.getElementById('balBajoMinimoSection'); if (!tb || !sec) return;
@@ -2885,14 +3062,8 @@ function eliminarNegocioConfirmar(id) {
   pedirConfirmacion('Eliminar negocio', '¿Eliminar "' + n.nombre + '" y TODOS sus datos?', (ok) => { if (!ok) return; const ea = r.activo === id; eliminarNegocio(id); if (ea) { loadDB(); actualizarHeader(); cargarTemaGuardado(); cargarMoneda(); } renderTodo(); renderPanelNegocios(); mostrarToast('🗑️ Negocio eliminado.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' });
 }
 function abrirModalNuevoNegocio() {
-  if (!verificarActivacion() && trialActivo()) {
-    mostrarToast('🔒 El módulo multiNegocio solo está disponible después de activar la aplicación. Ve a Ayuda para activar.', 'warn');
-    return;
-  }
-  if (!tieneAccesoMultiNegocioSync()) {
-    mostrarToast('Esta función requiere el módulo Multi-Negocio. Contacta al administrador para activarlo.', 'warn');
-    return;
-  }
+  if (!verificarActivacion() && trialActivo()) { mostrarToast('🔒 El módulo multiNegocio solo está disponible después de activar la aplicación.', 'warn'); return; }
+  if (!tieneAccesoMultiNegocioSync()) { mostrarToast('Esta función requiere el módulo Multi-Negocio.', 'warn'); return; }
   ['nnNombre','nnCorreo','nnDireccion','nnClave'].forEach(id => document.getElementById(id).value = ''); document.getElementById('nnError').textContent = ''; document.getElementById('modalNuevoNegocio').style.display = 'block'; setTimeout(() => document.getElementById('nnNombre').focus(), 100);
 }
 function cerrarModalNuevoNegocio() { document.getElementById('modalNuevoNegocio').style.display = 'none'; }
@@ -2901,15 +3072,15 @@ async function confirmarNuevoNegocio() {
   const err = document.getElementById('nnError'); err.textContent = '';
   if (!nombre) { err.textContent = 'Escriba el nombre.'; return; }
   const tipo = clasificarContacto(contacto);
-  if (!tipo) { err.textContent = 'Introduce un correo válido o un teléfono de 7 a 15 dígitos.'; return; }
+  if (!tipo) { err.textContent = 'Contacto inválido.'; return; }
   if (clave.length < 4) { err.textContent = 'Contraseña mínimo 4 caracteres.'; return; }
   const r = obtenerRegistro();
   if (r.lista.some(n => n.nombre.toLowerCase() === nombre.toLowerCase())) { err.textContent = 'Nombre ya existe.'; return; }
-  if (r.lista.some(n => normalizarContacto(n.correo) === normalizarContacto(contacto) || normalizarContacto(n.telefonoPagos) === normalizarContacto(contacto))) { err.textContent = 'Teléfono o correo ya existe.'; return; }
+  if (r.lista.some(n => normalizarContacto(n.correo) === normalizarContacto(contacto) || normalizarContacto(n.telefonoPagos) === normalizarContacto(contacto))) { err.textContent = 'Contacto ya existe.'; return; }
   const id = generarIdNegocio();
   const correoFinal = tipo === 'correo' ? contacto : '';
   const telefonoFinal = tipo === 'telefono' ? contacto : '';
-  r.lista.push({ id, nombre, correo: correoFinal, telefonoPagos: telefonoFinal, direccion, claveHash: await hashClave(clave, contacto), comisionPorciento: 0, pagoFijoDiario: 0, tasaCambioPorciento: 0, tema: 'azul', moneda: 'USD', cuentasBancarias: [], logo: null, fechaCreacion: new Date().toISOString() });
+  r.lista.push({ id, nombre, correo: correoFinal, telefonoPagos: telefonoFinal, direccion, claveHash: await hashClave(clave, contacto), comisionPorciento: 0, pagoFijoDiario: 0, tasaCambioPorcentaje: 0, tema: 'azul', moneda: 'USD', cuentasBancarias: [], logo: null, fechaCreacion: new Date().toISOString() });
   r.activo = id; guardarRegistro(r);
   localStorage.setItem(LS_KEY_PREFIX + id, JSON.stringify({ productos: [], entradas: [], ventas: [], perdidas: [], devoluciones: [], gastos: [], facturas: [], clientes: [], proveedores: [], facturasMulti: [], seq: { p: 1, e: 1, v: 1, d: 1, dev: 1, g: 1, f: 1, c: 1, pv: 1, fm: 1 } }));
   cerrarModalNuevoNegocio(); loadDB(); actualizarHeader(); cargarTemaGuardado(); cargarMoneda(); renderTodo();
@@ -2972,9 +3143,8 @@ function exportarConsolidadoWord() {
   const con = calcularConsolidado(r.desde, r.hasta); con.etiqueta = r.etiqueta;
   const cuerpo = construirConsolidadoHTML(con, true);
   const html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>Balance Consolidado</title><style>' + REPORT_CSS + '</style></head><body>' + cuerpo + '</body></html>';
-  const blob = new Blob(['\ufeff', html], { type: 'application/msword' }); const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'Balance Consolidado - ' + fechaArchivo(r.desde) + '_a_' + fechaArchivo(r.hasta) + '.doc';
-  document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(url), 3000);
+  const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+  _descargarBlob(blob, 'Balance Consolidado - ' + fechaArchivo(r.desde) + '_a_' + fechaArchivo(r.hasta) + '.doc');
   mostrarToast('📄 Balance guardado en Word.', 'info');
 }
 function exportarConsolidadoPDF() {
@@ -3027,7 +3197,7 @@ if (pImagenInput) { pImagenInput.addEventListener('change', (e) => { const file 
 function quitarPreviewImagenProducto() { _imagenTempFormProducto = null; document.getElementById('pPreviewImg').innerHTML = '📷'; const i = document.getElementById('pImagen'); if (i) i.value = ''; }
 
 // ═══════════════════════════════════════════════════════════
-// FORM ENTRADA
+// FORM ENTRADA / VENTA / PERDIDA / DEVOLUCION / GASTO
 // ═══════════════════════════════════════════════════════════
 $('#eProducto').onchange = () => { const aviso = $('#avisoCosto'); const pid = Number($('#eProducto').value); if (!pid) { $('#eCosto').value = ''; aviso.style.display = 'none'; return; } const costo = costoPromedio(pid); if (costo > 0) { $('#eCosto').value = costo.toFixed(2); aviso.style.display = 'block'; aviso.textContent = '💡 Costo actual: ' + money(costo); } else { $('#eCosto').value = ''; aviso.style.display = 'block'; aviso.textContent = '💡 Primera compra: introduce el costo.'; } };
 $('#formEntrada').onsubmit = ev => {
@@ -3039,10 +3209,6 @@ $('#formEntrada').onsubmit = ev => {
   _addEntrada(pid, cantidad, costo, fecha, provId); renderTodo(); ev.target.reset(); $('#eFecha').value = fechaISO(); $('#avisoCosto').style.display = 'none';
   mostrarToast('✅ Entrada registrada.');
 };
-
-// ═══════════════════════════════════════════════════════════
-// FORM VENTA
-// ═══════════════════════════════════════════════════════════
 $('#vProducto').onchange = () => { const p = getProducto(Number($('#vProducto').value)); if (p) $('#vPrecio').value = p.precioVenta; else $('#vPrecio').value = ''; mostrarAvisoStock(); };
 function mostrarAvisoStock() { const p = getProducto(Number($('#vProducto').value)); const av = $('#avisoStock'); if (p && p.stock <= 0) { av.style.display = 'block'; av.textContent = '⚠️ "' + p.nombre + '" sin stock.'; } else if (p && p.stock <= 5) { av.style.display = 'block'; av.textContent = '⚠️ Stock bajo: ' + cant(p.stock) + ' uds.'; } else av.style.display = 'none'; }
 $('#formVenta').onsubmit = ev => {
@@ -3056,58 +3222,14 @@ $('#formVenta').onsubmit = ev => {
   _addVenta(pid, cantidad, precio, fecha, cliId); renderTodo(); ev.target.reset(); $('#vFecha').value = fechaISO(); $('#avisoStock').style.display = 'none';
   mostrarToast('✅ Venta registrada.');
 };
-
-// ═══════════════════════════════════════════════════════════
-// FORM PERDIDA
-// ═══════════════════════════════════════════════════════════
 const dPS = document.getElementById('dProducto');
 if (dPS) { dPS.onchange = () => { const av = document.getElementById('avisoPerdida'); const pid = Number(dPS.value); if (!pid) { document.getElementById('dCosto').value = ''; if (av) av.style.display = 'none'; return; } const p = getProducto(pid); const c = costoPromedio(pid); document.getElementById('dCosto').value = c > 0 ? c.toFixed(2) : ''; if (av && p) { av.style.display = 'block'; av.textContent = '📦 Stock: ' + cant(p.stock) + ' uds. Costo: ' + money(c); } }; }
 const fp = document.getElementById('formPerdida');
-if (fp) { fp.onsubmit = ev => {
-  ev.preventDefault();
-  const fecha = document.getElementById('dFecha').value || fechaISO(); const pid = Number(document.getElementById('dProducto').value); const cantidad = parseNumero(document.getElementById('dCantidad').value); const motivo = document.getElementById('dMotivo').value.trim();
-  if (!pid) { mostrarToast('Seleccione producto.', 'error'); return; }
-  const p = getProducto(pid); if (!p) return;
-  if (cantidad <= 0) { mostrarToast('Cantidad > 0.', 'error'); return; }
-  if (p.stock < cantidad) { mostrarToast('Stock insuficiente.', 'error'); return; }
-  if (!motivo) { mostrarToast('Indique motivo.', 'error'); return; }
-  const costo = costoPromedio(pid); if (costo <= 0) { mostrarToast('Costo no determinado.', 'error'); return; }
-  _addPerdida(pid, cantidad, costo, motivo, fecha); renderTodo(); ev.target.reset(); document.getElementById('dFecha').value = fechaISO();
-  mostrarToast('📉 Pérdida registrada.', 'info');
-}; }
-
-// ═══════════════════════════════════════════════════════════
-// FORM DEVOLUCION
-// ═══════════════════════════════════════════════════════════
+if (fp) { fp.onsubmit = ev => { ev.preventDefault(); const fecha = document.getElementById('dFecha').value || fechaISO(); const pid = Number(document.getElementById('dProducto').value); const cantidad = parseNumero(document.getElementById('dCantidad').value); const motivo = document.getElementById('dMotivo').value.trim(); if (!pid) { mostrarToast('Seleccione producto.', 'error'); return; } const p = getProducto(pid); if (!p) return; if (cantidad <= 0) { mostrarToast('Cantidad > 0.', 'error'); return; } if (p.stock < cantidad) { mostrarToast('Stock insuficiente.', 'error'); return; } if (!motivo) { mostrarToast('Indique motivo.', 'error'); return; } const costo = costoPromedio(pid); if (costo <= 0) { mostrarToast('Costo no determinado.', 'error'); return; } _addPerdida(pid, cantidad, costo, motivo, fecha); renderTodo(); ev.target.reset(); document.getElementById('dFecha').value = fechaISO(); mostrarToast('📉 Pérdida registrada.', 'info'); }; }
 const fd = document.getElementById('formDevolucion');
-if (fd) { fd.onsubmit = ev => {
-  ev.preventDefault();
-  const tipo = document.getElementById('devTipo').value; const fecha = document.getElementById('devFecha').value || fechaISO();
-  const pid = Number(document.getElementById('devProducto').value); const cantidad = parseNumero(document.getElementById('devCantidad').value);
-  const monto = parseNumero(document.getElementById('devMonto').value); const motivo = document.getElementById('devMotivo').value.trim();
-  if (!pid) { mostrarToast('Seleccione producto.', 'error'); return; }
-  if (cantidad <= 0 || monto <= 0) { mostrarToast('Cantidad y monto > 0.', 'error'); return; }
-  if (!motivo) { mostrarToast('Indique motivo.', 'error'); return; }
-  const p = getProducto(pid); if (!p) return;
-  if (tipo === 'compra' && p.stock < cantidad) { mostrarToast('Stock insuficiente.', 'error'); return; }
-  _addDevolucion(tipo, pid, cantidad, monto, motivo, fecha); renderTodo(); ev.target.reset(); document.getElementById('devFecha').value = fechaISO();
-  mostrarToast('↩️ Devolución registrada.', 'info');
-}; }
-
-// ═══════════════════════════════════════════════════════════
-// FORM GASTO
-// ═══════════════════════════════════════════════════════════
+if (fd) { fd.onsubmit = ev => { ev.preventDefault(); const tipo = document.getElementById('devTipo').value; const fecha = document.getElementById('devFecha').value || fechaISO(); const pid = Number(document.getElementById('devProducto').value); const cantidad = parseNumero(document.getElementById('devCantidad').value); const monto = parseNumero(document.getElementById('devMonto').value); const motivo = document.getElementById('devMotivo').value.trim(); if (!pid) { mostrarToast('Seleccione producto.', 'error'); return; } if (cantidad <= 0 || monto <= 0) { mostrarToast('Cantidad y monto > 0.', 'error'); return; } if (!motivo) { mostrarToast('Indique motivo.', 'error'); return; } const p = getProducto(pid); if (!p) return; if (tipo === 'compra' && p.stock < cantidad) { mostrarToast('Stock insuficiente.', 'error'); return; } _addDevolucion(tipo, pid, cantidad, monto, motivo, fecha); renderTodo(); ev.target.reset(); document.getElementById('devFecha').value = fechaISO(); mostrarToast('↩️ Devolución registrada.', 'info'); }; }
 const fg = document.getElementById('formGasto');
-if (fg) { fg.onsubmit = ev => {
-  ev.preventDefault();
-  const fecha = document.getElementById('gFecha').value || fechaISO(); const cat = document.getElementById('gCategoria').value;
-  const desc = document.getElementById('gDescripcion').value.trim(); const monto = parseNumero(document.getElementById('gMonto').value);
-  if (!cat) { mostrarToast('Seleccione categoría.', 'error'); return; }
-  if (!desc) { mostrarToast('Escriba descripción.', 'error'); return; }
-  if (monto <= 0) { mostrarToast('Monto > 0.', 'error'); return; }
-  _addGasto(cat, desc, monto, fecha); renderTodo(); ev.target.reset(); document.getElementById('gFecha').value = fechaISO();
-  mostrarToast('💸 Gasto registrado.', 'info');
-}; }
+if (fg) { fg.onsubmit = ev => { ev.preventDefault(); const fecha = document.getElementById('gFecha').value || fechaISO(); const cat = document.getElementById('gCategoria').value; const desc = document.getElementById('gDescripcion').value.trim(); const monto = parseNumero(document.getElementById('gMonto').value); if (!cat) { mostrarToast('Seleccione categoría.', 'error'); return; } if (!desc) { mostrarToast('Escriba descripción.', 'error'); return; } if (monto <= 0) { mostrarToast('Monto > 0.', 'error'); return; } _addGasto(cat, desc, monto, fecha); renderTodo(); ev.target.reset(); document.getElementById('gFecha').value = fechaISO(); mostrarToast('💸 Gasto registrado.', 'info'); }; }
 
 function _addEntrada(pid, cantidad, costo, fecha, prov) { const total = cantidad * costo; const _e = { id: db.seq.e++, fecha: fecha || fechaISO(), productoId: pid, cantidad, costoUnitario: costo, total, proveedorId: prov || null }; db.entradas.push(_e); const p = getProducto(pid); if (p) p.stock += cantidad; if (!saveDB()) { db.entradas = db.entradas.filter(x => x.id !== _e.id); if (p) p.stock -= cantidad; return false; } return true; }
 function _addVenta(pid, cantidad, precio, fecha, cli) { const total = cantidad * precio; const _v = { id: db.seq.v++, fecha: fecha || fechaISO(), productoId: pid, cantidad, precioUnitario: precio, total, clienteId: cli || null }; db.ventas.push(_v); const p = getProducto(pid); if (p) p.stock -= cantidad; if (!saveDB()) { db.ventas = db.ventas.filter(x => x.id !== _v.id); if (p) p.stock += cantidad; return false; } return true; }
@@ -3117,53 +3239,17 @@ function _addGasto(cat, desc, monto, fecha) { const _g = { id: db.seq.g++, fecha
 
 function eliminarProducto(id) {
   const p = getProducto(id); if (!p) return;
-  if (carritoPOS.some(it => it.productoId === id)) {
-    mostrarToast('⚠️ "' + p.nombre + '" está en el carrito del POS. Quítalo primero.', 'warn');
-    return;
-  }
-  if (facturaBorrador.some(it => it.productoId === id)) {
-    mostrarToast('⚠️ "' + p.nombre + '" está en el borrador de factura. Quítalo primero.', 'warn');
-    return;
-  }
-  const mov = db.entradas.some(e => e.productoId === id) ||
-              db.ventas.some(v => v.productoId === id) ||
-              db.perdidas.some(d => d.productoId === id) ||
-              db.devoluciones.some(d => d.productoId === id);
-  pedirConfirmacion(
-    'Eliminar producto',
-    mov ? '"' + p.nombre + '" tiene movimientos. ¿Eliminar de todas formas?' : '¿Eliminar "' + p.nombre + '"?',
-    (ok) => {
-      if (!ok) return;
-      db.productos = db.productos.filter(x => x.id !== id);
-      saveDB(); renderTodo();
-      mostrarToast('🗑️ Producto eliminado.', 'info');
-    },
-    { textoSi: 'Eliminar', tipo: 'danger' }
-  );
+  if (carritoPOS.some(it => it.productoId === id)) { mostrarToast('⚠️ "' + p.nombre + '" está en el carrito. Quítalo primero.', 'warn'); return; }
+  if (facturaBorrador.some(it => it.productoId === id)) { mostrarToast('⚠️ "' + p.nombre + '" está en el borrador. Quítalo primero.', 'warn'); return; }
+  const mov = db.entradas.some(e => e.productoId === id) || db.ventas.some(v => v.productoId === id) || db.perdidas.some(d => d.productoId === id) || db.devoluciones.some(d => d.productoId === id);
+  pedirConfirmacion('Eliminar producto', mov ? '"' + p.nombre + '" tiene movimientos. ¿Eliminar de todas formas?' : '¿Eliminar "' + p.nombre + '"?', (ok) => { if (!ok) return; db.productos = db.productos.filter(x => x.id !== id); saveDB(); renderTodo(); mostrarToast('🗑️ Producto eliminado.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' });
 }
 function eliminarEntrada(id) { const e = db.entradas.find(x => x.id === id); if (!e) return; pedirConfirmacion('Eliminar entrada', '¿Eliminar? Se devolverá stock.', (ok) => { if (!ok) return; const p = getProducto(e.productoId); if (p) p.stock -= e.cantidad; db.entradas = db.entradas.filter(x => x.id !== id); saveDB(); renderTodo(); mostrarToast('🗑️ Entrada eliminada.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' }); }
 function eliminarVenta(id) {
   const v = db.ventas.find(x => x.id === id); if (!v) return;
   const fac = v.facturaId ? db.facturasMulti.find(f => f.id === v.facturaId) : null;
-  const msg = fac
-    ? '⚠️ Esta venta tiene la factura ' + v.facturaId + '.\n\nAl eliminarla, la factura quedará con datos inconsistentes. ¿Continuar de todas formas?'
-    : '¿Eliminar? Stock será devuelto.';
-  pedirConfirmacion('Eliminar venta', msg, (ok) => {
-    if (!ok) return;
-    const p = getProducto(v.productoId);
-    if (p) p.stock += v.cantidad;
-    db.ventas = db.ventas.filter(x => x.id !== id);
-    if (fac) {
-      if (fac.items.length <= 1) {
-        db.facturasMulti = db.facturasMulti.filter(f => f.id !== fac.id);
-      } else {
-        fac.items = fac.items.filter(it => it.productoId !== v.productoId);
-        fac.total = fac.items.reduce((s, it) => s + it.cantidad * it.precioUnitario, 0);
-      }
-    }
-    saveDB(); renderTodo();
-    mostrarToast('🗑️ Venta eliminada.', 'info');
-  }, { textoSi: 'Eliminar', tipo: 'danger' });
+  const msg = fac ? '⚠️ Esta venta tiene la factura ' + v.facturaId + '.\n\nAl eliminarla, la factura quedará con datos inconsistentes. ¿Continuar?' : '¿Eliminar? Stock será devuelto.';
+  pedirConfirmacion('Eliminar venta', msg, (ok) => { if (!ok) return; const p = getProducto(v.productoId); if (p) p.stock += v.cantidad; db.ventas = db.ventas.filter(x => x.id !== id); if (fac) { if (fac.items.length <= 1) db.facturasMulti = db.facturasMulti.filter(f => f.id !== fac.id); else { fac.items = fac.items.filter(it => it.productoId !== v.productoId); fac.total = fac.items.reduce((s, it) => s + it.cantidad * it.precioUnitario, 0); } } saveDB(); renderTodo(); mostrarToast('🗑️ Venta eliminada.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' });
 }
 function eliminarPerdida(id) { const d = db.perdidas.find(x => x.id === id); if (!d) return; pedirConfirmacion('Eliminar pérdida', '¿Eliminar? Stock devuelto.', (ok) => { if (!ok) return; const p = getProducto(d.productoId); if (p) p.stock += d.cantidad; db.perdidas = db.perdidas.filter(x => x.id !== id); saveDB(); renderTodo(); mostrarToast('🗑️ Pérdida eliminada.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' }); }
 function eliminarDevolucion(id) { const d = db.devoluciones.find(x => x.id === id); if (!d) return; pedirConfirmacion('Eliminar devolución', '¿Eliminar?', (ok) => { if (!ok) return; const p = getProducto(d.productoId); if (p) { if (d.tipo === 'venta') p.stock -= d.cantidad; else p.stock += d.cantidad; } db.devoluciones = db.devoluciones.filter(x => x.id !== id); saveDB(); renderTodo(); mostrarToast('🗑️ Devolución eliminada.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' }); }
@@ -3243,10 +3329,7 @@ function solicitarOfertaProveedor(id) {
   abrirModalSeleccionProductos(p, (sel, msg) => {
     if (!sel.length && !msg.trim()) return;
     let m = msg.trim() || '¡Hola! Quisiera solicitar oferta de:';
-    if (sel.length) {
-      m += '\n\n';
-      sel.forEach(s => { m += '• ' + s.nombre + (s.cantidad > 0 ? ' — ' + cant(s.cantidad) + ' uds.' : '') + '\n'; });
-    }
+    if (sel.length) { m += '\n\n'; sel.forEach(s => { m += '• ' + s.nombre + (s.cantidad > 0 ? ' — ' + cant(s.cantidad) + ' uds.' : '') + '\n'; }); }
     m += '\nPor favor envíenme precios. ¡Gracias!';
     enviarMensajeAContacto(p, m, 'Solicitud de oferta');
   });
@@ -3302,7 +3385,7 @@ function emitirFacturaMulti() {
   const fp = document.getElementById('facPago').value; const not = document.getElementById('facNotas').value.trim();
   const _reqPorProd = {};
   for (const it of facturaBorrador) { _reqPorProd[it.productoId] = (_reqPorProd[it.productoId] || 0) + it.cantidad; }
-  for (const _pid in _reqPorProd) { const p = getProducto(Number(_pid)); if (!p) { mostrarToast('Producto no encontrado.', 'error'); return; } if (p.stock < _reqPorProd[_pid]) { mostrarToast('Stock insuficiente de ' + p.nombre + ' (necesitas ' + cant(_reqPorProd[_pid]) + ', hay ' + cant(p.stock) + ')', 'error'); return; } }
+  for (const _pid in _reqPorProd) { const p = getProducto(Number(_pid)); if (!p) { mostrarToast('Producto no encontrado.', 'error'); return; } if (p.stock < _reqPorProd[_pid]) { mostrarToast('Stock insuficiente de ' + p.nombre, 'error'); return; } }
   const tot = facturaBorrador.reduce((s,it) => s + it.cantidad * it.precioUnitario, 0);
   const num = 'F-' + String(db.seq.fm).padStart(6, '0'); db.seq.fm++;
   const cli = cid ? getCliente(cid) : null;
@@ -3367,10 +3450,10 @@ function importarProductosLote() {
     for (let i = ini; i < lineas.length; i++) {
       const cs = parsearLineaCSV(lineas[i]); if (cs.length < 2) { err++; continue; }
       const n = (cs[0] || '').trim();
-      if (!n) { err++; if (!window._ultErrImport) window._ultErrImport = []; if (window._ultErrImport.length < 5) window._ultErrImport.push({ linea: i + 1, razon: 'nombre vacío' }); continue; }
+      if (!n) { err++; continue; }
       if (nombres.has(n.toLowerCase())) { om++; continue; }
       const pr = parseNumero(cs[1]); const st = parseNumero(cs[2]); const co = parseNumero(cs[3]); const mn = parseNumero(cs[4]); const cb = (cs[5] || '').trim();
-      if (pr <= 0) { err++; if (!window._ultErrImport) window._ultErrImport = []; if (window._ultErrImport.length < 5) window._ultErrImport.push({ linea: i + 1, razon: 'precio inválido o 0' }); continue; }
+      if (pr <= 0) { err++; continue; }
       if (cb && codigos.has(cb.toUpperCase())) { om++; continue; }
       const id = db.seq.p++;
       db.productos.push({ id, nombre: n, precioVenta: pr, stock: 0, stockMinimo: mn, imagen: null, codigoBarras: cb || '', caracteristicas: '', categoria: '' });
@@ -3378,11 +3461,9 @@ function importarProductosLote() {
       nombres.add(n.toLowerCase()); if (cb) codigos.add(cb.toUpperCase()); ok++;
     }
     if (ok > 0) saveDB(); renderTodo();
-    const errMuestras = (window._ultErrImport || []).slice(0, 5);
     let msg = '✅ Importación\n• Agregados: ' + ok + '\n• Omitidos: ' + om + '\n• Errores: ' + err;
-    if (errMuestras.length) msg += '\n\n⚠️ Filas con problema:\n' + errMuestras.map(f => '  Línea ' + f.linea + ': ' + f.razon).join('\n');
     if (ok === 0 && om === 0) { mostrarToast('⚠️ Nada importado.', 'warn'); return; }
-    pedirConfirmacion('📥 Importación', msg + '\n\n¿Ver productos?', (okv) => { if (okv) irAPestana('productos'); }, { textoSi: 'Ver', textoNo: 'Cerrar', tipo: 'normal' });
+    pedirConfirmacion('📥 Importación', msg, (okv) => { if (okv) irAPestana('productos'); }, { textoSi: 'Ver', textoNo: 'Cerrar', tipo: 'normal' });
   });
 }
 function descargarPlantillaCodigos() { const lista = db.productos.slice(0, 15).map(p => p.nombre + ', ' + (p.codigoBarras || '')); const contenido = 'Nombre, CodigoBarras\n' + (lista.length ? lista.join('\n') : 'Refresco Cola 500ml, NEG-0001\n'); descargarTxtPC(contenido, 'Plantilla - Codigos.csv'); mostrarToast('📄 Plantilla descargada.', 'info'); }
@@ -3409,12 +3490,7 @@ function asignarCodigosPorLote() {
     pedirConfirmacion('🔖 Asignación', msg, () => {}, { textoSi: 'Cerrar', textoNo: 'Cerrar', tipo: 'normal' });
   });
 }
-function descargarPlantillaPrecios() {
-  const lista = db.productos.slice(0, 20).map(p => p.nombre + ', ' + p.precioVenta);
-  const contenido = 'Nombre, NuevoPrecio\n' + (lista.length ? lista.join('\n') : 'Refresco Cola 500ml, 1.75\n');
-  descargarTxtPC(contenido, 'Plantilla - Precios.csv');
-  mostrarToast('📄 Plantilla descargada.', 'info');
-}
+function descargarPlantillaPrecios() { const lista = db.productos.slice(0, 20).map(p => p.nombre + ', ' + p.precioVenta); const contenido = 'Nombre, NuevoPrecio\n' + (lista.length ? lista.join('\n') : 'Refresco Cola 500ml, 1.75\n'); descargarTxtPC(contenido, 'Plantilla - Precios.csv'); mostrarToast('📄 Plantilla descargada.', 'info'); }
 function importarPreciosPorLote() {
   if (!db.productos.length) { mostrarToast('No hay productos.', 'warn'); return; }
   seleccionarArchivoRespaldo((texto, nf) => {
@@ -3471,7 +3547,7 @@ function _pedirPorcentajeYPrecio(categoria) {
     }, { textoSi: 'Aplicar', tipo: 'normal' });
   }, (v) => { const n = parseNumero(v); if (isNaN(n) || n === 0) return 'Número distinto de 0.'; if (n <= -100) return 'Mayor que -100.'; return null; });
 }
-const REPORT_CSS = `body{font-family:Arial,sans-serif;font-size:11pt;color:#222;margin:0;padding:10px}h1{font-size:17pt;text-align:center;color:#1a4d80;margin:0 0 2pt 0}.subt{text-align:center;font-size:11pt;color:#555;margin:0 0 14pt 0}h2{font-size:13pt;margin:14pt 0 6pt 0;color:#1a4d80}table{border-collapse:collapse;width:100%;margin:0 0 10pt 0}th,td{border:1px solid #8fa8c4;padding:5pt 8pt;font-size:10.5pt}th{background:#dbe8f5;font-weight:bold;color:#12395e}td.num,th.num{text-align:center}td.mon,th.mon{text-align:right}tr.total td{font-weight:bold;background:#eef4fb}tr.total-perdida td{font-weight:bold;background:#fdecea;color:#c0392b}tr.total-neto td{font-weight:bold;background:#e3f3ea;color:#217a44}td.vacio{text-align:center;font-style:italic;color:#777}.pie{font-size:8.5pt;color:#666;font-style:italic;margin-top:12pt;text-align:center}`;
+const REPORT_CSS = `body{font-family:Arial,sans-serif;font-size:11pt;color:#222;margin:0;padding:10px}h1{font-size:17pt;text-align:center;color:#1a4d80;margin:0 0 2pt 0}.subt{text-align:center;font-size:11pt;color:#555;margin:0 0 14pt 0}h2{font-size:13pt;margin:14pt 0 6pt 0;color:#1a4d80}table{border-collapse:collapse;width:100%;margin:0 0 10pt 0}th,td{border:1px solid #8fa8c4;padding:5pt 8pt;font-size:10.5pt}th{background:#dbe8f5;font-weight:bold;color:#12395e}td.num,th.num{text-align:center}td.mon,th.mon{text-align:right}tr.total td{font-weight:bold;background:#eef4fb}tr.total-perdida td{font-weight:bold;background:#fdecea;color:#c0392b}tr.total-neto td{font-weight:bold;background:#e3f3ea;color:#217a44}td.vacio{text-align:center;font-style:italic;color:#777}.pie{font-size:8.5pt;color:#666;font-style:italic;margin-top:12pt;text-align:center}.chart-img{max-width:100%;height:auto;margin:8pt auto;display:block;border:1px solid #e3e9f2;border-radius:6px}`;
 let tipoReporte = 'dia';
 function cambiarTipoReporte(tipo) {
   tipoReporte = tipo;
@@ -3493,15 +3569,59 @@ function obtenerRangoFechas() {
 function calcularBalanceRango(desde, hasta) {
   let v = 0, c = 0, inv = 0, per = 0, gas = 0, dev = 0; const vA = {}, eA = {}, pA = {};
   const _costos = calcularCostosPromedio();
-  db.ventas.forEach(x => { if (x.fecha < desde || x.fecha > hasta) return; v += x.total; c += x.cantidad * (_costos[x.productoId] || 0); if (!vA[x.productoId]) vA[x.productoId] = { cantidad: 0, total: 0 }; vA[x.productoId].cantidad += x.cantidad; vA[x.productoId].total += x.total; });
+  db.ventas.forEach(x => { if (x.fecha < desde || x.fecha > hasta) return; const costo = x.cantidad * (_costos[x.productoId] || 0); v += x.total; c += costo; if (!vA[x.productoId]) vA[x.productoId] = { cantidad: 0, total: 0, costo: 0 }; vA[x.productoId].cantidad += x.cantidad; vA[x.productoId].total += x.total; vA[x.productoId].costo += costo; });
   db.devoluciones.forEach(x => { if (x.fecha < desde || x.fecha > hasta) return; if (x.tipo === 'venta') dev += x.total; });
   db.entradas.forEach(x => { if (x.fecha < desde || x.fecha > hasta) return; inv += x.total; if (!eA[x.productoId]) eA[x.productoId] = { cantidad: 0, total: 0 }; eA[x.productoId].cantidad += x.cantidad; eA[x.productoId].total += x.total; });
   db.perdidas.forEach(x => { if (x.fecha < desde || x.fecha > hasta) return; per += x.total; if (!pA[x.productoId]) pA[x.productoId] = { cantidad: 0, total: 0 }; pA[x.productoId].cantidad += x.cantidad; pA[x.productoId].total += x.total; });
   db.gastos.forEach(x => { if (x.fecha < desde || x.fecha > hasta) return; gas += x.monto; });
   const vn = v - dev; const g = vn - c; const bn = g - per - gas;
-  return { totalVentas: v, totalCosto: c, ganancia: g, totalInversion: inv, totalPerdidas: per, totalGastos: gas, totalDevolucionesVenta: dev, beneficioNeto: bn, ventasAgr: vA, entradasAgr: eA, perdidasAgr: pA };
+  const margen = v > 0 ? (g / v) * 100 : 0;
+  return { totalVentas: v, totalCosto: c, ganancia: g, totalInversion: inv, totalPerdidas: per, totalGastos: gas, totalDevolucionesVenta: dev, beneficioNeto: bn, ventasAgr: vA, entradasAgr: eA, perdidasAgr: pA, margen };
 }
-function construirCuerpoReporteRango(r) {
+async function generarChartBase64(config, w, h) {
+  if (typeof Chart === 'undefined') return null;
+  return new Promise((resolve) => {
+    try {
+      const canvas = document.createElement('canvas');
+      canvas.width = w || 700; canvas.height = h || 380;
+      const chart = new Chart(canvas.getContext('2d'), config);
+      setTimeout(() => {
+        try {
+          const url = chart.toBase64Image('image/png', 1);
+          chart.destroy();
+          resolve(url);
+        } catch (e) { chart.destroy(); resolve(null); }
+      }, 200);
+    } catch (e) { resolve(null); }
+  });
+}
+async function generarChartsReporteBase64(b) {
+  const imgs = [];
+  const img1 = await generarChartBase64({
+    type: 'bar',
+    data: {
+      labels: ['Ventas', 'Costo', 'Ganancia', 'Gastos', 'Pérdidas', 'Neto'],
+      datasets: [{ label: 'Monto', data: [b.totalVentas, b.totalCosto, b.ganancia, b.totalGastos, b.totalPerdidas, b.beneficioNeto], backgroundColor: ['#2d7ac0', '#c0392b', '#2e9e5b', '#e08a1e', '#96291d', '#217a44'], borderRadius: 6 }]
+    },
+    options: { responsive: false, animation: false, plugins: { legend: { display: false }, title: { display: true, text: 'Resumen del período', font: { size: 16 } } }, scales: { y: { beginAtZero: true } } }
+  }, 720, 380);
+  if (img1) imgs.push({ titulo: 'Resumen del período', img: img1 });
+
+  const topProds = Object.keys(b.ventasAgr).map(pid => ({ id: Number(pid), ...b.ventasAgr[pid] })).sort((a, b) => b.total - a.total).slice(0, 5);
+  if (topProds.length) {
+    const img2 = await generarChartBase64({
+      type: 'bar',
+      data: {
+        labels: topProds.map(p => { const n = nombreProducto(p.id); return n.length > 22 ? n.substring(0, 20) + '...' : n; }),
+        datasets: [{ label: 'Ingresos', data: topProds.map(p => p.total), backgroundColor: '#2e9e5b', borderRadius: 6 }]
+      },
+      options: { indexAxis: 'y', responsive: false, animation: false, plugins: { legend: { display: false }, title: { display: true, text: 'Top 5 productos por ingresos', font: { size: 16 } } } }
+    }, 720, 380);
+    if (img2) imgs.push({ titulo: 'Top 5 productos por ingresos', img: img2 });
+  }
+  return imgs;
+}
+function construirCuerpoReporteRango(r, chartsImgs) {
   const b = calcularBalanceRango(r.desde, r.hasta); const cuenta = obtenerCuenta();
   const neg = cuenta ? cuenta.nombre : 'miNegocito'; const cor = cuenta ? (cuenta.correo || cuenta.telefonoPagos || '') : ''; const dir = cuenta && cuenta.direccion ? cuenta.direccion : '';
   let tit, sub;
@@ -3511,7 +3631,7 @@ function construirCuerpoReporteRango(r) {
   db.productos.forEach(p => { const c = _costosR[p.id] || 0; totInv += p.stock * c; totalIngEsp += p.stock * p.precioVenta; });
   const totalBenEst = totalIngEsp - totInv;
   const filasEnt = Object.keys(b.entradasAgr).map(pid => { const d = b.entradasAgr[pid]; return `<tr><td>${esc(nombreProducto(Number(pid)))}</td><td class="num">${cant(d.cantidad)}</td><td class="mon">${money(d.total/d.cantidad)}</td><td class="mon">${money(d.total)}</td></tr>`; }).join('') || '<tr><td colspan="4" class="vacio">Sin compras.</td></tr>';
-  const filasVen = Object.keys(b.ventasAgr).map(pid => { const d = b.ventasAgr[pid]; return `<tr><td>${esc(nombreProducto(Number(pid)))}</td><td class="num">${cant(d.cantidad)}</td><td class="mon">${money(d.total/d.cantidad)}</td><td class="mon">${money(d.total)}</td></tr>`; }).join('') || '<tr><td colspan="4" class="vacio">Sin ventas.</td></tr>';
+  const filasVen = Object.keys(b.ventasAgr).map(pid => { const d = b.ventasAgr[pid]; const ganancia = d.total - (d.costo || 0); return `<tr><td>${esc(nombreProducto(Number(pid)))}</td><td class="num">${cant(d.cantidad)}</td><td class="mon">${money(d.total/d.cantidad)}</td><td class="mon">${money(d.total)}</td><td class="mon" style="color:#217a44;font-weight:700">${money(ganancia)}</td></tr>`; }).join('') || '<tr><td colspan="5" class="vacio">Sin ventas.</td></tr>';
   const filasStock = db.productos.map(p => { const c = _costosR[p.id] || 0; const inv = p.stock * c; const ingEsp = p.stock * p.precioVenta; const benEst = ingEsp - inv; return `<tr><td>${esc(p.nombre)}</td><td class="num">${cant(p.stock)}</td><td class="mon">${money(p.precioVenta)}</td><td class="mon">${money(c)}</td><td class="mon">${money(inv)}</td><td class="mon" style="color:#2d7ac0;font-weight:700">${money(ingEsp)}</td><td class="mon" style="color:#217a44;font-weight:700">${money(benEst)}</td></tr>`; }).join('') || '<tr><td colspan="7" class="vacio">Sin productos.</td></tr>';
   const bajoMin = db.productos.filter(p => (Number(p.stockMinimo) || 0) > 0 && p.stock <= (Number(p.stockMinimo) || 0) * 1.2).sort((a,b) => (a.stock/(a.stockMinimo||1)) - (b.stock/(b.stockMinimo||1)));
   const tablaBajo = bajoMin.length ? '<h2>🎯 Productos bajo mínimo</h2><table><thead><tr><th>Producto</th><th class="num">Stock</th><th class="num">Mínimo</th><th class="num">Estado</th></tr></thead><tbody>' + bajoMin.map(p => { const m = Number(p.stockMinimo) || 0; const e = p.stock <= 0 ? '🔴 AGOTADO' : p.stock <= m ? '🟠 BAJO' : '🟡 CERCA'; return `<tr><td>${esc(p.nombre)}</td><td class="num">${cant(p.stock)}</td><td class="num">${cant(m)}</td><td class="num">${e}</td></tr>`; }).join('') + '</tbody></table>' : '';
@@ -3521,37 +3641,89 @@ function construirCuerpoReporteRango(r) {
   const tablaGastos = gastosPer.length ? '<h2>💸 Gastos</h2><table><thead><tr><th>Fecha</th><th>Categoría</th><th>Descripción</th><th class="mon">Monto</th></tr></thead><tbody>' + gastosPer.map(g => `<tr><td>${fechaBonita(g.fecha)}</td><td>${esc(g.categoria)}</td><td>${esc(g.descripcion)}</td><td class="mon" style="color:#c0392b;font-weight:700">-${money(g.monto)}</td></tr>`).join('') + `</tbody><tfoot><tr class="total-perdida"><td colspan="3">TOTAL</td><td class="mon">-${money(b.totalGastos)}</td></tr></tfoot></table>` : '';
   const facsPer = db.facturasMulti.filter(f => f.fecha >= r.desde && f.fecha <= r.hasta);
   const tablaFacs = facsPer.length ? '<h2>🧾 Facturas</h2><table><thead><tr><th>Factura</th><th>Fecha</th><th>Cliente</th><th>Pago</th><th class="num">Ítems</th><th class="mon">Total</th></tr></thead><tbody>' + facsPer.map(f => `<tr><td>${esc(f.id)}</td><td>${fechaBonita(f.fecha)}</td><td>${esc(f.clienteNombre)}</td><td>${esc(f.formaPago)}</td><td class="num">${f.items.length}</td><td class="mon">${money(f.total)}</td></tr>`).join('') + `</tbody><tfoot><tr class="total"><td colspan="5">TOTAL</td><td class="mon">${money(facsPer.reduce((s,f)=>s+f.total,0))}</td></tr></tfoot></table>` : '';
+
+  let chartsHtml = '';
+  if (chartsImgs && chartsImgs.length) {
+    chartsHtml = '<h2>📊 Gráficos</h2>';
+    chartsImgs.forEach(c => {
+      chartsHtml += '<div style="text-align:center;margin:10pt 0"><img src="' + c.img + '" class="chart-img" alt="' + esc(c.titulo) + '"></div>';
+    });
+  }
+
   const filaPer = b.totalPerdidas > 0 ? '<tr style="color:#c0392b;font-weight:700"><td>📉 Pérdidas (informativo)</td><td class="mon">-' + money(b.totalPerdidas) + '</td></tr>' : '';
   const filaDev = b.totalDevolucionesVenta > 0 ? '<tr style="color:#7b3fa0;font-weight:700"><td>↩️ Devoluciones</td><td class="mon">-' + money(b.totalDevolucionesVenta) + '</td></tr>' : '';
   const filaGas = b.totalGastos > 0 ? '<tr style="color:#c0392b;font-weight:700"><td>💸 Gastos</td><td class="mon">-' + money(b.totalGastos) + '</td></tr>' : '';
+  const filaMargen = b.margen > 0 ? '<tr><td>📈 Margen Ganancia</td><td class="mon">' + b.margen.toFixed(1) + '%</td></tr>' : '';
   const logoHtml = cuenta && cuenta.logo ? '<img src="' + cuenta.logo + '" style="height:70px;max-width:220px;object-fit:contain;display:block;margin:0 auto 6pt">' : '';
-  return `${logoHtml}<h1>🏪 ${esc(neg)}</h1>${cor ? '<p class="subt">' + esc(cor) + '</p>' : ''}${dir ? '<p class="subt">📍 ' + esc(dir) + '</p>' : ''}<p class="subt">${tit} — ${sub}</p><h2>Resumen</h2><table><thead><tr><th>Concepto</th><th class="mon">Monto</th></tr></thead><tbody><tr><td>Ventas</td><td class="mon">${money(b.totalVentas)}</td></tr>${filaDev}<tr><td>Costo</td><td class="mon">${money(b.totalCosto)}</td></tr><tr class="total"><td>Ganancia Bruta</td><td class="mon">${money(b.ganancia)}</td></tr>${filaPer}${filaGas}<tr class="total-neto"><td>💚 Beneficio Neto</td><td class="mon">${money(b.beneficioNeto)}</td></tr><tr class="total"><td>Inversión</td><td class="mon">${money(b.totalInversion)}</td></tr><tr class="total"><td>💼 Mercancía (costo)</td><td class="mon">${money(totInv)}</td></tr></tbody></table>${tablaPerdidas}${tablaGastos}${tablaFacs}<h2>Compras</h2><table><thead><tr><th>Producto</th><th class="num">Cant.</th><th class="mon">Costo</th><th class="mon">Total</th></tr></thead><tbody>${filasEnt}</tbody><tfoot><tr class="total"><td>TOTAL</td><td></td><td></td><td class="mon">${money(b.totalInversion)}</td></tr></tfoot></table><h2>Ventas</h2><table><thead><tr><th>Producto</th><th class="num">Cant.</th><th class="mon">Precio</th><th class="mon">Total</th></tr></thead><tbody>${filasVen}</tbody><tfoot><tr class="total"><td>TOTAL</td><td></td><td></td><td class="mon">${money(b.totalVentas)}</td></tr></tfoot></table><h2>Inventario</h2><table><thead><tr><th>Producto</th><th class="num">Stock</th><th class="mon">Precio</th><th class="mon">Costo</th><th class="mon">Inversión</th><th class="mon">Ingreso esperado</th><th class="mon">Beneficio estimado</th></tr></thead><tbody>${filasStock}</tbody><tfoot><tr class="total"><td colspan="4">TOTAL</td><td class="mon">${money(totInv)}</td><td class="mon" style="color:#2d7ac0">${money(totalIngEsp)}</td><td class="mon" style="color:#217a44">${money(totalBenEst)}</td></tr></tfoot></table>${tablaBajo}<p class="pie">Generado el ${new Date().toLocaleString('es-ES')}</p>`;
+  return `${logoHtml}<h1>🏪 ${esc(neg)}</h1>${cor ? '<p class="subt">' + esc(cor) + '</p>' : ''}${dir ? '<p class="subt">📍 ' + esc(dir) + '</p>' : ''}<p class="subt">${tit} — ${sub}</p>${chartsHtml}<h2>Resumen</h2><table><thead><tr><th>Concepto</th><th class="mon">Monto</th></tr></thead><tbody><tr><td>Ventas</td><td class="mon">${money(b.totalVentas)}</td></tr>${filaDev}<tr><td>Costo</td><td class="mon">${money(b.totalCosto)}</td></tr><tr class="total"><td>Ganancia Bruta</td><td class="mon">${money(b.ganancia)}</td></tr>${filaMargen}${filaPer}${filaGas}<tr class="total-neto"><td>💚 Beneficio Neto</td><td class="mon">${money(b.beneficioNeto)}</td></tr><tr class="total"><td>Inversión</td><td class="mon">${money(b.totalInversion)}</td></tr><tr class="total"><td>💼 Mercancía (costo)</td><td class="mon">${money(totInv)}</td></tr></tbody></table>${tablaPerdidas}${tablaGastos}${tablaFacs}<h2>Compras</h2><table><thead><tr><th>Producto</th><th class="num">Cant.</th><th class="mon">Costo</th><th class="mon">Total</th></tr></thead><tbody>${filasEnt}</tbody><tfoot><tr class="total"><td>TOTAL</td><td></td><td></td><td class="mon">${money(b.totalInversion)}</td></tr></tfoot></table><h2>Ventas</h2><table><thead><tr><th>Producto</th><th class="num">Cant.</th><th class="mon">Precio</th><th class="mon">Total</th><th class="mon">Ganancia</th></tr></thead><tbody>${filasVen}</tbody><tfoot><tr class="total"><td>TOTAL</td><td></td><td></td><td class="mon">${money(b.totalVentas)}</td><td class="mon" style="color:#217a44">${money(b.ganancia)}</td></tr></tfoot></table><h2>Inventario</h2><table><thead><tr><th>Producto</th><th class="num">Stock</th><th class="mon">Precio</th><th class="mon">Costo</th><th class="mon">Inversión</th><th class="mon">Ingreso esperado</th><th class="mon">Beneficio estimado</th></tr></thead><tbody>${filasStock}</tbody><tfoot><tr class="total"><td colspan="4">TOTAL</td><td class="mon">${money(totInv)}</td><td class="mon" style="color:#2d7ac0">${money(totalIngEsp)}</td><td class="mon" style="color:#217a44">${money(totalBenEst)}</td></tr></tfoot></table>${tablaBajo}<p class="pie">Generado el ${new Date().toLocaleString('es-ES')}</p>`;
 }
-function verReporte() { const r = obtenerRangoFechas(); if (!r) { mostrarToast('Fechas inválidas.', 'error'); return; } $('#contenidoReporte').innerHTML = '<style>' + REPORT_CSS + '</style>' + construirCuerpoReporteRango(r); $('#vistaReporte').classList.add('activo'); $('#vistaReporte').scrollTop = 0; registrarEstado(obtenerPestanaActiva(), 'reporte'); }
+async function verReporte() {
+  const r = obtenerRangoFechas();
+  if (!r) { mostrarToast('Fechas inválidas.', 'error'); return; }
+  $('#contenidoReporte').innerHTML = '<div style="text-align:center;padding:40px;color:#6b7a90">Generando reporte con gráficos...</div>';
+  $('#vistaReporte').classList.add('activo'); $('#vistaReporte').scrollTop = 0;
+  const b = calcularBalanceRango(r.desde, r.hasta);
+  const imgs = await generarChartsReporteBase64(b);
+  $('#contenidoReporte').innerHTML = '<style>' + REPORT_CSS + '</style>' + construirCuerpoReporteRango(r, imgs);
+  registrarEstado(obtenerPestanaActiva(), 'reporte');
+}
 function cerrarReporte() { $('#vistaReporte').classList.remove('activo'); }
-function compartirReporte() { if (!requerirActivacion('Para compartir reportes debes activar la app.')) return; const r = obtenerRangoFechas(); if (!r) { mostrarToast('Fechas inválidas.', 'error'); return; } const texto = reporteComoTextoPlanoRango(r); if (esDispositivoMovil()) { if (navigator.share) navigator.share({ title: 'Reporte ' + r.etiqueta, text: texto }).catch(err => { if (err.name !== 'AbortError') abrirWhatsAppConTexto(texto); }); else abrirWhatsAppConTexto(texto); } else descargarComoDocRango(r); }
-function copiarReporte() { const r = obtenerRangoFechas(); if (!r) return; const cuerpo = construirCuerpoReporteRango(r); const html = '<style>' + REPORT_CSS + '</style>' + cuerpo; const texto = reporteComoTextoPlanoRango(r); if (navigator.clipboard && window.ClipboardItem) { try { const item = new ClipboardItem({ 'text/html': new Blob([html], {type:'text/html'}), 'text/plain': new Blob([texto], {type:'text/plain'}) }); navigator.clipboard.write([item]).then(() => mostrarToast('✅ Copiado.')).catch(() => { copiarTexto(texto); mostrarToast('📋 Copiado (texto).', 'info'); }); return; } catch (e) {} } copiarTexto(texto); mostrarToast('📋 Copiado.', 'info'); }
-function imprimirReporte() { try { const c = $('#contenidoReporte').innerHTML; const w = window.open('', '_blank'); if (!w) throw new Error('Bloqueado'); w.document.write('<html><head><meta charset="utf-8"><title>Reporte</title><style>' + REPORT_CSS + '</style></head><body>' + c + '</body></html>'); w.document.close(); setTimeout(() => { w.focus(); w.print(); }, 400); } catch (e) { pedirConfirmacion('Impresión no disponible', '¿Copiar reporte?', (ok) => { if (ok) copiarReporte(); }); } }
-function descargarComoDocRango(r) { const cuerpo = construirCuerpoReporteRango(r); const html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>Reporte</title><style>' + REPORT_CSS + '</style></head><body>' + cuerpo + '</body></html>'; const blob = new Blob(['\ufeff', html], { type: 'application/msword' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'Reporte - ' + r.desde + '_a_' + r.hasta + '.doc'; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(url), 3000); mostrarToast('📄 Reporte guardado.', 'info'); }
-function reporteComoTextoPlanoRango(r) { const b = calcularBalanceRango(r.desde, r.hasta); const c = obtenerCuenta(); const neg = c ? c.nombre : 'miNegocito'; let t = '🏪 ' + neg + '\n📊 Reporte — ' + r.etiqueta + '\n═════════════\n\n'; t += '💰 Ventas: ' + money(b.totalVentas) + '\n'; if (b.totalDevolucionesVenta > 0) t += '↩️ Devoluciones: -' + money(b.totalDevolucionesVenta) + '\n'; t += '💸 Costo: ' + money(b.totalCosto) + '\n💚 Ganancia Bruta: ' + money(b.ganancia) + '\n'; if (b.totalPerdidas > 0) t += '📉 Pérdidas: -' + money(b.totalPerdidas) + '\n'; if (b.totalGastos > 0) t += '💸 Gastos: -' + money(b.totalGastos) + '\n💚 Beneficio Neto: ' + money(b.beneficioNeto) + '\n'; t += '📦 Inversión: ' + money(b.totalInversion) + '\n\n'; t += '— ' + new Date().toLocaleString('es-ES'); return t; }
+async function compartirReporte() {
+  if (!requerirActivacion('Para compartir reportes debes activar la app.')) return;
+  const r = obtenerRangoFechas(); if (!r) { mostrarToast('Fechas inválidas.', 'error'); return; }
+  const texto = reporteComoTextoPlanoRango(r);
+  if (esDispositivoMovil()) {
+    if (navigator.share) navigator.share({ title: 'Reporte ' + r.etiqueta, text: texto }).catch(err => { if (err.name !== 'AbortError') abrirWhatsAppConTexto(texto); });
+    else abrirWhatsAppConTexto(texto);
+  } else {
+    const b = calcularBalanceRango(r.desde, r.hasta);
+    const imgs = await generarChartsReporteBase64(b);
+    const cuerpo = construirCuerpoReporteRango(r, imgs);
+    const html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>Reporte</title><style>' + REPORT_CSS + '</style></head><body>' + cuerpo + '</body></html>';
+    const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+    _descargarBlob(blob, 'Reporte - ' + r.desde + '_a_' + r.hasta + '.doc');
+    mostrarToast('📄 Reporte guardado con gráficos.', 'info');
+  }
+}
+async function copiarReporte() {
+  const r = obtenerRangoFechas(); if (!r) return;
+  const b = calcularBalanceRango(r.desde, r.hasta);
+  const imgs = await generarChartsReporteBase64(b);
+  const cuerpo = construirCuerpoReporteRango(r, imgs);
+  const html = '<style>' + REPORT_CSS + '</style>' + cuerpo;
+  const texto = reporteComoTextoPlanoRango(r);
+  if (navigator.clipboard && window.ClipboardItem) {
+    try {
+      const item = new ClipboardItem({ 'text/html': new Blob([html], {type:'text/html'}), 'text/plain': new Blob([texto], {type:'text/plain'}) });
+      await navigator.clipboard.write([item]);
+      mostrarToast('✅ Copiado con formato.');
+      return;
+    } catch (e) {}
+  }
+  copiarTexto(texto);
+  mostrarToast('📋 Copiado (texto).', 'info');
+}
+async function imprimirReporte() {
+  const r = obtenerRangoFechas();
+  if (!r) return;
+  const b = calcularBalanceRango(r.desde, r.hasta);
+  const imgs = await generarChartsReporteBase64(b);
+  const cuerpo = construirCuerpoReporteRango(r, imgs);
+  try {
+    const w = window.open('', '_blank');
+    if (!w) throw new Error('Bloqueado');
+    w.document.write('<html><head><meta charset="utf-8"><title>Reporte</title><style>' + REPORT_CSS + '</style></head><body>' + cuerpo + '</body></html>');
+    w.document.close();
+    setTimeout(() => { try { w.focus(); w.print(); } catch (e) {} }, 800);
+    mostrarToast('🖨️ Elige "Guardar como PDF".', 'info');
+  } catch (e) { pedirConfirmacion('Impresión no disponible', '¿Copiar reporte como texto?', (ok) => { if (ok) copiarReporte(); }); }
+}
+function descargarComoDocRango(r) { const b = calcularBalanceRango(r.desde, r.hasta); const imgs = generarChartsReporteBase64(b); imgs.then(imgsArr => { const cuerpo = construirCuerpoReporteRango(r, imgsArr); const html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>Reporte</title><style>' + REPORT_CSS + '</style></head><body>' + cuerpo + '</body></html>'; const blob = new Blob(['\ufeff', html], { type: 'application/msword' }); _descargarBlob(blob, 'Reporte - ' + r.desde + '_a_' + r.hasta + '.doc'); mostrarToast('📄 Reporte guardado con gráficos.', 'info'); }); }
+function reporteComoTextoPlanoRango(r) { const b = calcularBalanceRango(r.desde, r.hasta); const c = obtenerCuenta(); const neg = c ? c.nombre : 'miNegocito'; let t = '🏪 ' + neg + '\n📊 Reporte — ' + r.etiqueta + '\n═════════════\n\n'; t += '💰 Ventas: ' + money(b.totalVentas) + '\n'; if (b.totalDevolucionesVenta > 0) t += '↩️ Devoluciones: -' + money(b.totalDevolucionesVenta) + '\n'; t += '💸 Costo: ' + money(b.totalCosto) + '\n💚 Ganancia Bruta: ' + money(b.ganancia) + '\n'; if (b.margen > 0) t += '📈 Margen: ' + b.margen.toFixed(1) + '%\n'; if (b.totalPerdidas > 0) t += '📉 Pérdidas: -' + money(b.totalPerdidas) + '\n'; if (b.totalGastos > 0) t += '💸 Gastos: -' + money(b.totalGastos) + '\n💚 Beneficio Neto: ' + money(b.beneficioNeto) + '\n'; t += '📦 Inversión: ' + money(b.totalInversion) + '\n\n'; t += '— ' + new Date().toLocaleString('es-ES'); return t; }
 
-const TEXTO_NOVEDADES = `🆕 Novedades miNegocito v1.579
-
-🔐 Módulo Multi-Negocio premium
-📲 Activación portable sin Device ID
-🏪 Activación con nombre, teléfono e ID
-📱 Registro con teléfono o correo
-🧮 Cantidades fraccionarias (libras, litros)
-🖼️ Catálogo centrado bajo la imagen
-💱 20 monedas · 🎨 8 colores
-⚡ Rendimiento optimizado (caché de costos)
-🛡️ Protección de carrito y borrador
-🔕 Feedback unificado (toast único)
-🌙 Modo oscuro accesible en la barra lateral / header
-📂 Configuración y Copia de Seguridad colapsables
-
-📲 +53 5 318 6004 · miNegocito 🇨🇺`;
-function copiarNovedades() { copiarTexto(TEXTO_NOVEDADES); mostrarToast('📋 Novedades copiadas.', 'info'); }
+// ═══════════════════════════════════════════════════════════
+// MANUAL
+// ═══════════════════════════════════════════════════════════
 function abrirManual() {
   const c = document.getElementById('contenidoManual');
   const cuenta = obtenerCuenta();
@@ -3563,20 +3735,16 @@ function abrirManual() {
     '<div style="background:linear-gradient(135deg,#1a4d80,#2d7ac0);color:#fff;padding:26px 20px;text-align:center;border-radius:14px;margin-bottom:20px">' +
       '<h1 style="margin:0 0 6px 0;font-size:22px">📖 Manual de miNegocito</h1>' +
       '<p style="margin:0;opacity:.9;font-size:14px">Negocio: ' + esc(neg) + '</p>' +
-      '<p style="margin:6px 0 0 0;opacity:.85;font-size:12px">Versión 1.579</p>' +
+      '<p style="margin:6px 0 0 0;opacity:.85;font-size:12px">Versión 1.580</p>' +
     '</div>' +
-    sec('🆕', 'Novedades v1.579', ul([
-      '🌙 Modo oscuro en la barra lateral (móvil) y en la cabecera (escritorio).',
-      '📂 Secciones colapsables en Ayuda (Configuración y Copia de Seguridad).',
-      '⚡ Rendimiento: caché de costos promedio, guardado más rápido.',
-      '📲 Instalación como app (PWA): Chrome / Edge / Safari.',
-      '🔐 Módulo Multi-Negocio (premium).',
-      '🧮 Cantidades fraccionarias (libras, litros, kilos).',
-      '💱 Tasa de cambio configurable (%).',
-      '🖼️ Catálogo por imagen con 2×2, 3×3 y 3×4.',
-      '🏦 Cuentas bancarias con QR.',
-      '🧾 Facturación múltiple.',
-      '🛡️ Protección del carrito y borrador de factura.'
+    sec('🆕', 'Novedades v1.580', ul([
+      '📊 Gráficos de ventas, ganancias y gastos en balance y reportes.',
+      '🔍 Búsqueda global de productos, clientes y proveedores en Acceso Rápido.',
+      '📄 Catálogo HTML descargable en 1, 2, 3 columnas o ajustado (con fotos).',
+      '📈 % de ganancia (margen) en balance del día y del mes.',
+      '💰 Columna de ganancia en Productos Vendidos y Top 5.',
+      '💼 Columnas de valor de stock (precio venta y precio costo) en Productos.',
+      'Filtro rápido de productos por nombre o código.'
     ])) +
     sec('🚀', '1. Primeros pasos', ul([
       'Crea tu cuenta con nombre del negocio, teléfono o correo y contraseña.',
@@ -3585,54 +3753,59 @@ function abrirManual() {
     ])) +
     sec('📦', '2. Productos', ul([
       'Agrega productos con foto, precio, stock, costo y mínimo de alerta.',
+      'Ahora verás el Valor Venta (stock × precio venta) y el Valor Costo (stock × costo promedio).',
+      'Filtro rápido por nombre o código.',
       'Código de barras manual, aleatorio o por escaneo.',
-      'Importación por lotes CSV (productos, códigos, precios, % masivo).',
-      'Categorías personalizables.'
+      'Importación por lotes CSV.'
     ])) +
     sec('🖼️', '3. Punto de Venta (POS)', ul([
       'Abre ⚡ Acceso Rápido → Punto de Venta.',
       'Toca un producto, escribe cantidad con el teclado (incluye decimales).',
-      'Revisa el carrito y paga: facturar o registrar venta directa.',
-      'La tasa de cambio % se aplica automáticamente si está configurada.'
+      'Revisa el carrito y paga: facturar o registrar venta directa.'
     ])) +
     sec('📊', '4. Balance y reportes', ul([
-      'Balance diario, mensual y por rango.',
-      'Ganancia bruta, beneficio neto, inversión, pérdidas y gastos.',
-      'Reportes Word / PDF / WhatsApp / compartir.',
-      'Balance consolidado si tienes el módulo Multi-Negocio.'
+      'Balance diario con gráficos de resumen y top 5.',
+      'Margen de ganancia sobre ventas (%).',
+      'Productos vendidos ahora muestra la ganancia de cada uno.',
+      'Reportes Word/PDF incluyen los gráficos embebidos.',
+      'Balance consolidado con multiNegocio.'
     ])) +
-    sec('🧾', '5. Facturación', ul([
+    sec('🔍', '5. Búsqueda global', ul([
+      'En ⚡ Acceso Rápido escribe al menos 2 letras.',
+      'Verás productos (con stock, precio y ganancia), clientes y proveedores.',
+      'Desde ahí puedes editar producto o dar entrada directa.'
+    ])) +
+    sec('📄', '6. Catálogo HTML', ul([
+      'Desde Productos → 📄 Catálogo HTML o desde Compartir catálogo.',
+      'Elige 1, 2, 3 columnas o ajustado a la pantalla.',
+      'Se descarga un único archivo .html con todas las fotos y descripciones.',
+      'Los clientes pueden abrirlo en cualquier navegador sin conexión.'
+    ])) +
+    sec('🧾', '7. Facturación', ul([
       'Factura múltiple con varios productos.',
       'Factura desde una venta existente.',
       'Copiar factura como texto o imprimir / guardar PDF.'
     ])) +
-    sec('🏢', '6. Multi-Negocio (premium)', ul([
-      'Maneja varias sucursales desde la misma app.',
-      'Cambia de negocio desde el selector del header o el panel.',
-      'Solo se activa si el administrador te habilita el módulo.'
-    ])) +
-    sec('💾', '7. Respaldos', ul([
+    sec('💾', '8. Respaldos', ul([
       'Guarda respaldo .txt o envíalo por correo / WhatsApp.',
       'Carga respaldos desde otro dispositivo.',
       'La app te recuerda si llevas +3 días sin respaldar.'
     ])) +
-    sec('🌙', '8. Modo oscuro y temas', ul([
+    sec('🌙', '9. Modo oscuro y temas', ul([
       'Modo oscuro desde la barra lateral (móvil) o el header (escritorio).',
-      'Elige entre 8 colores de acento (Azul, Verde, Rojo, Morado, Naranja, Teal, Rosa, Gris).',
-      'Cambia la moneda entre 20 opciones.'
+      '8 colores de acento · 20 monedas.'
     ])) +
-    sec('📲', '9. Instalar la app (PWA)', ul([
+    sec('📲', '10. Instalar la app (PWA)', ul([
       'Android: menú del navegador → "Instalar aplicación".',
       'iPhone/iPad: Compartir ⬆️ → "Añadir a pantalla de inicio".',
-      'PC (Chrome/Edge): menú → "Instalar aplicación".',
-      'Funciona offline una vez instalada.'
+      'PC (Chrome/Edge): menú → "Instalar aplicación".'
     ])) +
-    sec('💬', '10. Soporte', '<table style="width:100%;font-size:14px">' +
+    sec('💬', 'Soporte', '<table style="width:100%;font-size:14px">' +
       '<tr><td style="padding:6px 0"><b>📲 WhatsApp</b></td><td>+53 5 318 6004</td></tr>' +
       '<tr><td style="padding:6px 0"><b>📧 Correo</b></td><td>solucionesalrohi@gmail.com</td></tr>' +
       '<tr><td style="padding:6px 0"><b>🌐 Blog</b></td><td>solucionesalrohi.blogspot.com</td></tr>' +
       '</table>') +
-    '<div style="text-align:center;font-size:12px;color:#6b7a90;padding:16px">miNegocito — Manual v1.579 · ' + anio + '</div>' +
+    '<div style="text-align:center;font-size:12px;color:#6b7a90;padding:16px">miNegocito — Manual v1.580 · ' + anio + '</div>' +
   '</div>';
   document.getElementById('vistaManual').classList.add('activo');
   document.getElementById('vistaManual').scrollTop = 0;
@@ -3648,7 +3821,7 @@ function abrirModalCatalogoCompartir() {
   const c = document.getElementById('modalCatalogoCompartirWrapper'); if (c) c.remove();
   const cats = obtenerCategorias();
   const optsCat = '<option value="">Todas las categorías</option>' + cats.filter(cat => db.productos.some(p => p.categoria === cat && p.stock > 0)).map(cat => '<option value="' + esc(cat) + '">' + esc(cat) + '</option>').join('');
-  const html = `<div id="modalCatalogoCompartir" style="position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100002;padding:16px;overflow-y:auto;display:flex;align-items:flex-start;justify-content:center"><div style="background:#fff;border-radius:14px;padding:18px;max-width:560px;width:100%;margin:auto;box-shadow:0 10px 40px rgba(0,0,0,.35)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><h3 style="color:#1a4d80;margin:0;font-size:18px">📢 Compartir catálogo</h3><button onclick="cerrarModalCatalogoCompartir()" style="background:#f0f4fa;border:none;border-radius:8px;padding:6px 12px;font-weight:800;color:#6b7a90;cursor:pointer">✖</button></div><div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap"><select id="filtroCategoriaCatalogo" onchange="renderListaCatalogoCompartir()" style="flex:1;min-width:160px;padding:10px;font-size:13px;border:2px solid #c8d2e0;border-radius:8px;font-family:inherit">${optsCat}</select><select id="layoutCatalogo" style="padding:10px;font-size:13px;border:2px solid #c8d2e0;border-radius:8px;font-family:inherit"><option value="2x2">2×2 (4 por hoja)</option><option value="3x3">3×3 (9 por hoja)</option><option value="3x4" selected>3×4 (12 por hoja)</option></select></div><input type="search" id="buscarEnCatalogo" placeholder="🔍 Buscar..." oninput="_renderListaCatalogoDebounced()" style="width:100%;padding:11px 14px;font-size:14px;border:2px solid #c8d2e0;border-radius:10px;margin-bottom:12px;font-family:inherit"><div id="listaCatalogoCompartir" style="max-height:45vh;overflow-y:auto;border:1px solid #e3e9f2;border-radius:10px;margin-bottom:12px"></div><div style="display:grid;grid-template-columns:1fr;gap:8px"><button onclick="compartirCatalogoComoImagen()" style="width:100%;padding:13px;border:none;border-radius:10px;background:linear-gradient(135deg,#7b3fa0,#5d2d7a);color:#fff;font-weight:700;font-size:14px;cursor:pointer">🖼️ Enviar catálogo como IMAGEN</button><button onclick="compartirCatalogoTexto()" style="width:100%;padding:13px;border:none;border-radius:10px;background:linear-gradient(135deg,#2d7ac0,#1a4d80);color:#fff;font-weight:700;font-size:14px;cursor:pointer">📝 Enviar catálogo como TEXTO</button></div></div></div>`;
+  const html = `<div id="modalCatalogoCompartir" style="position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100002;padding:16px;overflow-y:auto;display:flex;align-items:flex-start;justify-content:center"><div style="background:#fff;border-radius:14px;padding:18px;max-width:560px;width:100%;margin:auto;box-shadow:0 10px 40px rgba(0,0,0,.35)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><h3 style="color:#1a4d80;margin:0;font-size:18px">📢 Compartir catálogo</h3><button onclick="cerrarModalCatalogoCompartir()" style="background:#f0f4fa;border:none;border-radius:8px;padding:6px 12px;font-weight:800;color:#6b7a90;cursor:pointer">✖</button></div><div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap"><select id="filtroCategoriaCatalogo" onchange="renderListaCatalogoCompartir()" style="flex:1;min-width:160px;padding:10px;font-size:13px;border:2px solid #c8d2e0;border-radius:8px;font-family:inherit">${optsCat}</select><select id="layoutCatalogo" style="padding:10px;font-size:13px;border:2px solid #c8d2e0;border-radius:8px;font-family:inherit"><option value="2x2">2×2 (4 por hoja)</option><option value="3x3">3×3 (9 por hoja)</option><option value="3x4" selected>3×4 (12 por hoja)</option></select></div><input type="search" id="buscarEnCatalogo" placeholder="🔍 Buscar..." oninput="_renderListaCatalogoDebounced()" style="width:100%;padding:11px 14px;font-size:14px;border:2px solid #c8d2e0;border-radius:10px;margin-bottom:12px;font-family:inherit"><div id="listaCatalogoCompartir" style="max-height:45vh;overflow-y:auto;border:1px solid #e3e9f2;border-radius:10px;margin-bottom:12px"></div><div style="display:grid;grid-template-columns:1fr;gap:8px"><button onclick="compartirCatalogoComoImagen()" style="width:100%;padding:13px;border:none;border-radius:10px;background:linear-gradient(135deg,#7b3fa0,#5d2d7a);color:#fff;font-weight:700;font-size:14px;cursor:pointer">🖼️ Enviar catálogo como IMAGEN</button><button onclick="compartirCatalogoHTML()" style="width:100%;padding:13px;border:none;border-radius:10px;background:linear-gradient(135deg,#2e9e5b,#217a44);color:#fff;font-weight:700;font-size:14px;cursor:pointer">📄 Enviar catálogo en HTML (un solo archivo)</button><button onclick="compartirCatalogoTexto()" style="width:100%;padding:13px;border:none;border-radius:10px;background:linear-gradient(135deg,#2d7ac0,#1a4d80);color:#fff;font-weight:700;font-size:14px;cursor:pointer">📝 Enviar catálogo como TEXTO</button></div></div></div>`;
   const ct = document.createElement('div'); ct.id = 'modalCatalogoCompartirWrapper'; ct.innerHTML = html; document.body.appendChild(ct);
   renderListaCatalogoCompartir(); registrarEstado(obtenerPestanaActiva(), 'catalogoCompartir');
 }
@@ -3714,33 +3887,21 @@ async function generarImagenesCatalogo(productos, titulo, layoutKey) {
       const imgY = y + pad + 10;
       ctx.fillStyle = '#ffffff'; ctx.fillRect(imgX, imgY, imgW, imgH);
       if (p.imagen) await _dibujarImagenEnCanvas(ctx, p.imagen, imgX, imgY, imgW, imgH);
-      else {
-        ctx.fillStyle = '#6b7a90';
-        ctx.font = Math.min(64, imgH * 0.6) + 'px Arial';
-        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText('📷', imgX + imgW/2, imgY + imgH/2);
-      }
+      else { ctx.fillStyle = '#6b7a90'; ctx.font = Math.min(64, imgH * 0.6) + 'px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('📷', imgX + imgW/2, imgY + imgH/2); }
       const textTop = imgY + imgH + 14;
       const centerX = imgX + imgW / 2;
       const maxTextW = imgW - 8;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'top';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'top';
       ctx.fillStyle = '#1a4d80';
       ctx.font = 'bold ' + (COLS === 2 ? 22 : 17) + 'px Arial, sans-serif';
       let nombreMostrar = p.nombre;
-      if (ctx.measureText(nombreMostrar).width > maxTextW) {
-        while (nombreMostrar.length > 3 && ctx.measureText(nombreMostrar + '...').width > maxTextW) {
-          nombreMostrar = nombreMostrar.slice(0, -1);
-        }
-        nombreMostrar += '...';
-      }
+      if (ctx.measureText(nombreMostrar).width > maxTextW) { while (nombreMostrar.length > 3 && ctx.measureText(nombreMostrar + '...').width > maxTextW) nombreMostrar = nombreMostrar.slice(0, -1); nombreMostrar += '...'; }
       ctx.fillText(nombreMostrar, centerX, textTop);
       ctx.fillStyle = '#217a44';
       ctx.font = 'bold ' + (COLS === 2 ? 28 : 22) + 'px Arial, sans-serif';
       ctx.fillText(money(p.precioVenta), centerX, textTop + (COLS === 2 ? 32 : 26));
     }
-    ctx.fillStyle = '#6b7a90';
-    ctx.font = '18px Arial, sans-serif';
+    ctx.fillStyle = '#6b7a90'; ctx.font = '18px Arial, sans-serif';
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText('Generado con miNegocito · ' + new Date().toLocaleDateString('es-ES'), CATALOGO_W/2, CATALOGO_H - 30);
     pages.push(canvas);
@@ -3772,6 +3933,101 @@ async function compartirCatalogoComoImagen() {
   for (let i = 0; i < pages.length; i++) { const canvas = pages[i]; const link = document.createElement('a'); link.download = 'catalogo-' + (i + 1) + '.png'; link.href = canvas.toDataURL('image/png'); document.body.appendChild(link); link.click(); document.body.removeChild(link); await new Promise(r => setTimeout(r, 400)); }
   mostrarToast('✅ ' + pages.length + ' imagen(es) descargada(s).', 'info');
 }
+// v1.580: catálogo HTML de un solo archivo
+function generarCatalogoHTML(categoriaFiltro, columnas) {
+  const cuenta = obtenerCuenta();
+  const neg = cuenta ? cuenta.nombre : 'miNegocito';
+  const dir = cuenta && cuenta.direccion ? cuenta.direccion : '';
+  const tel = cuenta ? (cuenta.telefonoPagos || cuenta.correo || '') : '';
+  const logo = cuenta && cuenta.logo ? cuenta.logo : null;
+  let prods = db.productos.filter(p => p.stock > 0);
+  if (categoriaFiltro) prods = prods.filter(p => p.categoria === categoriaFiltro);
+  prods.sort((a, b) => a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' }));
+  const gridCol = columnas === '1' ? '1fr'
+    : columnas === '2' ? 'repeat(auto-fit,minmax(280px,1fr))'
+    : columnas === '3' ? 'repeat(auto-fit,minmax(200px,1fr))'
+    : 'repeat(auto-fit,minmax(240px,1fr))';
+
+  let html = '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + esc(neg) + ' — Catálogo</title>';
+  html += '<style>*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#f4f6fa;color:#222}';
+  html += '.header{background:linear-gradient(135deg,#1a4d80,#2d7ac0);color:#fff;padding:28px 16px;text-align:center}';
+  html += '.header .logo{max-height:70px;max-width:200px;object-fit:contain;display:block;margin:0 auto 8px;background:#fff;padding:4px;border-radius:8px}';
+  html += '.header h1{margin:0 0 8px;font-size:24px;font-weight:700}';
+  html += '.header .meta{font-size:13px;opacity:.92;margin:3px 0}';
+  html += '.header .fecha{font-size:11px;opacity:.75;margin-top:8px}';
+  html += '.container{max-width:1200px;margin:0 auto;padding:20px}';
+  html += '.grid{display:grid;grid-template-columns:' + gridCol + ';gap:16px}';
+  html += '.card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s}';
+  html += '.card:hover{transform:translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,.12)}';
+  html += '.img{width:100%;aspect-ratio:1/1;background:#f8faff;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:12px;font-size:56px;color:#6b7a90;border:1px solid #eaf1f9}';
+  html += '.img img{width:100%;height:100%;object-fit:contain;background:#fff}';
+  html += '.nom{font-weight:700;color:#1a4d80;font-size:15px;margin:0 0 6px 0;line-height:1.3}';
+  html += '.cat{display:inline-block;background:#eaf1f9;color:#2d7ac0;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;margin-bottom:6px}';
+  html += '.pre{font-weight:800;color:#217a44;font-size:20px;margin:4px 0 6px 0}';
+  html += '.desc{font-size:12px;color:#6b7a90;line-height:1.4;margin-bottom:8px;flex:1}';
+  html += '.stk{font-size:11px;color:#999;margin-top:auto;padding-top:6px;border-top:1px solid #eef2f8}';
+  html += '.footer{text-align:center;padding:30px 20px;font-size:12px;color:#6b7a90;background:#fff;margin-top:30px}';
+  html += '.footer .wa{color:#25D366;font-weight:700;text-decoration:none;font-size:14px}';
+  html += '@media print{.card{break-inside:avoid}}';
+  html += '</style></head><body>';
+  html += '<div class="header">';
+  if (logo) html += '<img src="' + logo + '" class="logo" alt="Logo">';
+  html += '<h1>🏪 ' + esc(neg) + '</h1>';
+  if (dir) html += '<p class="meta">📍 ' + esc(dir) + '</p>';
+  if (tel) html += '<p class="meta">📞 ' + esc(tel) + '</p>';
+  html += '<p class="fecha">Catálogo · ' + fechaBonita(fechaISO()) + ' · ' + prods.length + ' producto' + (prods.length === 1 ? '' : 's') + '</p>';
+  html += '</div>';
+  html += '<div class="container"><div class="grid">';
+  prods.forEach(p => {
+    html += '<div class="card">';
+    html += '<div class="img">' + (p.imagen ? '<img src="' + p.imagen + '" alt="' + esc(p.nombre) + '" loading="lazy">' : '📷') + '</div>';
+    html += '<div class="nom">' + esc(p.nombre) + '</div>';
+    if (p.categoria) html += '<div><span class="cat">🏷️ ' + esc(p.categoria) + '</span></div>';
+    html += '<div class="pre">' + money(p.precioVenta) + '</div>';
+    if (p.caracteristicas) html += '<div class="desc">' + esc(p.caracteristicas) + '</div>';
+    html += '<div class="stk">Stock: ' + cant(p.stock) + '</div>';
+    html += '</div>';
+  });
+  html += '</div></div>';
+  html += '<div class="footer">';
+  if (tel) html += '<p>📲 <a class="wa" href="https://wa.me/' + tel.replace(/[^\d]/g, '') + '">Pedidos por WhatsApp: ' + esc(tel) + '</a></p>';
+  html += '<p style="margin-top:8px">Generado con miNegocito · Soluciones ALROHI<br>📲 +53 5 318 6004</p>';
+  html += '</div></body></html>';
+  return html;
+}
+function compartirCatalogoHTML() {
+  if (!requerirActivacion('Para compartir debes activar la app.')) return;
+  const disp = db.productos.filter(p => p.stock > 0);
+  if (!disp.length) { mostrarToast('Sin productos con stock.', 'warn'); return; }
+  const cat = document.getElementById('filtroCategoriaCatalogo')?.value || '';
+  cerrarModalCatalogoCompartir();
+  const bts = [
+    { texto: '📱 1 columna (grande)', clase: 'azul', accion: () => _descargarCatalogoHTML(cat, '1') },
+    { texto: '📱 2 columnas', clase: 'azul', accion: () => _descargarCatalogoHTML(cat, '2') },
+    { texto: '💻 3 columnas', clase: 'azul', accion: () => _descargarCatalogoHTML(cat, '3') },
+    { texto: '🖥️ Ajustado a pantalla (auto)', clase: 'verde', accion: () => _descargarCatalogoHTML(cat, 'auto') },
+    { texto: '✖ Cancelar', clase: 'gris', accion: () => {} }
+  ];
+  mostrarModalOpciones('📄 Catálogo HTML', 'Selecciona el diseño. Se descargará UN SOLO archivo .html con todas las fotos y descripciones incluidas.\n\nLos clientes podrán abrirlo sin conexión en cualquier navegador.', bts);
+}
+function _descargarCatalogoHTML(categoriaFiltro, columnas) {
+  const html = generarCatalogoHTML(categoriaFiltro, columnas);
+  const cuenta = obtenerCuenta();
+  const nb = cuenta ? _limpiarNombreArchivo(cuenta.nombre) : 'miNegocito';
+  const nf = 'Catalogo - ' + nb + ' - ' + fechaArchivo(fechaISO()) + '.html';
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  if (esDispositivoMovil() && navigator.share && navigator.canShare && typeof File !== 'undefined') {
+    try {
+      const file = new File([blob], nf, { type: 'text/html' });
+      if (navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: 'Catálogo - ' + nb }).then(() => mostrarToast('✅ Catálogo compartido.', 'info')).catch(err => { if (err.name !== 'AbortError') _descargarBlob(blob, nf); });
+        return;
+      }
+    } catch (e) {}
+  }
+  _descargarBlob(blob, nf);
+  mostrarToast('✅ Catálogo HTML guardado: ' + nf, 'info');
+}
 async function compartirUnProductoDelCatalogo(id) {
   if (!requerirActivacion('Para enviar promociones debes activar la app.')) return;
   const p = getProducto(id); if (!p) return;
@@ -3795,26 +4051,9 @@ function generarTextoCatalogo(categoria) {
   let t = bloque ? bloque + '\n' : '🏪 *' + neg + '*\n';
   t += '📋 Lista de productos\n━━━━━━━━━━━━━━━━━━━━\n\n';
   const grupos = {};
-  disp.forEach(p => {
-    const cat = (p.categoria && p.categoria.trim()) ? p.categoria.trim() : 'SIN CATEGORÍA';
-    if (!grupos[cat]) grupos[cat] = [];
-    grupos[cat].push(p);
-  });
-  const cats = Object.keys(grupos).sort((a, b) => {
-    if (a === 'SIN CATEGORÍA') return 1;
-    if (b === 'SIN CATEGORÍA') return -1;
-    return a.localeCompare(b, 'es', { sensitivity: 'base' });
-  });
-  cats.forEach(cat => {
-    t += '🏷️ *' + cat.toUpperCase() + ':*\n';
-    const prods = grupos[cat].sort((a, b) => a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' }));
-    prods.forEach(p => {
-      t += '  • ' + p.nombre + ' — ' + money(p.precioVenta);
-      if (p.stock > 0 && p.stock <= 5) t += ' ⚡ Últimas ' + cant(p.stock) + ' uds.';
-      t += '\n';
-    });
-    t += '\n';
-  });
+  disp.forEach(p => { const cat = (p.categoria && p.categoria.trim()) ? p.categoria.trim() : 'SIN CATEGORÍA'; if (!grupos[cat]) grupos[cat] = []; grupos[cat].push(p); });
+  const cats = Object.keys(grupos).sort((a, b) => { if (a === 'SIN CATEGORÍA') return 1; if (b === 'SIN CATEGORÍA') return -1; return a.localeCompare(b, 'es', { sensitivity: 'base' }); });
+  cats.forEach(cat => { t += '🏷️ *' + cat.toUpperCase() + ':*\n'; const prods = grupos[cat].sort((a, b) => a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' })); prods.forEach(p => { t += '  • ' + p.nombre + ' — ' + money(p.precioVenta); if (p.stock > 0 && p.stock <= 5) t += ' ⚡ Últimas ' + cant(p.stock) + ' uds.'; t += '\n'; }); t += '\n'; });
   t += '━━━━━━━━━━━━━━━━━━━━\n';
   if (dir) t += '📍 ' + dir + '\n';
   t += '📞 _Responde para pedir_ 💙\n\n⚙️ *miNegocito*';
@@ -3852,26 +4091,13 @@ function obtenerUltimoRespaldo() { try { return parseInt(localStorage.getItem(UL
 function registrarRespaldoHecho() { try { localStorage.setItem(ULTIMO_RESPALDO_KEY, String(Date.now())); } catch (e) {} actualizarAvisoRespaldo(); notificaciones = notificaciones.filter(n => n.tipo !== 'respaldo'); guardarNotificaciones(); actualizarFAB(); }
 function diasSinRespaldo() { const u = obtenerUltimoRespaldo(); if (!u) return null; return Math.floor((Date.now() - u) / (24 * 60 * 60 * 1000)); }
 function actualizarAvisoRespaldo() {
-  const el = document.getElementById('ultimoRespaldo');
-  const badge = document.getElementById('respaldoBadge');
-  const d = diasSinRespaldo();
-  if (el) {
-    if (d === null) { el.textContent = '📌 Aún no has hecho respaldo.'; el.style.color = '#c0392b'; }
-    else if (d === 0) { el.textContent = '✅ Último respaldo: hoy.'; el.style.color = '#217a44'; }
-    else if (d < DIAS_RECORDATORIO_RESPALDO) { el.textContent = '✅ Último respaldo: hace ' + d + ' días.'; el.style.color = '#217a44'; }
-    else { el.textContent = '⚠️ ' + d + ' días sin respaldar.'; el.style.color = '#c0392b'; }
-  }
-  if (badge) {
-    badge.className = 'colapsable-badge';
-    if (d === null) { badge.textContent = 'sin respaldo'; badge.classList.add('rojo'); }
-    else if (d === 0) { badge.textContent = 'hoy'; badge.classList.add('verde'); }
-    else if (d < DIAS_RECORDATORIO_RESPALDO) { badge.textContent = 'hace ' + d + 'd'; badge.classList.add('verde'); }
-    else { badge.textContent = d + 'd sin respaldar'; badge.classList.add('rojo'); }
-  }
+  const el = document.getElementById('ultimoRespaldo'); const badge = document.getElementById('respaldoBadge'); const d = diasSinRespaldo();
+  if (el) { if (d === null) { el.textContent = '📌 Aún no has hecho respaldo.'; el.style.color = '#c0392b'; } else if (d === 0) { el.textContent = '✅ Último respaldo: hoy.'; el.style.color = '#217a44'; } else if (d < DIAS_RECORDATORIO_RESPALDO) { el.textContent = '✅ Último respaldo: hace ' + d + ' días.'; el.style.color = '#217a44'; } else { el.textContent = '⚠️ ' + d + ' días sin respaldar.'; el.style.color = '#c0392b'; } }
+  if (badge) { badge.className = 'colapsable-badge'; if (d === null) { badge.textContent = 'sin respaldo'; badge.classList.add('rojo'); } else if (d === 0) { badge.textContent = 'hoy'; badge.classList.add('verde'); } else if (d < DIAS_RECORDATORIO_RESPALDO) { badge.textContent = 'hace ' + d + 'd'; badge.classList.add('verde'); } else { badge.textContent = d + 'd sin respaldar'; badge.classList.add('rojo'); } }
 }
 function verificarRecordatorioRespaldo() { const d = diasSinRespaldo(); if (d === null) { agregarNotificacion('respaldo', '💾', 'Aún no has hecho respaldo. Te recomendamos guardar tu información.', 'irARespaldo'); } else if (d >= DIAS_RECORDATORIO_RESPALDO) { agregarNotificacion('respaldo', '💾', 'Llevas ' + d + ' días sin respaldar. Te recomendamos hacerlo.', 'irARespaldo'); } }
 function irARespaldo() { irAPestana('ayuda'); toggleSeccion('secCopiaSeguridad', true); setTimeout(() => { const b = document.getElementById('btnExportar'); if (b) b.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 250); }
-function generarRespaldoJSON() { const cuenta = obtenerCuenta(); return JSON.stringify({ ...db, cuenta: cuenta ? { id: cuenta.id, nombre: cuenta.nombre, correo: cuenta.correo, telefonoPagos: cuenta.telefonoPagos || '', direccion: cuenta.direccion || '', claveHash: cuenta.claveHash || '', comisionPorciento: cuenta.comisionPorciento || 0, pagoFijoDiario: cuenta.pagoFijoDiario || 0, tasaCambioPorciento: cuenta.tasaCambioPorciento || 0, tema: cuenta.tema || 'azul', moneda: cuenta.moneda || 'USD', cuentasBancarias: cuenta.cuentasBancarias || [], logo: cuenta.logo || null } : null, fecha: new Date().toISOString() }, null, 2); }
+function generarRespaldoJSON() { const cuenta = obtenerCuenta(); return JSON.stringify({ ...db, cuenta: cuenta ? { id: cuenta.id, nombre: cuenta.nombre, correo: cuenta.correo, telefonoPagos: cuenta.telefonoPagos || '', direccion: cuenta.direccion || '', claveHash: cuenta.claveHash || '', comisionPorciento: cuenta.comisionPorciento || 0, pagoFijoDiario: cuenta.pagoFijoDiario || 0, tasaCambioPorcentaje: cuenta.tasaCambioPorcentaje || 0, tema: cuenta.tema || 'azul', moneda: cuenta.moneda || 'USD', cuentasBancarias: cuenta.cuentasBancarias || [], logo: cuenta.logo || null } : null, fecha: new Date().toISOString() }, null, 2); }
 function exportarDatos() { const data = generarRespaldoJSON(); const cuenta = obtenerCuenta(); const nb = cuenta ? _limpiarNombreArchivo(cuenta.nombre.replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '_')) : 'Negocio'; const nf = 'Respaldo - ' + nb + ' - ' + fechaArchivo(fechaISO()) + '.txt'; registrarRespaldoHecho(); if (esDispositivoMovil()) compartirRespaldoEnMovil(data, nf, 'Respaldo'); else { descargarTxtPC(data, nf); pedirConfirmacion('Respaldo guardado', '¿Enviar por correo?', (ok) => { if (ok) abrirCorreoConRespaldo(data, nf); }); } }
 function enviarRespaldoPorCorreo() { if (!requerirActivacion('Para enviar respaldo debes activar la app.')) return; const data = generarRespaldoJSON(); const cuenta = obtenerCuenta(); const nb = cuenta ? _limpiarNombreArchivo(cuenta.nombre.replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '_')) : 'Negocio'; const nf = 'Respaldo - ' + nb + ' - ' + fechaArchivo(fechaISO()) + '.txt'; registrarRespaldoHecho(); if (esDispositivoMovil()) compartirRespaldoEnMovil(data, nf, 'Respaldo'); else { descargarTxtPC(data, nf); setTimeout(() => abrirCorreoConRespaldo(data, nf), 800); } }
 async function compartirRespaldoEnMovil(data, nf, t) { if (navigator.share && window.File) { try { const file = new File([data], nf, { type: 'text/plain' }); if (navigator.canShare && navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], title: t, text: 'Respaldo' }); mostrarToast('✅ Compartido.'); return; } catch (err) { if (err.name === 'AbortError') return; } } } catch (e) {} } if (navigator.share) { try { await navigator.share({ title: t, text: data }); mostrarToast('✅ Compartido.'); return; } catch (err) { if (err.name === 'AbortError') return; } } descargarTxtPC(data, nf); mostrarToast('💾 Archivo descargado.', 'info'); }
@@ -3889,17 +4115,17 @@ function mostrarDialogoImportacion(d, nr) {
   const r = obtenerRegistro(); const act = negocioActivo();
   const ex = nr ? r.lista.find(n => n.nombre.toLowerCase() === nr.toLowerCase()) : null;
   if (ex) { const cmp = compararRespaldoConActual(d, ex.id); let msg = 'El negocio "' + ex.nombre + '" ya existe.'; if (cmp && cmp.diffs.length) msg += '\n\n📊 Cambios:\n' + cmp.diffs.join('\n'); msg += '\n\n¿Sobreescribir?';
-    mostrarModalOpciones('📂 Importar', msg, [{ texto: '🔄 Sobreescribir', clase: 'rojo', accion: () => { pedirConfirmacion('⚠️ Sobreescribir', 'Se reemplazarán TODOS los datos de "' + ex.nombre + '".\n\n¿Continuar?', (ok) => { if (ok) ejecutarImportacion(d, { modo: 'sobreescribir', negocioId: ex.id }); }, { textoSi: 'Sí, sobreescribir', tipo: 'danger' }); } }, { texto: '➕ Crear nuevo', clase: 'verde', accion: () => pedirNombreYImportar(d) }, { texto: '✖ Cancelar', clase: 'gris', accion: () => {} }]); return; }
-  if (nr) { const bts = [{ texto: '➕ Crear "' + nr + '"', clase: 'verde', accion: () => ejecutarImportacion(d, { modo: 'crear', nombre: nr }) }]; if (act) bts.push({ texto: '🔄 Sobreescribir actual', clase: 'rojo', accion: () => ejecutarImportacion(d, { modo: 'sobreescribir', negocioId: act.id }) }); bts.push({ texto: '✖ Cancelar', clase: 'gris', accion: () => {} }); mostrarModalOpciones('📂 Importar', '"' + nr + '" no existe. ¿Qué hacer?', bts); return; }
+    mostrarModalOpciones('📂 Importar', msg, [{ texto: '🔄 Sobreescribir', clase: 'rojo', accion: () => { pedirConfirmacion('⚠️ Sobreescribir', 'Se reemplazarán TODOS los datos.', (ok) => { if (ok) ejecutarImportacion(d, { modo: 'sobreescribir', negocioId: ex.id }); }, { textoSi: 'Sí', tipo: 'danger' }); } }, { texto: '➕ Crear nuevo', clase: 'verde', accion: () => pedirNombreYImportar(d) }, { texto: '✖ Cancelar', clase: 'gris', accion: () => {} }]); return; }
+  if (nr) { const bts = [{ texto: '➕ Crear "' + nr + '"', clase: 'verde', accion: () => ejecutarImportacion(d, { modo: 'crear', nombre: nr }) }]; if (act) bts.push({ texto: '🔄 Sobreescribir actual', clase: 'rojo', accion: () => ejecutarImportacion(d, { modo: 'sobreescribir', negocioId: act.id }) }); bts.push({ texto: '✖ Cancelar', clase: 'gris', accion: () => {} }); mostrarModalOpciones('📂 Importar', '"' + nr + '" no existe.', bts); return; }
   const bts = [{ texto: '➕ Crear nuevo negocio', clase: 'verde', accion: () => pedirNombreYImportar(d) }];
   if (act) bts.push({ texto: '🔄 Sobreescribir actual', clase: 'rojo', accion: () => ejecutarImportacion(d, { modo: 'sobreescribir', negocioId: act.id }) });
-  bts.push({ texto: '✖ Cancelar', clase: 'gris', accion: () => {} }); mostrarModalOpciones('📂 Importar', 'El respaldo no tiene nombre. ¿Qué hacer?', bts);
+  bts.push({ texto: '✖ Cancelar', clase: 'gris', accion: () => {} }); mostrarModalOpciones('📂 Importar', '¿Qué hacer?', bts);
 }
 function pedirNombreYImportar(d) { const sug = (d.cuenta && (d.cuenta.nombre || d.cuenta.negocio)) || ''; pedirValor('Nombre del nuevo negocio', 'Introduce un nombre:', sug, (n) => { const nn = (n || '').trim(); if (!nn) return; const r = obtenerRegistro(); if (r.lista.some(x => x.nombre.toLowerCase() === nn.toLowerCase())) { mostrarToast('Ya existe.', 'error'); return; } ejecutarImportacion(d, { modo: 'crear', nombre: nn }); }, (v) => !v.trim() ? 'Introduce un nombre.' : null); }
 async function ejecutarImportacion(d, o) {
   const r = obtenerRegistro(); let id;
   if (o.modo === 'sobreescribir') id = o.negocioId;
-  else { id = generarIdNegocio(); const ct = d.cuenta || {}; const contactoImport = ct.correo || ct.telefonoPagos || ''; r.lista.push({ id, nombre: o.nombre, correo: ct.correo || '', telefonoPagos: ct.telefonoPagos || '', direccion: ct.direccion || '', claveHash: (typeof ct.claveHash === 'string' && ct.claveHash.length > 0) ? ct.claveHash : await hashClave('1234', contactoImport || 'temp@temp.com'), comisionPorciento: ct.comisionPorciento || 0, pagoFijoDiario: ct.pagoFijoDiario || 0, tasaCambioPorciento: ct.tasaCambioPorciento || 0, tema: ct.tema || 'azul', moneda: ct.moneda || 'USD', cuentasBancarias: ct.cuentasBancarias || [], logo: ct.logo || null, fechaCreacion: new Date().toISOString() }); r.activo = id; guardarRegistro(r); }
+  else { id = generarIdNegocio(); const ct = d.cuenta || {}; const contactoImport = ct.correo || ct.telefonoPagos || ''; r.lista.push({ id, nombre: o.nombre, correo: ct.correo || '', telefonoPagos: ct.telefonoPagos || '', direccion: ct.direccion || '', claveHash: (typeof ct.claveHash === 'string' && ct.claveHash.length > 0) ? ct.claveHash : await hashClave('1234', contactoImport || 'temp@temp.com'), comisionPorciento: ct.comisionPorciento || 0, pagoFijoDiario: ct.pagoFijoDiario || 0, tasaCambioPorcentaje: ct.tasaCambioPorcentaje || 0, tema: ct.tema || 'azul', moneda: ct.moneda || 'USD', cuentasBancarias: ct.cuentasBancarias || [], logo: ct.logo || null, fechaCreacion: new Date().toISOString() }); r.activo = id; guardarRegistro(r); }
   const nd = { productos: d.productos || [], entradas: d.entradas || [], ventas: d.ventas || [], perdidas: d.perdidas || [], devoluciones: d.devoluciones || [], gastos: d.gastos || [], facturas: d.facturas || [], clientes: d.clientes || [], proveedores: d.proveedores || [], facturasMulti: d.facturasMulti || [], seq: d.seq || { p: 1, e: 1, v: 1, d: 1, dev: 1, g: 1, f: 1, c: 1, pv: 1, fm: 1 } };
   ['d','dev','g','f','c','pv','fm'].forEach(k => { if (!nd.seq[k]) nd.seq[k] = 1; });
   nd.productos.forEach(p => { if (typeof p.stockMinimo !== 'number') p.stockMinimo = 0; if (typeof p.imagen === 'undefined') p.imagen = null; if (typeof p.caracteristicas === 'undefined') p.caracteristicas = ''; if (typeof p.codigoBarras === 'undefined') p.codigoBarras = ''; if (typeof p.categoria === 'undefined') p.categoria = ''; });
@@ -3964,18 +4190,7 @@ function abrirPOS() { if (!verificarAcceso()) { mostrarModalActivacion(true); re
 function cerrarPOS() { document.getElementById('vistaPOS').classList.remove('activo'); cerrarModalCantidadPOS(); cerrarModalCarritoPOS(); if (carritoPOS.length > 0) mostrarToast('ℹ️ Carrito: ' + carritoPOS.length + ' producto(s).', 'info'); actualizarFAB(); }
 function cerrarPOSConConfirmacion() {
   if (carritoPOS.length > 0) {
-    pedirConfirmacion(
-      'Salir del POS',
-      'Tienes ' + carritoPOS.length + ' producto(s) en el carrito.\n\n¿Salir y descartarlos?',
-      (ok) => {
-        if (!ok) return;
-        document.getElementById('vistaPOS').classList.remove('activo');
-        cerrarModalCantidadPOS();
-        cerrarModalCarritoPOS();
-        actualizarFAB();
-      },
-      { textoSi: 'Salir', textoNo: 'Seguir vendiendo', tipo: 'danger' }
-    );
+    pedirConfirmacion('Salir del POS', 'Tienes ' + carritoPOS.length + ' producto(s) en el carrito.\n\n¿Salir y descartarlos?', (ok) => { if (!ok) return; document.getElementById('vistaPOS').classList.remove('activo'); cerrarModalCantidadPOS(); cerrarModalCarritoPOS(); actualizarFAB(); }, { textoSi: 'Salir', textoNo: 'Seguir vendiendo', tipo: 'danger' });
     return;
   }
   cerrarPOS();
@@ -3985,13 +4200,7 @@ function renderGrillaPOS() {
   const f = (document.getElementById('buscadorPOS').value || '').trim().toLowerCase(); let l = db.productos.slice();
   if (f) l = l.filter(p => p.nombre.toLowerCase().indexOf(f) !== -1 || String(p.codigoBarras || '').toLowerCase().indexOf(f) !== -1);
   l.sort((a,b) => a.nombre.localeCompare(b.nombre,'es',{sensitivity:'base'}));
-  if (!l.length) {
-    c.innerHTML = '<div class="pos-vacio" style="grid-column:1/-1">' +
-      (f ? 'Sin resultados para "' + esc(f) + '".<br><small style="font-size:13px">Prueba con otra palabra o escanea el código.</small>'
-         : 'Aún no hay productos.<br><small style="font-size:13px">Ve a Productos → Agregar.</small>') +
-      '</div>';
-    return;
-  }
+  if (!l.length) { c.innerHTML = '<div class="pos-vacio" style="grid-column:1/-1">' + (f ? 'Sin resultados para "' + esc(f) + '".<br><small style="font-size:13px">Prueba con otra palabra o escanea el código.</small>' : 'Aún no hay productos.<br><small style="font-size:13px">Ve a Productos → Agregar.</small>') + '</div>'; return; }
   c.innerHTML = l.map(p => { const ss = p.stock <= 0; let cs = 'tarjeta-stock'; if (ss) cs += ' agotado-txt'; else if (p.stock <= 5) cs += ' bajo'; const ih = p.imagen ? '<img src="' + p.imagen + '" alt="' + esc(p.nombre) + '" loading="lazy">' : '📷'; return `<button type="button" class="tarjeta-prod${ss ? ' agotado' : ''}" onclick="seleccionarProductoPOS(${p.id})"><div class="tarjeta-img">${ih}</div><div class="tarjeta-nombre">${esc(p.nombre)}</div><div class="tarjeta-precio">${money(p.precioVenta)}</div><div class="${cs}">${ss ? 'Sin stock' : 'Stock: ' + cant(p.stock)}</div></button>`; }).join('');
 }
 function actualizarContadorCarritoPOS() { const c = document.getElementById('contadorCarritoPOS'); const b = document.getElementById('btnCarritoPOS'); if (c && b) { const t = carritoPOS.reduce((s, i) => s + i.cantidad, 0); c.textContent = cant(t); if (t > 0) b.classList.add('con-items'); else b.classList.remove('con-items'); } actualizarFAB(); }
@@ -4000,17 +4209,8 @@ function cerrarModalCantidadPOS() { document.getElementById('modalCantidadPOS').
 function teclaCantidad(t) {
   if (t === 'back') cantidadPOSActual = cantidadPOSActual.length > 1 ? cantidadPOSActual.slice(0, -1) : '0';
   else if (t === 'clear') cantidadPOSActual = '0';
-  else if (t === '.') {
-    if (cantidadPOSActual.indexOf('.') === -1) {
-      if (cantidadPOSActual === '0' || cantidadPOSActual === '') cantidadPOSActual = '0.';
-      else cantidadPOSActual += '.';
-    }
-  }
-  else if (/^[0-9]$/.test(t)) {
-    if (cantidadPOSActual === '0') cantidadPOSActual = t;
-    else cantidadPOSActual += t;
-    if (cantidadPOSActual.length > 8) cantidadPOSActual = cantidadPOSActual.slice(0, 8);
-  }
+  else if (t === '.') { if (cantidadPOSActual.indexOf('.') === -1) { if (cantidadPOSActual === '0' || cantidadPOSActual === '') cantidadPOSActual = '0.'; else cantidadPOSActual += '.'; } }
+  else if (/^[0-9]$/.test(t)) { if (cantidadPOSActual === '0') cantidadPOSActual = t; else cantidadPOSActual += t; if (cantidadPOSActual.length > 8) cantidadPOSActual = cantidadPOSActual.slice(0, 8); }
   actualizarDisplayCantidadPOS();
 }
 function actualizarDisplayCantidadPOS() { document.getElementById('mcpDisplay').textContent = cantidadPOSActual; const c = parseNumero(cantidadPOSActual); const p = productoPOSActual; document.getElementById('mcpSubtotal').textContent = p ? money(c * p.precioVenta) : money(0); document.getElementById('mcpError').textContent = ''; }
@@ -4028,7 +4228,7 @@ function cerrarModalCarritoPOS() { document.getElementById('modalCarritoPOS').st
 function renderListaCarritoPOS() {
   const c = document.getElementById('listaCarritoPOS'); const t = carritoPOS.reduce((s, i) => s + i.cantidad * i.precioUnitario, 0); const tu = carritoPOS.reduce((s, i) => s + i.cantidad, 0);
   document.getElementById('carritoTituloCant').textContent = '(' + cant(tu) + ' uds.)'; document.getElementById('totalCarritoPOS').textContent = money(t);
-  const cuentaTC = obtenerCuenta(); const tasaTC = cuentaTC ? Number(cuentaTC.tasaCambioPorciento) || 0 : 0;
+  const cuentaTC = obtenerCuenta(); const tasaTC = cuentaTC ? Number(cuentaTC.tasaCambioPorcentaje) || 0 : 0;
   const elTasa = document.getElementById('totalTasaCarritoPOS');
   if (elTasa) { if (tasaTC > 0 && t > 0) { elTasa.style.display = 'block'; elTasa.innerHTML = '💱 Tasa ' + tasaTC + '%: <b style="color:#217a44;font-size:15px">' + money(t * (1 + tasaTC / 100)) + '</b>'; } else elTasa.style.display = 'none'; }
   if (!carritoPOS.length) { c.innerHTML = '<div class="carrito-vacio">Vacío</div>'; document.getElementById('btnPagarPOS').disabled = true; return; }
@@ -4040,13 +4240,13 @@ function vaciarCarritoPOS() { if (!carritoPOS.length) return; pedirConfirmacion(
 function pagarCarritoPOS() {
   if (!carritoPOS.length) { mostrarToast('Vacío.', 'warn'); return; }
   for (const it of carritoPOS) { const p = getProducto(it.productoId); if (!p) { mostrarToast('Producto eliminado. Quítalo.', 'error'); return; } if (p.stock < it.cantidad) { mostrarToast('Stock insuficiente de "' + p.nombre + '".', 'error'); return; } }
-  const cuentaTC = obtenerCuenta(); const tasaTC = cuentaTC ? Number(cuentaTC.tasaCambioPorciento) || 0 : 0;
+  const cuentaTC = obtenerCuenta(); const tasaTC = cuentaTC ? Number(cuentaTC.tasaCambioPorcentaje) || 0 : 0;
   const totalBase = carritoPOS.reduce((s, i) => s + i.cantidad * i.precioUnitario, 0);
   let msg = '¿Emitir factura?\n\n· Sí = ir a facturación.\n· No = registrar ventas directas.';
   if (tasaTC > 0) msg = 'Total: ' + money(totalBase) + '\n💱 Tasa ' + tasaTC + '%: ' + money(totalBase * (1 + tasaTC / 100)) + '\n\n' + msg;
   mostrarModalOpciones('💳 Pago', msg, [
     { texto: '🧾 Facturar', clase: 'verde', accion: () => {
-      for (const it of carritoPOS) { const _p = getProducto(it.productoId); if (!_p || _p.stock < it.cantidad) { mostrarToast('⚠️ Stock cambió. Revisa el carrito antes de pagar.', 'error'); return; } }
+      for (const it of carritoPOS) { const _p = getProducto(it.productoId); if (!_p || _p.stock < it.cantidad) { mostrarToast('⚠️ Stock cambió. Revisa el carrito.', 'error'); return; } }
       const _totalPOS = carritoPOS.reduce((s, i) => s + i.cantidad * i.precioUnitario, 0);
       const _itemsPOS = carritoPOS.length;
       facturaBorrador = carritoPOS.map(it => ({ ...it })); carritoPOS = []; actualizarContadorCarritoPOS();
@@ -4056,7 +4256,7 @@ function pagarCarritoPOS() {
       mostrarToast('🧾 ' + _itemsPOS + ' producto(s) cargados por ' + money(_totalPOS) + ' en factura.', 'info');
     } },
     { texto: '✅ Solo registrar venta', clase: 'verde', accion: () => {
-      for (const it of carritoPOS) { const _p = getProducto(it.productoId); if (!_p || _p.stock < it.cantidad) { mostrarToast('⚠️ Stock cambió. Revisa el carrito antes de pagar.', 'error'); return; } }
+      for (const it of carritoPOS) { const _p = getProducto(it.productoId); if (!_p || _p.stock < it.cantidad) { mostrarToast('⚠️ Stock cambió. Revisa el carrito.', 'error'); return; } }
       const f = fechaISO();
       carritoPOS.forEach(it => { db.ventas.push({ id: db.seq.v++, fecha: f, productoId: it.productoId, cantidad: it.cantidad, precioUnitario: it.precioUnitario, total: it.cantidad * it.precioUnitario, clienteId: null }); const p = getProducto(it.productoId); if (p) p.stock -= it.cantidad; });
       saveDB(); const t = carritoPOS.reduce((s, i) => s + i.cantidad * i.precioUnitario, 0); const ni = carritoPOS.length;
@@ -4117,13 +4317,7 @@ function iniciarApp() {
   const sm = document.getElementById('selectorMoneda'); if (sm && cta) sm.value = cta.moneda || 'USD';
   const pa = obtenerPestanaActiva();
   if (!pa || pa !== 'rapido') irAPestana('rapido'); else renderResumenMes();
-  (function () {
-    const el = document.getElementById('bFecha');
-    if (el && !el.dataset.binded) {
-      el.addEventListener('change', renderBalance);
-      el.dataset.binded = '1';
-    }
-  })();
+  (function () { const el = document.getElementById('bFecha'); if (el && !el.dataset.binded) { el.addEventListener('change', renderBalance); el.dataset.binded = '1'; } })();
   $('#btnVerReporte').onclick = verReporte; $('#btnWord').onclick = compartirReporte;
   $('#btnExportar').onclick = exportarDatos; $('#btnEnviarRespaldo').onclick = enviarRespaldoPorCorreo; $('#btnImportar').onclick = importarDatos;
   $('#btnBorrar').onclick = () => { pedirConfirmacion('Borrar datos', '⚠️ Se borrarán TODOS los datos del negocio actual.\n\n¿Seguro?', (ok) => { if (!ok) return; pedirConfirmacion('Última confirmación', '¿Borrar definitivamente?', (ok2) => { if (!ok2) return; db = { productos: [], entradas: [], ventas: [], perdidas: [], devoluciones: [], gastos: [], facturas: [], clientes: [], proveedores: [], facturasMulti: [], seq: { p: 1, e: 1, v: 1, d: 1, dev: 1, g: 1, f: 1, c: 1, pv: 1, fm: 1 } }; carritoPOS = []; saveDB(); renderTodo(); mostrarToast('🗑️ Datos borrados.', 'info'); }, { textoSi: 'Sí, borrar todo', tipo: 'danger' }); }, { textoSi: 'Continuar', tipo: 'danger' }); };
@@ -4148,20 +4342,12 @@ function iniciarApp() {
       cerrarSidebar();
     }
   });
-  const ta = document.getElementById('textoJSON');
-  if (ta) { ta.addEventListener('paste', () => setTimeout(validarJSONInput, 60)); }
+  const ta = document.getElementById('textoJSON'); if (ta) { ta.addEventListener('paste', () => setTimeout(validarJSONInput, 60)); }
   document.addEventListener('visibilitychange', function() { if (!document.hidden) refrescarDesdeStorage(); });
   window.addEventListener('focus', function() { refrescarDesdeStorage(); });
   window.addEventListener('pagehide', function() { try { saveDB(); } catch (e) {} });
   window.addEventListener('beforeunload', function() { try { saveDB(); } catch (e) {} });
-  window.addEventListener('storage', function (e) {
-    if (!e.key || e.key.indexOf(LS_KEY_PREFIX) !== 0) return;
-    if (e.key !== getLSKeyActual()) return;
-    refrescarDesdeStorage();
-    if (document.getElementById('vistaPOS').classList.contains('activo')) renderGrillaPOS();
-    actualizarBadgeProductos();
-    actualizarContadorCarritoPOS();
-  });
+  window.addEventListener('storage', function (e) { if (!e.key || e.key.indexOf(LS_KEY_PREFIX) !== 0) return; if (e.key !== getLSKeyActual()) return; refrescarDesdeStorage(); if (document.getElementById('vistaPOS').classList.contains('activo')) renderGrillaPOS(); actualizarBadgeProductos(); actualizarContadorCarritoPOS(); });
   }
   verificarRecordatorioRespaldo(); actualizarBannerTrial(); actualizarBotonesLogo(); actualizarBotonesModoOscuro();
   if (!verificarAcceso()) setTimeout(() => mostrarModalActivacion(true), 400);
@@ -4170,11 +4356,8 @@ function iniciarApp() {
   setInterval(() => { if (verificarActivacion()) { descargarLicenciasGitHub().catch(() => {}); return; } if (diasRestantesTrial() <= 0) { const modal = document.getElementById('modalActivacion'); if (modal && !modal.classList.contains('activo')) mostrarModalActivacion(true); } actualizarBannerTrial(); }, 5 * 60 * 1000);
   }
 }
-
 function arrancar() {
-  if (!window.crypto || !crypto.subtle) {
-    setTimeout(() => mostrarToast('⚠️ Tu navegador no soporta cifrado seguro (file://). Abre la app desde https:// para que las contraseñas se guarden de forma segura y consistente.', 'warn'), 800);
-  }
+  if (!window.crypto || !crypto.subtle) { setTimeout(() => mostrarToast('⚠️ Tu navegador no soporta cifrado seguro. Abre la app desde https://', 'warn'), 800); }
   document.querySelector('header').style.display = 'none';
   document.querySelector('main').style.display = 'none';
   const f = document.querySelector('.footer'); if (f) f.style.display = 'none';
@@ -4184,83 +4367,39 @@ function arrancar() {
   if (!r.lista.length) mostrarSetup();
   else if (sesionActiva()) { ocultarPantallaCuenta(); iniciarApp(); }
   else mostrarLogin();
-
   const sc = document.getElementById('setupContacto');
   if (sc && !sc.dataset.listener) {
-    sc.addEventListener('input', function() {
-      const el = document.getElementById('setupContactoTipo');
-      if (!el) return;
-      const t = clasificarContacto(this.value);
-      if (!this.value.trim()) el.textContent = '';
-      else if (t === 'correo') { el.textContent = '📧 Detectado como correo electrónico'; el.style.color = '#217a44'; }
-      else if (t === 'telefono') { el.textContent = '📱 Detectado como teléfono'; el.style.color = '#217a44'; }
-      else { el.textContent = '⚠️ Introduce un correo válido o un teléfono de 7 a 15 dígitos'; el.style.color = '#c0392b'; }
-    });
+    sc.addEventListener('input', function() { const el = document.getElementById('setupContactoTipo'); if (!el) return; const t = clasificarContacto(this.value); if (!this.value.trim()) el.textContent = ''; else if (t === 'correo') { el.textContent = '📧 Detectado como correo electrónico'; el.style.color = '#217a44'; } else if (t === 'telefono') { el.textContent = '📱 Detectado como teléfono'; el.style.color = '#217a44'; } else { el.textContent = '⚠️ Introduce un correo válido o un teléfono de 7 a 15 dígitos'; el.style.color = '#c0392b'; } });
     sc.dataset.listener = 'true';
   }
-
   actualizarFAB();
   actualizarBotonesModoOscuro();
 }
 arrancar();
 let _deferredPrompt = null;
-
 (function generarManifestDinamico() {
   const link = document.querySelector('link[rel="manifest"]');
   if (!link) return;
-  fetch(link.href, { method: 'HEAD' }).then(r => {
-    if (!r.ok) throw new Error('sin manifest');
-  }).catch(() => {
+  fetch(link.href, { method: 'HEAD' }).then(r => { if (!r.ok) throw new Error('sin manifest'); }).catch(() => {
     const cuenta = (function(){ try { return negocioActivo(); } catch(e){ return null; } })();
-    const manifest = {
-      name: cuenta ? cuenta.nombre : 'miNegocito',
-      short_name: 'miNegocito',
-      description: 'Gestión de negocio ligera y offline',
-      start_url: './',
-      display: 'standalone',
-      background_color: '#f4f6fa',
-      theme_color: '#1a4d80',
-      orientation: 'portrait-primary',
-      lang: 'es',
-      icons: []
-    };
+    const manifest = { name: cuenta ? cuenta.nombre : 'miNegocito', short_name: 'miNegocito', description: 'Gestión de negocio ligera y offline', start_url: './', display: 'standalone', background_color: '#f4f6fa', theme_color: '#1a4d80', orientation: 'portrait-primary', lang: 'es', icons: [] };
     const blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
     link.href = URL.createObjectURL(blob);
   });
 })();
 window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); _deferredPrompt = e; });
 function instalarPWA() {
-  if (_deferredPrompt) {
-    _deferredPrompt.prompt();
-    _deferredPrompt.userChoice.then((choice) => {
-      if (choice.outcome === 'accepted') console.log('[PWA] Instalación aceptada');
-      _deferredPrompt = null;
-      const btn = document.getElementById('btnInstalarPWA');
-      if (btn) btn.style.display = 'none';
-    });
-    return;
-  }
-  const esi = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-              (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (_deferredPrompt) { _deferredPrompt.prompt(); _deferredPrompt.userChoice.then((choice) => { if (choice.outcome === 'accepted') console.log('[PWA] Instalación aceptada'); _deferredPrompt = null; const btn = document.getElementById('btnInstalarPWA'); if (btn) btn.style.display = 'none'; }); return; }
+  const esi = /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   const esAndroid = /Android/i.test(navigator.userAgent);
   let msg;
-  if (esi) {
-    msg = '📲 Para instalar en iPhone/iPad:\n\n1. Toca Compartir (⬆️) en Safari\n2. Elige "Añadir a pantalla de inicio"\n3. Toca "Añadir"';
-  } else if (esAndroid) {
-    msg = '📲 Para instalar en Android:\n\n1. Abre el menú del navegador (⋮)\n2. Elige "Instalar aplicación" o\n   "Añadir a pantalla de inicio"';
-  } else {
-    msg = '📲 Para instalar en tu PC:\n\n1. Abre el menú del navegador (⋮)\n2. Busca "Instalar aplicación" (Chrome/Edge)\n\nSi no aparece, ya está instalada o el navegador no lo soporta.';
-  }
+  if (esi) msg = '📲 Para instalar en iPhone/iPad:\n\n1. Toca Compartir (⬆️) en Safari\n2. Elige "Añadir a pantalla de inicio"\n3. Toca "Añadir"';
+  else if (esAndroid) msg = '📲 Para instalar en Android:\n\n1. Abre el menú del navegador (⋮)\n2. Elige "Instalar aplicación"';
+  else msg = '📲 Para instalar en tu PC:\n\n1. Abre el menú del navegador (⋮)\n2. Busca "Instalar aplicación" (Chrome/Edge)';
   alert(msg);
 }
 window.addEventListener('appinstalled', () => { const btn = document.getElementById('btnInstalarPWA'); if (btn) btn.style.display = 'none'; });
-(function () {
-  const yaInstalada = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-  const btn = document.getElementById('btnInstalarPWA');
-  if (!btn) return;
-  if (!yaInstalada) btn.style.display = 'inline-flex';
-  else btn.style.display = 'none';
-})();
+(function () { const yaInstalada = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true; const btn = document.getElementById('btnInstalarPWA'); if (!btn) return; if (!yaInstalada) btn.style.display = 'inline-flex'; else btn.style.display = 'none'; })();
 </script>
 </body>
 </html>
