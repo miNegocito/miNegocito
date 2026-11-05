@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>miNegocito v1.583</title>
+<title>miNegocito v1.584</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1a4d80">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -1909,6 +1909,26 @@ async function activar() {
 // ═══════════════════════════════════════════════════════════
 // SECCIÓN LICENCIA EN AYUDA
 // ═══════════════════════════════════════════════════════════
+async function refrescarLicenciaManual() {
+  mostrarToast('🔄 Verificando licencia con el servidor...', 'info');
+  try {
+    const ok = await sincronizarLicencia();
+    if (ok) {
+      actualizarSeccionLicencia();
+      renderSelectorNegocios();
+      if (tieneAccesoMultiNegocioSync()) {
+        mostrarToast('✅ Licencia actualizada. Multi-Negocio activo.');
+      } else {
+        mostrarToast('ℹ️ Licencia actualizada. Aún sin módulo Multi-Negocio. Contacta al admin si ya lo pagaste.', 'warn');
+      }
+    } else {
+      mostrarToast('⚠️ No se pudo verificar. Revisa tu conexión a internet.', 'warn');
+    }
+  } catch (e) {
+    mostrarToast('❌ Error al refrescar: ' + e.message, 'error');
+  }
+}
+
 function actualizarSeccionLicencia() {
   const activado = verificarActivacion();
   const bi = document.getElementById('licenciaInvitacion'); const ba = document.getElementById('licenciaActiva');
@@ -1921,7 +1941,14 @@ function actualizarSeccionLicencia() {
     const elMod = document.getElementById('infoLicenciaModulos');
     if (elF) elF.textContent = '📅 Activada el ' + (datos.fecha ? new Date(datos.fecha).toLocaleString('es-ES') : '--');
     if (elC) elC.textContent = datos.codigo || '--';
-    if (elMod) { if (tieneAccesoMultiNegocioSync()) elMod.innerHTML = '<span style="color:#e3f3ea">✅ Módulo Multi-Negocio activado</span>'; else elMod.innerHTML = '<span style="color:#fdecea">⚠️ Módulo Multi-Negocio NO activado.</span><br><small style="opacity:.8">Contáctanos si deseas activarlo.</small>'; }
+    if (elMod) {
+      const btnRefresh = '<button onclick="refrescarLicenciaManual()" style="margin-top:10px;background:rgba(255,255,255,.25);color:#fff;border:1px solid rgba(255,255,255,.4);padding:9px 16px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px">🔄 Refrescar licencia</button>';
+      if (tieneAccesoMultiNegocioSync()) {
+        elMod.innerHTML = '<span style="color:#e3f3ea">✅ Módulo Multi-Negocio activado</span><br>' + btnRefresh;
+      } else {
+        elMod.innerHTML = '<span style="color:#fdecea">⚠️ Módulo Multi-Negocio NO activado.</span><br><small style="opacity:.8">Si ya lo pagaste, pídele al admin que lo active y pulsa refrescar.</small><br>' + btnRefresh;
+      }
+    }
   } else {
     bi.style.display = 'block'; ba.style.display = 'none';
     const trial = obtenerTrial(); const dias = diasRestantesTrial();
@@ -4621,6 +4648,12 @@ function iniciarApp() {
   verificarRecordatorioRespaldo(); actualizarBannerTrial(); actualizarBotonesLogo(); actualizarBotonesModoOscuro();
   if (!verificarAcceso()) setTimeout(() => mostrarModalActivacion(true), 400);
   descargarLicenciasGitHub().catch(() => {});
+  // v1.584: sincronizar licencia al iniciar (refresca multinegocio si el admin lo activó)
+  if (verificarActivacion()) {
+    setTimeout(() => {
+      sincronizarLicencia().then(() => { renderSelectorNegocios(); actualizarSeccionLicencia(); }).catch(() => {});
+    }, 1200);
+  }
   if (!window.__mnL2) { window.__mnL2 = true;
   setInterval(() => { if (verificarActivacion()) { descargarLicenciasGitHub().catch(() => {}); return; } if (diasRestantesTrial() <= 0) { const modal = document.getElementById('modalActivacion'); if (modal && !modal.classList.contains('activo')) mostrarModalActivacion(true); } actualizarBannerTrial(); }, 5 * 60 * 1000);
   }
