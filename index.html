@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>miNegocito v1.584</title>
+<title>miNegocito v1.586</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1a4d80">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -584,37 +584,59 @@
       <label>Stock mínimo (alerta) <input id="pMinimo" type="number" step="0.01" min="0" value="0"></label>
       <label>Código de barras<div style="display:flex;gap:6px"><input id="pCodigoBarras" placeholder="Opcional" maxlength="40" style="flex:1"><button type="button" class="btn azul" style="padding:6px 10px;font-size:12px;white-space:nowrap" onclick="generarCodigoFormProducto()">🎲 Generar</button></div></label>
       <label>Categoría<select id="pCategoria" onchange="alCambiarCategoria(this)"></select></label>
-      <label style="grid-column: 1 / -1;">Características (opcional)<textarea id="pCaracteristicas" rows="2" maxlength="300" placeholder="Ej: Frío, importado, 500ml, sabor cola..."></textarea></label>
+      <label style="grid-column: 1 / -1;">Características (opcional, máx. 1200)<textarea id="pCaracteristicas" rows="3" maxlength="1200" placeholder="Ej: Frío, importado, 500ml, sabor cola..."></textarea></label>
       <label style="grid-column: 1 / -1;">Imagen del producto<div class="preview-img-wrap"><div class="preview-img" id="pPreviewImg">📷</div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><input type="file" id="pImagen" accept="image/*" style="padding:6px;font-size:12px"><button type="button" class="btn gris" style="padding:6px 12px;font-size:12px;align-self:flex-start" onclick="quitarPreviewImagenProducto()">🗑️ Quitar imagen</button></div></div></label>
       <button type="submit" class="btn verde" style="grid-column: 1 / -1;">➕ Agregar producto</button>
     </form>
-    <div class="card" style="background:#eef4fb;border:2px dashed #2d7ac0">
-      <h3 style="color:#1a4d80;margin:0 0 8px 0;font-size:16px">📥 Importar productos por lotes</h3>
-      <p class="mini" style="margin-bottom:12px">Formato: <code>Nombre, PrecioVenta, Stock, Costo, StockMínimo, CodigoBarras</code></p>
-      <div class="acciones" style="margin-bottom:0"><button type="button" class="btn" onclick="importarProductosLote()">📂 Cargar archivo CSV/TXT</button><button type="button" class="btn gris" onclick="descargarPlantillaProductos()">📄 Descargar plantilla</button><button type="button" class="btn morado" onclick="mostrarAyudaImportacion()">❓ Ver formato</button></div>
-      <div class="acciones" style="margin-top:10px;margin-bottom:0">
-        <button type="button" class="btn azul" onclick="asignarCodigosPorLote()">🔖 Asignar códigos por lote</button>
-        <button type="button" class="btn gris" onclick="descargarPlantillaCodigos()">📄 Plantilla de códigos</button>
-        <button type="button" class="btn morado" onclick="abrirAltaPorEscaneo()">📷 Dar de alta por escaneo</button>
+    <!-- Mejora 5: acordeones para importar y exportar -->
+    <div class="card colapsable" id="secImportarProductos" style="background:#eef4fb;border:2px dashed #2d7ac0">
+      <button class="colapsable-header" onclick="toggleSeccion('secImportarProductos')" type="button">
+        <span>📥 Importar productos por lotes</span>
+        <span class="colapsable-flecha">▼</span>
+      </button>
+      <div class="colapsable-contenido">
+        <p class="mini" style="margin-bottom:12px">Formato: <code>Nombre, PrecioVenta, Stock, Costo, StockMínimo, CodigoBarras</code></p>
+        <div class="acciones" style="margin-bottom:10px"><button type="button" class="btn" onclick="importarProductosLote()">📂 Cargar archivo CSV/TXT</button><button type="button" class="btn gris" onclick="descargarPlantillaProductos()">📄 Descargar plantilla</button><button type="button" class="btn morado" onclick="mostrarAyudaImportacion()">❓ Ver formato</button></div>
+        <div class="acciones" style="margin-bottom:10px">
+          <button type="button" class="btn azul" onclick="asignarCodigosPorLote()">🔖 Asignar códigos por lote</button>
+          <button type="button" class="btn gris" onclick="descargarPlantillaCodigos()">📄 Plantilla de códigos</button>
+          <button type="button" class="btn morado" onclick="abrirAltaPorEscaneo()">📷 Dar de alta por escaneo</button>
+        </div>
+        <div class="acciones" style="margin-bottom:0">
+          <button type="button" class="btn naranja" onclick="importarPreciosPorLote()">💲 Cambiar precios por lote</button>
+          <button type="button" class="btn gris" onclick="descargarPlantillaPrecios()">📄 Plantilla de precios</button>
+          <button type="button" class="btn morado" onclick="aplicarCambioPrecioPorcentaje()">📊 Cambio masivo por %</button>
+        </div>
+        <p class="mini" style="margin-top:8px">Códigos por lote: <code>Nombre, Código</code> o <code>ID, Código</code>. Precios por lote: <code>Nombre, NuevoPrecio</code> o <code>ID, NuevoPrecio</code>. También puedes aplicar un % masivo (todos o una categoría).</p>
       </div>
-      <div class="acciones" style="margin-top:10px;margin-bottom:0">
-        <button type="button" class="btn naranja" onclick="importarPreciosPorLote()">💲 Cambiar precios por lote</button>
-        <button type="button" class="btn gris" onclick="descargarPlantillaPrecios()">📄 Plantilla de precios</button>
-        <button type="button" class="btn morado" onclick="aplicarCambioPrecioPorcentaje()">📊 Cambio masivo por %</button>
+    </div>
+    <div class="card colapsable" id="secExportarCatalogo">
+      <button class="colapsable-header" onclick="toggleSeccion('secExportarCatalogo')" type="button">
+        <span>📤 Exportar y compartir</span>
+        <span class="colapsable-flecha">▼</span>
+      </button>
+      <div class="colapsable-contenido">
+        <div class="acciones" style="margin-bottom:0">
+          <button class="btn morado" onclick="exportarCodigosBarras()">🖨️ Exportar a Word</button>
+          <button class="btn rojo" onclick="exportarCodigosBarrasPDF()">📄 Exportar a PDF</button>
+          <button class="btn verde" onclick="compartirCatalogo()">📤 Compartir catálogo</button>
+          <button class="btn azul" onclick="compartirCatalogoHTML()">📄 Catálogo HTML</button>
+          <button class="btn gris" onclick="verCatalogo()">👁️ Ver catálogo</button>
+        </div>
       </div>
-      <p class="mini" style="margin-top:8px">Códigos por lote: <code>Nombre, Código</code> o <code>ID, Código</code>. Precios por lote: <code>Nombre, NuevoPrecio</code> o <code>ID, NuevoPrecio</code>. También puedes aplicar un % masivo (todos o una categoría).</p>
     </div>
-    <div class="acciones">
-      <button class="btn morado" onclick="exportarCodigosBarras()">🖨️ Exportar a Word</button>
-      <button class="btn rojo" onclick="exportarCodigosBarrasPDF()">📄 Exportar a PDF</button>
-      <button class="btn verde" onclick="compartirCatalogo()">📤 Compartir catálogo</button>
-      <button class="btn azul" onclick="compartirCatalogoHTML()">📄 Catálogo HTML</button>
-      <button class="btn gris" onclick="verCatalogo()">👁️ Ver catálogo</button>
+    <!-- Mejora 5: vista tarjetas / tabla -->
+    <div class="acciones" style="align-items:center;justify-content:space-between;flex-wrap:wrap">
+      <input type="search" id="buscadorProductos" placeholder="🔍 Filtrar productos por nombre o código..." oninput="renderProductosDebounced()" style="flex:1;min-width:200px;padding:9px 12px;font-size:14px;border:2px solid #c8d2e0;border-radius:8px;font-family:inherit">
+      <div style="display:flex;gap:6px;align-items:center">
+        <button class="btn gris" id="btnVistaTabla" onclick="cambiarVistaProductos('tabla')" style="padding:8px 12px;font-size:12px">📋 Tabla</button>
+        <button class="btn gris" id="btnVistaTarjetas" onclick="cambiarVistaProductos('tarjetas')" style="padding:8px 12px;font-size:12px">🃏 Tarjetas</button>
+      </div>
     </div>
-    <div class="card" style="padding:10px 12px;margin-bottom:12px">
-      <input type="search" id="buscadorProductos" placeholder="🔍 Filtrar productos por nombre o código..." oninput="renderProductosDebounced()" style="width:100%;padding:9px 12px;font-size:14px;border:2px solid #c8d2e0;border-radius:8px;font-family:inherit">
+    <div id="vistaProductosTarjetas" style="display:none;margin-bottom:18px">
+      <div id="grillaProductosTarjetas" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px"></div>
     </div>
-    <div class="card tabla-wrap">
+    <div id="vistaProductosTabla" class="card tabla-wrap">
       <table id="tblProductos"><thead><tr><th>Foto</th><th>ID</th><th>Producto</th><th class="mon">Precio Venta</th><th class="num">Stock</th><th class="num">Mínimo</th><th class="mon">Valor Venta</th><th class="mon">Valor Costo</th><th>Código</th><th class="mon">Costo Prom.</th><th>Acciones</th></tr></thead><tbody></tbody></table>
     </div>
   </section>
@@ -1034,8 +1056,8 @@
   <div style="display:flex;gap:6px;margin-bottom:14px"><input id="epCodigo" type="text" maxlength="40" style="flex:1;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px"><button type="button" class="btn azul" style="padding:9px 12px;font-size:12px" onclick="generarCodigoEdicion()">🎲 Generar</button></div>
   <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Categoría</label>
   <select id="epCategoria" onchange="alCambiarCategoria(this)" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:14px"></select>
-  <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Características (opcional)</label>
-  <textarea id="epCaracteristicas" rows="2" maxlength="300" style="width:100%;padding:11px;font-size:14px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:14px"></textarea>
+  <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Características (opcional, máx. 1200)</label>
+  <textarea id="epCaracteristicas" rows="3" maxlength="1200" style="width:100%;padding:11px;font-size:14px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:14px"></textarea>
   <div id="epError" style="color:#c0392b;font-size:13px;min-height:18px;font-weight:600;margin-bottom:8px"></div>
   <div class="botones"><button class="btn gris" onclick="cerrarModalEditarProducto()">Cancelar</button><button class="btn verde" onclick="guardarEdicionProducto()">✅ Guardar cambios</button></div>
 </div></div></div>
@@ -1240,6 +1262,7 @@ let _monedaActual = 'USD';
 const CATALOGO_W = 1080;
 const CATALOGO_H = 1350;
 const CATALOGO_LAYOUTS = {
+  '1x1': { cols: 1, rows: 1 },
   '2x2': { cols: 2, rows: 2 },
   '3x3': { cols: 3, rows: 3 },
   '3x4': { cols: 3, rows: 4 }
@@ -1271,6 +1294,7 @@ let _dataVersion = 0;
 let _chartPL = null;
 let _chartTopProd = null;
 let _chartBalanceLoaded = false;
+let _vistaProductos = 'tabla'; // 'tabla' o 'tarjetas'
 
 function _debounce(fn, ms) {
   let t;
@@ -1404,7 +1428,7 @@ function toggleSeccion(id, forceOpen) {
   try { localStorage.setItem('seccion_' + id, abierto ? '1' : '0'); } catch (e) {}
 }
 function restaurarSeccionesAcordeon() {
-  ['secConfigCuenta', 'secCopiaSeguridad'].forEach(id => {
+  ['secConfigCuenta', 'secCopiaSeguridad', 'secImportarProductos', 'secExportarCatalogo'].forEach(id => {
     try {
       const v = localStorage.getItem('seccion_' + id);
       if (v === '1') { const el = document.getElementById(id); if (el) el.classList.add('abierto'); }
@@ -2674,7 +2698,69 @@ function llenarSelects() {
   const selProv = document.getElementById('eProveedor'); if (selProv) selProv.innerHTML = '<option value="">-- Sin proveedor --</option>' + db.proveedores.filter(p => p.activo).map(p => `<option value="${p.id}">${esc(p.nombre)}</option>`).join('');
   const selCli = document.getElementById('vCliente'); if (selCli) selCli.innerHTML = '<option value="">-- Consumidor final --</option>' + db.clientes.filter(c => c.activo).map(c => `<option value="${c.id}">${esc(c.nombre)}</option>`).join('');
 }
+
+// ═══════════════════════════════════════════════════════════
+// PRODUCTOS: TABLA Y TARJETAS (Mejora 5)
+// ═══════════════════════════════════════════════════════════
+function cambiarVistaProductos(vista) {
+  _vistaProductos = vista;
+  const btnTabla = document.getElementById('btnVistaTabla');
+  const btnTarjetas = document.getElementById('btnVistaTarjetas');
+  const divTabla = document.getElementById('vistaProductosTabla');
+  const divTarjetas = document.getElementById('vistaProductosTarjetas');
+  if (vista === 'tarjetas') {
+    if (btnTarjetas) { btnTarjetas.style.background = '#2d7ac0'; btnTarjetas.style.color = '#fff'; }
+    if (btnTabla) { btnTabla.style.background = '#6b7a90'; btnTabla.style.color = '#fff'; }
+    if (divTabla) divTabla.style.display = 'none';
+    if (divTarjetas) divTarjetas.style.display = 'block';
+    renderProductosTarjetas();
+  } else {
+    if (btnTabla) { btnTabla.style.background = '#2d7ac0'; btnTabla.style.color = '#fff'; }
+    if (btnTarjetas) { btnTarjetas.style.background = '#6b7a90'; btnTarjetas.style.color = '#fff'; }
+    if (divTabla) divTabla.style.display = 'block';
+    if (divTarjetas) divTarjetas.style.display = 'none';
+    renderProductos();
+  }
+  try { localStorage.setItem('vista_productos', vista); } catch (e) {}
+}
+function renderProductosTarjetas() {
+  const cont = document.getElementById('grillaProductosTarjetas');
+  if (!cont) return;
+  if (!db.productos.length) { cont.innerHTML = '<div class="vacio" style="grid-column:1/-1;padding:20px">Aún no hay productos.</div>'; return; }
+  const _costos = calcularCostosPromedio();
+  const _filtroProd = (document.getElementById('buscadorProductos')?.value || '').trim().toLowerCase();
+  let _prods = _filtroProd ? db.productos.filter(p => p.nombre.toLowerCase().includes(_filtroProd) || String(p.codigoBarras || '').toLowerCase().includes(_filtroProd)) : db.productos;
+  if (!_prods.length) { cont.innerHTML = '<div class="vacio" style="grid-column:1/-1;padding:20px">Sin resultados.</div>'; return; }
+  _prods = _prods.slice().sort((a, b) => a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' }));
+  cont.innerHTML = _prods.map(p => {
+    const min = Number(p.stockMinimo) || 0;
+    let stockColor = '#217a44';
+    let stockIcon = '';
+    if (p.stock <= 0) { stockColor = '#c0392b'; stockIcon = ' 🔴'; }
+    else if (min > 0 && p.stock <= min) { stockColor = '#e08a1e'; stockIcon = ' 🟠'; }
+    else if (min > 0 && p.stock <= min * 1.2) { stockColor = '#b56b0d'; stockIcon = ' 🟡'; }
+    const imgHtml = p.imagen ? '<img src="' + p.imagen + '" alt="' + esc(p.nombre) + '" style="width:100%;height:100%;object-fit:contain;background:#fff" loading="lazy">' : '📷';
+    const catHtml = p.categoria ? '<div style="display:inline-block;background:#eaf1f9;color:#2d7ac0;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-bottom:4px">🏷️ ' + esc(p.categoria) + '</div>' : '';
+    return `<div style="background:#fff;border-radius:10px;padding:10px;box-shadow:0 2px 6px rgba(0,0,0,.08);display:flex;flex-direction:column;gap:6px;border:2px solid transparent;transition:transform .15s,box-shadow .15s" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 14px rgba(0,0,0,.12)'" onmouseout="this.style.transform='';this.style.boxShadow='0 2px 6px rgba(0,0,0,.08)'">
+      <div style="width:100%;aspect-ratio:1/1;border-radius:8px;border:1px solid #eaf1f9;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:36px;background:#fff">${imgHtml}</div>
+      <div style="font-size:12px;font-weight:700;color:#1a4d80;line-height:1.25;min-height:30px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">${esc(p.nombre)}</div>
+      ${catHtml}
+      <div style="font-size:15px;font-weight:800;color:#217a44">${money(p.precioVenta)}</div>
+      <div style="font-size:11px;color:${stockColor};font-weight:700">Stock: ${cant(p.stock)}${stockIcon}</div>
+      <div style="display:flex;gap:4px;margin-top:2px;flex-wrap:wrap">
+        <button class="btn azul" style="flex:1;padding:6px 4px;font-size:11px" onclick="abrirModalEditarProducto(${p.id})">📝</button>
+        <button class="btn naranja" style="flex:1;padding:6px 4px;font-size:11px" onclick="editarImagenProducto(${p.id})">🖼️</button>
+        <button class="btn morado" style="flex:1;padding:6px 4px;font-size:11px" onclick="declararPerdida(${p.id})">📉</button>
+        <button class="btn rojo" style="flex:1;padding:6px 4px;font-size:11px" onclick="eliminarProducto(${p.id})">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
 function renderProductos() {
+  if (_vistaProductos === 'tarjetas') {
+    renderProductosTarjetas();
+    return;
+  }
   const tb = $('#tblProductos tbody');
   if (!db.productos.length) { tb.innerHTML = '<tr><td colspan="11" class="vacio">Aún no hay productos.</td></tr>'; return; }
   const _costos = calcularCostosPromedio();
@@ -2970,7 +3056,7 @@ function calcularBalanceDeData(d, desde, hasta) {
 }
 
 // ═══════════════════════════════════════════════════════════
-// PANEL NEGOCIOS — REHECHO con % margen, expandir, consolidado y HTML
+// PANEL NEGOCIOS
 // ═══════════════════════════════════════════════════════════
 function toggleBalanceNegocio(id) {
   _negociosExpandidos[id] = !_negociosExpandidos[id];
@@ -3074,7 +3160,7 @@ function renderPanelNegocios() {
 }
 
 // ═══════════════════════════════════════════════════════════
-// COMPARTIR NEGOCIOS COMO HTML (mejora #6)
+// COMPARTIR NEGOCIOS COMO HTML
 // ═══════════════════════════════════════════════════════════
 function compartirNegociosHTML() {
   const r = obtenerRegistro();
@@ -3388,7 +3474,6 @@ function eliminarProducto(id) {
   const p = getProducto(id); if (!p) return;
   if (carritoPOS.some(it => it.productoId === id)) { mostrarToast('⚠️ "' + p.nombre + '" está en el carrito. Quítalo primero.', 'warn'); return; }
   if (facturaBorrador.some(it => it.productoId === id)) { mostrarToast('⚠️ "' + p.nombre + '" está en el borrador. Quítalo primero.', 'warn'); return; }
-  // v1.583: distinguir producto sin ventas (borrado total) vs con ventas (solo producto)
   const tieneVentas = db.ventas.some(v => v.productoId === id);
   const nEntradas = db.entradas.filter(e => e.productoId === id).length;
   const nPerdidas = db.perdidas.filter(d => d.productoId === id).length;
@@ -3835,7 +3920,7 @@ function construirCuerpoReporteRango(r, chartsImgs) {
 }
 
 // ═══════════════════════════════════════════════════════════
-// IMPRIMIR VÍA BLOB (arreglo del PDF)
+// IMPRIMIR VÍA BLOB
 // ═══════════════════════════════════════════════════════════
 function _imprimirHTMLViaBlob(html, nombreArchivo) {
   try {
@@ -3844,7 +3929,6 @@ function _imprimirHTMLViaBlob(html, nombreArchivo) {
     const w = window.open(url, '_blank');
     if (!w) {
       URL.revokeObjectURL(url);
-      // Fallback: descargar como archivo
       const a = document.createElement('a');
       a.href = url; a.download = (nombreArchivo || 'documento') + '.html';
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
@@ -3886,7 +3970,6 @@ async function compartirReporte() {
   }
 }
 
-// ═══ COMPARTIR REPORTE COMO HTML (mejora #1) ═══
 async function compartirReporteHTML() {
   const r = obtenerRangoFechas();
   if (!r) { mostrarToast('Fechas inválidas.', 'error'); return; }
@@ -3945,17 +4028,19 @@ function descargarComoDocRango(r) { const b = calcularBalanceRango(r.desde, r.ha
 function reporteComoTextoPlanoRango(r) { const b = calcularBalanceRango(r.desde, r.hasta); const c = obtenerCuenta(); const neg = c ? c.nombre : 'miNegocito'; let t = '🏪 ' + neg + '\n📊 Reporte — ' + r.etiqueta + '\n═════════════\n\n'; t += '💰 Ventas: ' + money(b.totalVentas) + '\n'; if (b.totalDevolucionesVenta > 0) t += '↩️ Devoluciones: -' + money(b.totalDevolucionesVenta) + '\n'; t += '💸 Costo: ' + money(b.totalCosto) + '\n💚 Ganancia Bruta: ' + money(b.ganancia) + '\n'; if (b.margen > 0) t += '📈 Margen: ' + b.margen.toFixed(1) + '%\n'; if (b.totalPerdidas > 0) t += '📉 Pérdidas: -' + money(b.totalPerdidas) + '\n'; if (b.totalGastos > 0) t += '💸 Gastos: -' + money(b.totalGastos) + '\n💚 Beneficio Neto: ' + money(b.beneficioNeto) + '\n'; t += '📦 Inversión: ' + money(b.totalInversion) + '\n\n'; t += '— ' + new Date().toLocaleString('es-ES'); return t; }
 
 // ═══════════════════════════════════════════════════════════
-// MANUAL CON BOTONES COMPARTIR NOVEDADES (mejora #4)
+// MANUAL
 // ═══════════════════════════════════════════════════════════
 function obtenerTextoNovedades() {
-  return `🚀 *miNegocito v1.580 — Novedades*\n\n` +
+  return `🚀 *miNegocito v1.585 — Novedades*\n\n` +
     `📊 Gráficos de ventas, ganancias y gastos en balance y reportes.\n` +
     `🔍 Búsqueda global de productos, clientes y proveedores.\n` +
-    `📄 Catálogo HTML descargable con fotos y descripciones.\n` +
+    `📄 Catálogo HTML con tarjetas y botón Solicitar.\n` +
     `📈 % de ganancia (margen) en balance del día y del mes.\n` +
     `💰 Columna de ganancia en Productos Vendidos y Top 5.\n` +
     `💼 Valor de stock (precio venta y precio costo) en Productos.\n` +
-    `🔎 Filtro rápido de productos por nombre o código.\n\n` +
+    `🔎 Filtro rápido de productos por nombre o código.\n` +
+    `🃏 Vista de productos en tarjetas o tabla.\n` +
+    `📝 Características ampliadas a 1200 caracteres.\n\n` +
     `📲 *Más información:*\n` +
     `WhatsApp: +53 5 318 6004\n` +
     `📧 solucionesalrohi@gmail.com`;
@@ -3980,12 +4065,15 @@ function abrirManual() {
   const novedadesHTML = ul([
     '📊 Gráficos de ventas, ganancias y gastos en balance y reportes.',
     '🔍 Búsqueda global de productos, clientes y proveedores en Acceso Rápido.',
-    '📄 Catálogo HTML descargable en 1, 2, 3 columnas o ajustado (con fotos).',
+    '📄 Catálogo HTML interactivo con tarjetas y botón Solicitar.',
     '📈 % de ganancia (margen) en balance del día y del mes.',
     '💰 Columna de ganancia en Productos Vendidos y Top 5.',
     '💼 Columnas de valor de stock (precio venta y precio costo) en Productos.',
     '🔎 Filtro rápido de productos por nombre o código.',
-    '🌐 Reportes descargables en HTML, Word y PDF.'
+    '🌐 Reportes descargables en HTML, Word y PDF.',
+    '🃏 Vista de productos en tarjetas (mínimo 2 columnas en móvil) o tabla.',
+    '📝 Características ampliadas a 1200 caracteres.',
+    '📂 Acordeones para importar y exportar en Productos.'
   ]) + '<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">' +
     '<button onclick="compartirNovedadesWhatsApp()" style="flex:1;min-width:140px;padding:10px 14px;border:none;border-radius:8px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;font-weight:700;cursor:pointer;font-size:13px;font-family:inherit">📱 Compartir WhatsApp</button>' +
     '<button onclick="compartirNovedadesTelegram()" style="flex:1;min-width:140px;padding:10px 14px;border:none;border-radius:8px;background:linear-gradient(135deg,#0088cc,#006699);color:#fff;font-weight:700;cursor:pointer;font-size:13px;font-family:inherit">✈️ Compartir Telegram</button>' +
@@ -3994,9 +4082,9 @@ function abrirManual() {
     '<div style="background:linear-gradient(135deg,#1a4d80,#2d7ac0);color:#fff;padding:26px 20px;text-align:center;border-radius:14px;margin-bottom:20px">' +
       '<h1 style="margin:0 0 6px 0;font-size:22px">📖 Manual de miNegocito</h1>' +
       '<p style="margin:0;opacity:.9;font-size:14px">Negocio: ' + esc(neg) + '</p>' +
-      '<p style="margin:6px 0 0 0;opacity:.85;font-size:12px">Versión 1.580</p>' +
+      '<p style="margin:6px 0 0 0;opacity:.85;font-size:12px">Versión 1.586</p>' +
     '</div>' +
-    sec('🆕', 'Novedades v1.581', novedadesHTML) +
+    sec('🆕', 'Novedades v1.586', novedadesHTML) +
     sec('🚀', '1. Primeros pasos', ul([
       'Crea tu cuenta con nombre del negocio, teléfono o correo y contraseña.',
       'La prueba gratis dura 7 días.',
@@ -4004,10 +4092,12 @@ function abrirManual() {
     ])) +
     sec('📦', '2. Productos', ul([
       'Agrega productos con foto, precio, stock, costo y mínimo de alerta.',
-      'Ahora verás el Valor Venta (stock × precio venta) y el Valor Costo (stock × costo promedio).',
+      'Valor Venta (stock × precio venta) y Valor Costo (stock × costo promedio).',
       'Filtro rápido por nombre o código.',
+      'Cambia entre vista de tabla y vista de tarjetas (mínimo 2 columnas en móvil).',
       'Código de barras manual, aleatorio o por escaneo.',
-      'Importación por lotes CSV.'
+      'Importación por lotes CSV desde el acordeón "Importar productos por lotes".',
+      'Exporta y comparte el catálogo desde el acordeón "Exportar y compartir".'
     ])) +
     sec('🖼️', '3. Punto de Venta (POS)', ul([
       'Abre ⚡ Acceso Rápido → Punto de Venta.',
@@ -4027,26 +4117,33 @@ function abrirManual() {
       'Desde ahí puedes editar producto o dar entrada directa.'
     ])) +
     sec('📄', '6. Catálogo HTML', ul([
-      'Desde Productos → 📄 Catálogo HTML o desde Compartir catálogo.',
+      'Desde Productos → 📤 Compartir catálogo → 📄 Catálogo HTML.',
       'Elige 1, 2, 3 columnas o ajustado a la pantalla.',
       'Se descarga un único archivo .html con todas las fotos y descripciones.',
-      'Los clientes pueden abrirlo en cualquier navegador sin conexión.'
+      'Cada tarjeta tiene botón "Solicitar" que abre WhatsApp con el mensaje precargado: "Hola, me interesa este producto de tu catálogo:" + nombre + precio + "¿Está disponible?".',
+      'Al tocar la tarjeta se ve la descripción completa (características).'
     ])) +
-    sec('🧾', '7. Facturación', ul([
+    sec('📝', '7. Catálogo de texto', ul([
+      'Desde Productos → 📤 Compartir catálogo → 📝 Catálogo de texto.',
+      'Elige si incluir enlace de WhatsApp por producto (recomendado con menos de 40 productos).',
+      'Cada producto se muestra: nombre en negrita, precio debajo, enlace "Pedir por WhatsApp" debajo.',
+      'Si hay muchos productos, se omite el enlace para evitar bloqueos.'
+    ])) +
+    sec('🧾', '8. Facturación', ul([
       'Factura múltiple con varios productos.',
       'Factura desde una venta existente.',
       'Copiar factura como texto o imprimir / guardar PDF.'
     ])) +
-    sec('💾', '8. Respaldos', ul([
+    sec('💾', '9. Respaldos', ul([
       'Guarda respaldo .txt o envíalo por correo / WhatsApp.',
       'Carga respaldos desde otro dispositivo.',
       'La app te recuerda si llevas +3 días sin respaldar.'
     ])) +
-    sec('🌙', '9. Modo oscuro y temas', ul([
+    sec('🌙', '10. Modo oscuro y temas', ul([
       'Modo oscuro desde la barra lateral (móvil) o el header (escritorio).',
       '8 colores de acento · 20 monedas.'
     ])) +
-    sec('📲', '10. Instalar la app (PWA)', ul([
+    sec('📲', '11. Instalar la app (PWA)', ul([
       'Android: menú del navegador → "Instalar aplicación".',
       'iPhone/iPad: Compartir ⬆️ → "Añadir a pantalla de inicio".',
       'PC (Chrome/Edge): menú → "Instalar aplicación".'
@@ -4056,7 +4153,7 @@ function abrirManual() {
       '<tr><td style="padding:6px 0"><b>📧 Correo</b></td><td>solucionesalrohi@gmail.com</td></tr>' +
       '<tr><td style="padding:6px 0"><b>🌐 Blog</b></td><td>solucionesalrohi.blogspot.com</td></tr>' +
       '</table>') +
-    '<div style="text-align:center;font-size:12px;color:#6b7a90;padding:16px">miNegocito — Manual v1.580 · ' + anio + '</div>' +
+    '<div style="text-align:center;font-size:12px;color:#6b7a90;padding:16px">miNegocito — Manual v1.586 · ' + anio + '</div>' +
   '</div>';
   document.getElementById('vistaManual').classList.add('activo');
   document.getElementById('vistaManual').scrollTop = 0;
@@ -4065,14 +4162,14 @@ function abrirManual() {
 function cerrarManual() { document.getElementById('vistaManual').classList.remove('activo'); irAPestana('ayuda'); }
 
 // ═══════════════════════════════════════════════════════════
-// CATÁLOGO (mejora #5: texto de descripción en HTML)
+// CATÁLOGO
 // ═══════════════════════════════════════════════════════════
 function compartirCatalogo() { if (!requerirActivacion('Para enviar promociones debes activar la app.')) return; const disp = db.productos.filter(p => p.stock > 0); if (!disp.length) { mostrarToast('Sin productos con stock.', 'warn'); return; } abrirModalCatalogoCompartir(); }
 function abrirModalCatalogoCompartir() {
   const c = document.getElementById('modalCatalogoCompartirWrapper'); if (c) c.remove();
   const cats = obtenerCategorias();
   const optsCat = '<option value="">Todas las categorías</option>' + cats.filter(cat => db.productos.some(p => p.categoria === cat && p.stock > 0)).map(cat => '<option value="' + esc(cat) + '">' + esc(cat) + '</option>').join('');
-  const html = `<div id="modalCatalogoCompartir" style="position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100002;padding:16px;overflow-y:auto;display:flex;align-items:flex-start;justify-content:center"><div style="background:#fff;border-radius:14px;padding:18px;max-width:560px;width:100%;margin:auto;box-shadow:0 10px 40px rgba(0,0,0,.35)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><h3 style="color:#1a4d80;margin:0;font-size:18px">📢 Compartir catálogo</h3><button onclick="cerrarModalCatalogoCompartir()" style="background:#f0f4fa;border:none;border-radius:8px;padding:6px 12px;font-weight:800;color:#6b7a90;cursor:pointer">✖</button></div><div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap"><select id="filtroCategoriaCatalogo" onchange="renderListaCatalogoCompartir()" style="flex:1;min-width:160px;padding:10px;font-size:13px;border:2px solid #c8d2e0;border-radius:8px;font-family:inherit">${optsCat}</select><select id="layoutCatalogo" style="padding:10px;font-size:13px;border:2px solid #c8d2e0;border-radius:8px;font-family:inherit"><option value="2x2">2×2 (4 por hoja)</option><option value="3x3">3×3 (9 por hoja)</option><option value="3x4" selected>3×4 (12 por hoja)</option></select></div><input type="search" id="buscarEnCatalogo" placeholder="🔍 Buscar..." oninput="_renderListaCatalogoDebounced()" style="width:100%;padding:11px 14px;font-size:14px;border:2px solid #c8d2e0;border-radius:10px;margin-bottom:12px;font-family:inherit"><div id="listaCatalogoCompartir" style="max-height:45vh;overflow-y:auto;border:1px solid #e3e9f2;border-radius:10px;margin-bottom:12px"></div><div style="display:grid;grid-template-columns:1fr;gap:8px"><button onclick="compartirCatalogoComoImagen()" style="width:100%;padding:13px;border:none;border-radius:10px;background:linear-gradient(135deg,#7b3fa0,#5d2d7a);color:#fff;font-weight:700;font-size:14px;cursor:pointer">🖼️ Enviar catálogo como IMAGEN</button><button onclick="compartirCatalogoHTML()" style="width:100%;padding:13px;border:none;border-radius:10px;background:linear-gradient(135deg,#2e9e5b,#217a44);color:#fff;font-weight:700;font-size:14px;cursor:pointer">📄 Enviar catálogo en HTML (con texto)</button><button onclick="compartirCatalogoTexto()" style="width:100%;padding:13px;border:none;border-radius:10px;background:linear-gradient(135deg,#2d7ac0,#1a4d80);color:#fff;font-weight:700;font-size:14px;cursor:pointer">📝 Enviar catálogo como TEXTO</button></div></div></div>`;
+  const html = `<div id="modalCatalogoCompartir" style="position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100002;padding:16px;overflow-y:auto;display:flex;align-items:flex-start;justify-content:center"><div style="background:#fff;border-radius:14px;padding:18px;max-width:560px;width:100%;margin:auto;box-shadow:0 10px 40px rgba(0,0,0,.35)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><h3 style="color:#1a4d80;margin:0;font-size:18px">📢 Compartir catálogo</h3><button onclick="cerrarModalCatalogoCompartir()" style="background:#f0f4fa;border:none;border-radius:8px;padding:6px 12px;font-weight:800;color:#6b7a90;cursor:pointer">✖</button></div><div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap"><select id="filtroCategoriaCatalogo" onchange="renderListaCatalogoCompartir()" style="flex:1;min-width:160px;padding:10px;font-size:13px;border:2px solid #c8d2e0;border-radius:8px;font-family:inherit">${optsCat}</select><select id="layoutCatalogo" style="padding:10px;font-size:13px;border:2px solid #c8d2e0;border-radius:8px;font-family:inherit"><option value="1x1">1×1 (1 por hoja)</option><option value="2x2">2×2 (4 por hoja)</option><option value="3x3">3×3 (9 por hoja)</option><option value="3x4" selected>3×4 (12 por hoja)</option></select></div><input type="search" id="buscarEnCatalogo" placeholder="🔍 Buscar..." oninput="_renderListaCatalogoDebounced()" style="width:100%;padding:11px 14px;font-size:14px;border:2px solid #c8d2e0;border-radius:10px;margin-bottom:12px;font-family:inherit"><div id="listaCatalogoCompartir" style="max-height:45vh;overflow-y:auto;border:1px solid #e3e9f2;border-radius:10px;margin-bottom:12px"></div><div style="display:grid;grid-template-columns:1fr;gap:8px"><button onclick="compartirCatalogoComoImagen()" style="width:100%;padding:13px;border:none;border-radius:10px;background:linear-gradient(135deg,#7b3fa0,#5d2d7a);color:#fff;font-weight:700;font-size:14px;cursor:pointer">🖼️ Enviar catálogo como IMAGEN</button><button onclick="compartirCatalogoHTML()" style="width:100%;padding:13px;border:none;border-radius:10px;background:linear-gradient(135deg,#2e9e5b,#217a44);color:#fff;font-weight:700;font-size:14px;cursor:pointer">📄 Enviar catálogo en HTML (con texto)</button><button onclick="compartirCatalogoTexto()" style="width:100%;padding:13px;border:none;border-radius:10px;background:linear-gradient(135deg,#2d7ac0,#1a4d80);color:#fff;font-weight:700;font-size:14px;cursor:pointer">📝 Enviar catálogo como TEXTO</button></div></div></div>`;
   const ct = document.createElement('div'); ct.id = 'modalCatalogoCompartirWrapper'; ct.innerHTML = html; document.body.appendChild(ct);
   renderListaCatalogoCompartir(); registrarEstado(obtenerPestanaActiva(), 'catalogoCompartir');
 }
@@ -4184,7 +4281,7 @@ async function compartirCatalogoComoImagen() {
   for (let i = 0; i < pages.length; i++) { const canvas = pages[i]; const link = document.createElement('a'); link.download = 'catalogo-' + (i + 1) + '.png'; link.href = canvas.toDataURL('image/png'); document.body.appendChild(link); link.click(); document.body.removeChild(link); await new Promise(r => setTimeout(r, 400)); }
   mostrarToast('✅ ' + pages.length + ' imagen(es) descargada(s).', 'info');
 }
-// v1.581: catálogo HTML interactivo (Opción A — botón Solicitar por producto)
+// Catálogo HTML con tarjetas 1,2,3+ columnas, botón Solicitar, tarjeta expandible con descripción
 function generarCatalogoHTML(categoriaFiltro, columnas) {
   const cuenta = obtenerCuenta();
   const neg = cuenta ? cuenta.nombre : 'miNegocito';
@@ -4196,10 +4293,10 @@ function generarCatalogoHTML(categoriaFiltro, columnas) {
   let prods = db.productos.filter(p => p.stock > 0);
   if (categoriaFiltro) prods = prods.filter(p => p.categoria === categoriaFiltro);
   prods.sort((a, b) => a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' }));
-  const gridCol = columnas === '1' ? '1fr'
-    : columnas === '2' ? 'repeat(auto-fit,minmax(280px,1fr))'
-    : columnas === '3' ? 'repeat(auto-fit,minmax(200px,1fr))'
-    : 'repeat(auto-fit,minmax(240px,1fr))';
+  const gridCol = columnas === '1' ? 'repeat(auto-fit,minmax(280px,1fr))'
+    : columnas === '2' ? 'repeat(auto-fit,minmax(240px,1fr))'
+    : columnas === '3' ? 'repeat(auto-fit,minmax(190px,1fr))'
+    : 'repeat(auto-fit,minmax(220px,1fr))';
   let html = '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + esc(neg) + ' — Catálogo</title>';
   html += '<style>*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#f4f6fa;color:#222}';
   html += '.header{background:linear-gradient(135deg,#1a4d80,#2d7ac0);color:#fff;padding:28px 16px;text-align:center}';
@@ -4209,23 +4306,28 @@ function generarCatalogoHTML(categoriaFiltro, columnas) {
   html += '.header .fecha{font-size:11px;opacity:.75;margin-top:8px}';
   html += '.container{max-width:1200px;margin:0 auto;padding:20px}';
   html += '.grid{display:grid;grid-template-columns:' + gridCol + ';gap:16px}';
-  html += '.card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s}';
+  html += '.card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s;cursor:pointer}';
   html += '.card:hover{transform:translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,.12)}';
+  html += '.card.expandido{cursor:default}';
   html += '.img{width:100%;aspect-ratio:1/1;background:#f8faff;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:12px;font-size:56px;color:#6b7a90;border:1px solid #eaf1f9}';
   html += '.img img{width:100%;height:100%;object-fit:contain;background:#fff}';
   html += '.nom{font-weight:700;color:#1a4d80;font-size:15px;margin:0 0 6px 0;line-height:1.3}';
   html += '.cat{display:inline-block;background:#eaf1f9;color:#2d7ac0;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;margin-bottom:6px}';
   html += '.pre{font-weight:800;color:#217a44;font-size:20px;margin:4px 0 6px 0}';
-  html += '.desc{font-size:12px;color:#6b7a90;line-height:1.4;margin-bottom:8px;flex:1}';
+  html += '.desc{font-size:12px;color:#6b7a90;line-height:1.4;margin-bottom:8px;flex:1;display:none}';
+  html += '.card.expandido .desc{display:block}';
   html += '.stk{font-size:11px;color:#999;margin-top:auto;padding-top:6px;border-top:1px solid #eef2f8}';
   html += '.btn-solicitar{display:block;width:100%;padding:12px;margin-top:10px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;text-align:center;font-weight:700;border-radius:8px;text-decoration:none;font-size:14px;border:none;cursor:pointer;font-family:inherit;transition:transform .15s}';
   html += '.btn-solicitar:active{transform:scale(.97)}';
-  html += '.btn-copiar{display:block;width:100%;padding:12px;margin-top:10px;background:linear-gradient(135deg,#2d7ac0,#1a4d80);color:#fff;text-align:center;font-weight:700;border-radius:8px;text-decoration:none;font-size:14px;border:none;cursor:pointer;font-family:inherit}';
+  html += '/* .card.expandido .btn-solicitar ya no necesario: botón siempre visible */';
+  html += '.card .toggle-indicador{display:none}';
+  html += '.card.expandido .toggle-indicador{display:inline-block;position:absolute;top:8px;right:8px;background:#fdecea;color:#c0392b;border:none;border-radius:50%;width:28px;height:28px;font-size:14px;font-weight:800;cursor:pointer;line-height:1;padding:0;z-index:2}';
+  html += '.card{position:relative}';
   html += '.footer{text-align:center;padding:30px 20px;font-size:12px;color:#6b7a90;background:#fff;margin-top:30px}';
   html += '.footer .wa{color:#25D366;font-weight:700;text-decoration:none;font-size:14px}';
   html += '.toast-cat{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#2e9e5b;color:#fff;padding:12px 22px;border-radius:10px;font-size:14px;font-weight:700;box-shadow:0 6px 24px rgba(0,0,0,.3);opacity:0;transition:opacity .3s,transform .3s;z-index:9999;max-width:90vw;text-align:center}';
   html += '.toast-cat.visible{opacity:1;transform:translateX(-50%) translateY(0)}';
-  html += '@media print{.card{break-inside:avoid}.btn-solicitar,.btn-copiar{display:none}}';
+  html += '@media print{.card{break-inside:avoid}.btn-solicitar,.toggle-indicador{display:none!important}}';
   html += '</style></head><body>';
   html += '<div class="header">';
   if (logo) html += '<img src="' + logo + '" class="logo" alt="Logo">';
@@ -4236,25 +4338,22 @@ function generarCatalogoHTML(categoriaFiltro, columnas) {
   html += '</div>';
   html += '<div class="container"><div class="grid">';
   prods.forEach(p => {
-    html += '<div class="card">';
+    html += '<div class="card" onclick="toggleTarjetaCatalogo(this, event)">';
+    html += '<button class="toggle-indicador" onclick="cerrarTarjetaCatalogo(event)">✖</button>';
     html += '<div class="img">' + (p.imagen ? '<img src="' + p.imagen + '" alt="' + esc(p.nombre) + '" loading="lazy">' : '📷') + '</div>';
     html += '<div class="nom">' + esc(p.nombre) + '</div>';
     if (p.categoria) html += '<div><span class="cat">🏷️ ' + esc(p.categoria) + '</span></div>';
     html += '<div class="pre">' + money(p.precioVenta) + '</div>';
     if (p.caracteristicas) html += '<div class="desc">' + esc(p.caracteristicas) + '</div>';
     html += '<div class="stk">Stock: ' + cant(p.stock) + '</div>';
-    const msgWA = 'Hola, me interesa este producto de tu catálogo:\n\n' +
-                  '🏪 ' + neg + '\n' +
-                  '📦 ' + p.nombre + '\n' +
-                  '💵 ' + money(p.precioVenta) + '\n' +
-                  (p.caracteristicas ? '📝 ' + p.caracteristicas + '\n' : '') +
-                  '\n¿Está disponible?';
+    // Mensaje solicitado: sin descripción
+    const msgWA = 'Hola, me interesa:\n' + p.nombre + '\n\n¿Está disponible?';
     if (waGestor) {
       const urlWA = 'https://wa.me/' + waGestor + '?text=' + encodeURIComponent(msgWA);
-      html += '<a class="btn-solicitar" href="' + urlWA + '" target="_blank" rel="noopener">💬 Solicitar este producto</a>';
+      html += '<a class="btn-solicitar" href="' + urlWA + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">💬 Solicitar</a>';
     } else {
       const msgJson = JSON.stringify(msgWA);
-      html += '<button class="btn-copiar" onclick=\'copiarSolicitudCatalogo(' + msgJson + ')\'>📋 Copiar solicitud</button>';
+      html += '<button class="btn-solicitar" onclick="event.stopPropagation();copiarSolicitudCatalogo(' + msgJson + ')">📋 Copiar solicitud</button>';
     }
     html += '</div>';
   });
@@ -4264,6 +4363,16 @@ function generarCatalogoHTML(categoriaFiltro, columnas) {
   html += '<p style="margin-top:8px">Generado con miNegocito · Soluciones ALROHI<br>📲 +53 5 318 6004</p>';
   html += '</div>';
   html += '<script>';
+  html += 'function toggleTarjetaCatalogo(card, ev){';
+  html += '  if(ev.target.closest("a")||ev.target.closest("button"))return;';
+  html += '  var expandido = card.classList.contains("expandido");';
+  html += '  document.querySelectorAll(".card.expandido").forEach(function(c){c.classList.remove("expandido")});';
+  html += '  if(!expandido)card.classList.add("expandido");';
+  html += '}';
+  html += 'function cerrarTarjetaCatalogo(ev){';
+  html += '  ev.stopPropagation();';
+  html += '  ev.target.closest(".card").classList.remove("expandido");';
+  html += '}';
   html += 'function copiarSolicitudCatalogo(txt){';
   html += '  if(navigator.clipboard&&navigator.clipboard.writeText){';
   html += '    navigator.clipboard.writeText(txt).then(function(){mostrarToastCatalogo("📋 Solicitud copiada. Pégala en WhatsApp.")}).catch(function(){prompt("Copia este mensaje:",txt)});';
@@ -4291,9 +4400,8 @@ function compartirCatalogoHTML() {
     { texto: '🖥️ Ajustado a pantalla (auto)', clase: 'verde', accion: () => _descargarCatalogoHTML(cat, 'auto') },
     { texto: '✖ Cancelar', clase: 'gris', accion: () => {} }
   ];
-  mostrarModalOpciones('📄 Catálogo HTML interactivo', 'Selecciona el diseño. Se descargará UN SOLO archivo .html con todas las fotos, descripciones y un botón "💬 Solicitar" en cada producto que abre WhatsApp directamente.\n\nLos clientes podrán abrirlo sin conexión en cualquier navegador.', bts);
+  mostrarModalOpciones('📄 Catálogo HTML interactivo', 'Selecciona el diseño. Se descargará UN SOLO archivo .html con todas las fotos, categorías y precios. Cada tarjeta se expande al tocarla mostrando la descripción completa y el botón "💬 Solicitar" que abre WhatsApp con el mensaje: "Hola, me interesa este producto de tu catálogo:" + nombre + precio + "¿Está disponible?".', bts);
 }
-// v1.580: catálogo HTML con texto descriptivo
 function _descargarCatalogoHTML(categoriaFiltro, columnas) {
   const html = generarCatalogoHTML(categoriaFiltro, columnas);
   const cuenta = obtenerCuenta();
@@ -4314,7 +4422,6 @@ function _descargarCatalogoHTML(categoriaFiltro, columnas) {
   }
   _descargarBlob(blob, nf);
   mostrarToast('✅ Catálogo HTML guardado: ' + nf, 'info');
-  // Mostrar texto descriptivo para enviar por WhatsApp
   setTimeout(() => {
     mostrarModalOpciones('📢 Texto de descripción', 'El archivo se ha guardado.\n\nCopia o envía este texto junto con el catálogo:\n\n' + descripcion, [
       { texto: '📋 Copiar texto', clase: 'azul', accion: () => { copiarTexto(descripcion); mostrarToast('📋 Copiado.', 'info'); } },
@@ -4334,11 +4441,25 @@ async function compartirUnProductoDelCatalogo(id) {
   pedirConfirmacion('📲 Compartir en WhatsApp', 'El texto ya está copiado y la imagen descargada. Pega el texto y adjunta la foto.', (ok) => { if (ok) abrirWhatsAppConTexto(texto); }, { textoSi: 'Abrir WhatsApp', textoNo: 'Cerrar', tipo: 'normal' });
 }
 function descargarImagenProducto(p) { if (!p || !p.imagen) return; try { const link = document.createElement('a'); link.href = p.imagen; link.download = 'producto-' + p.id + '.jpg'; document.body.appendChild(link); link.click(); document.body.removeChild(link); } catch (e) {} }
-function generarTextoProductoIndividual(p, neg, dir, inclCar) { let t = '🏪 *' + neg + '*\n\n▪️ *' + p.nombre + '*\n💵 Precio: ' + money(p.precioVenta) + '\n'; if (inclCar && p.caracteristicas) t += '📝 ' + p.caracteristicas + '\n'; if (p.stock > 0 && p.stock <= 5) t += '⚡ Últimas ' + cant(p.stock) + ' unidades\n'; if (dir) t += '\n📍 ' + dir + '\n'; t += '\n_Responde para hacer tu pedido_ 💙\n\n⚙️ *miNegocito*'; return t; }
-function generarTextoCatalogo(categoria) {
+function generarTextoProductoIndividual(p, neg, dir, inclCar) {
+  const cuenta = obtenerCuenta();
+  const waGestor = String(cuenta && cuenta.telefonoPagos ? cuenta.telefonoPagos : '').replace(/[^\d]/g, '');
+  const msgWA = 'Hola, me interesa:\n' + p.nombre + '\n\n¿Está disponible?';
+  const urlWA = waGestor ? ('https://wa.me/' + waGestor + '?text=' + encodeURIComponent(msgWA)) : '';
+  let t = '🏪 *' + neg + '*\n\n▪️ *' + p.nombre + '*\n💵 Precio: ' + money(p.precioVenta) + '\n';
+  if (inclCar && p.caracteristicas) t += '📝 ' + p.caracteristicas + '\n';
+  if (p.stock > 0 && p.stock <= 5) t += '⚡ Últimas ' + cant(p.stock) + ' unidades\n';
+  if (dir) t += '\n📍 ' + dir + '\n';
+  if (urlWA) t += '\n📲 Pedir: ' + urlWA + '\n';
+  t += '\n_Responde para hacer tu pedido_ 💙\n\n⚙️ *miNegocito*';
+  return t;
+}
+// Catálogo de texto (mejora 3: opción enlace / sin enlace)
+function generarTextoCatalogo(categoria, incluirEnlace) {
   const cuenta = obtenerCuenta();
   const neg = cuenta ? cuenta.nombre : 'miNegocito';
   const dir = cuenta && cuenta.direccion ? cuenta.direccion.trim() : '';
+  const waGestor = String(cuenta && cuenta.telefonoPagos ? cuenta.telefonoPagos : '').replace(/[^\d]/g, '');
   let disp = db.productos.filter(p => p.stock > 0);
   if (categoria) disp = disp.filter(p => p.categoria === categoria);
   if (!disp.length) return null;
@@ -4348,7 +4469,20 @@ function generarTextoCatalogo(categoria) {
   const grupos = {};
   disp.forEach(p => { const cat = (p.categoria && p.categoria.trim()) ? p.categoria.trim() : 'SIN CATEGORÍA'; if (!grupos[cat]) grupos[cat] = []; grupos[cat].push(p); });
   const cats = Object.keys(grupos).sort((a, b) => { if (a === 'SIN CATEGORÍA') return 1; if (b === 'SIN CATEGORÍA') return -1; return a.localeCompare(b, 'es', { sensitivity: 'base' }); });
-  cats.forEach(cat => { t += '🏷️ *' + cat.toUpperCase() + ':*\n'; const prods = grupos[cat].sort((a, b) => a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' })); prods.forEach(p => { t += '  • ' + p.nombre + ' — ' + money(p.precioVenta); if (p.stock > 0 && p.stock <= 5) t += ' ⚡ Últimas ' + cant(p.stock) + ' uds.'; t += '\n'; }); t += '\n'; });
+  cats.forEach(cat => {
+    t += '🏷️ *' + cat.toUpperCase() + ':*\n';
+    const prods = grupos[cat].sort((a, b) => a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' }));
+    prods.forEach(p => {
+      t += '*_ ' + p.nombre + ' _*\n';
+      t += '💵 ' + money(p.precioVenta) + '\n';
+      if (incluirEnlace && waGestor) {
+        const msgP = encodeURIComponent('Hola, me interesa:\n' + p.nombre + '\n\n¿Está disponible?');
+        t += '📲 Pedir: https://wa.me/' + waGestor + '?text=' + msgP + '\n';
+      }
+      t += '\n';
+    });
+    t += '\n';
+  });
   t += '━━━━━━━━━━━━━━━━━━━━\n';
   if (dir) t += '📍 ' + dir + '\n';
   t += '📞 _Responde para pedir_ 💙\n\n⚙️ *miNegocito*';
@@ -4357,9 +4491,20 @@ function generarTextoCatalogo(categoria) {
 function compartirCatalogoTexto() {
   if (!requerirActivacion('Para enviar debes activar la app.')) return;
   const cat = document.getElementById('filtroCategoriaCatalogo')?.value || '';
+  const nProd = db.productos.filter(p => p.stock > 0 && (!cat || p.categoria === cat)).length;
   cerrarModalCatalogoCompartir();
-  const t = generarTextoCatalogo(cat);
-  if (!t) { mostrarToast('Sin productos con stock' + (cat ? ' en "' + cat + '"' : '') + '.', 'warn'); return; }
+  const bts = [];
+  if (nProd <= 40) {
+    bts.push({ texto: '🔗 Con enlace de WhatsApp por producto', clase: 'verde', accion: () => _enviarCatalogoTexto(cat, true) });
+  }
+  bts.push({ texto: '📝 Sin enlaces (solo lista)', clase: 'azul', accion: () => _enviarCatalogoTexto(cat, false) });
+  bts.push({ texto: '✖ Cancelar', clase: 'gris', accion: () => {} });
+  const msg = '¿Deseas incluir un enlace de WhatsApp por producto?\n\n' + (nProd > 40 ? '⚠️ Tienes ' + nProd + ' productos con stock. Se recomienda SIN enlaces para evitar bloqueos de WhatsApp.\n\n' : '');
+  mostrarModalOpciones('📝 Catálogo de texto', msg + '• Con enlace: cada producto incluye un enlace directo a WhatsApp con el mensaje precargado.\n• Sin enlaces: lista limpia sin enlaces.', bts);
+}
+function _enviarCatalogoTexto(categoria, incluirEnlace) {
+  const t = generarTextoCatalogo(categoria, incluirEnlace);
+  if (!t) { mostrarToast('Sin productos con stock' + (categoria ? ' en "' + categoria + '"' : '') + '.', 'warn'); return; }
   if (esDispositivoMovil()) {
     if (navigator.share) navigator.share({ title: 'Catálogo - ' + (obtenerCuenta()?.nombre || 'miNegocito'), text: t }).catch(err => { if (err.name !== 'AbortError') abrirWhatsAppConTexto(t); });
     else abrirWhatsAppConTexto(t);
@@ -4370,7 +4515,7 @@ function compartirCatalogoTexto() {
   }
 }
 function verCatalogo(categoria) {
-  const t = generarTextoCatalogo(categoria || null);
+  const t = generarTextoCatalogo(categoria || null, true);
   if (!t) { mostrarToast('Sin productos.', 'warn'); return; }
   if (esDispositivoMovil() && navigator.share) { navigator.share({ title: 'Catálogo', text: t }).catch(err => { if (err.name !== 'AbortError') { copiarTexto(t); mostrarToast('📋 Copiado.', 'info'); } }); }
   else { const w = window.open('', '_blank'); if (!w) { copiarTexto(t); mostrarToast('📋 Copiado.', 'info'); return; } w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Catálogo</title><style>body{font-family:sans-serif;background:#f4f6fa;margin:0;padding:24px}.caja{background:#fff;border-radius:12px;padding:24px;max-width:640px;margin:0 auto}h1{color:#1a4d80}pre{background:#f8faff;border:1px solid #e3e9f2;border-radius:8px;padding:16px;font-size:13px;white-space:pre-wrap;max-height:60vh;overflow-y:auto}button{padding:10px 18px;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;background:#25D366;color:#fff}</style></head><body><div class="caja"><h1>📢 Vista previa</h1><pre id="t">' + esc(t) + '</pre><button onclick="navigator.clipboard.writeText(document.getElementById(\'t\').textContent).then(()=>alert(\'Copiado\'))">📋 Copiar</button></div></body></html>'); w.document.close(); }
@@ -4594,6 +4739,8 @@ function iniciarApp() {
   const footer = document.querySelector('.footer'); if (footer) footer.style.display = '';
   loadDB(); cargarNotificaciones(); cargarTemaGuardado(); cargarMoneda(); cargarModoOscuroGuardado();
   restaurarSeccionesAcordeon();
+  // Restaurar vista de productos
+  try { const vp = localStorage.getItem('vista_productos'); if (vp === 'tarjetas' || vp === 'tabla') _vistaProductos = vp; } catch (e) {}
   const hoy = fechaISO();
   ['bFecha','eFecha','vFecha','rFecha','dFecha','devFecha','gFecha','facFecha'].forEach(id => { const el = document.getElementById(id); if (el) el.value = hoy; });
   const h2 = new Date(); const hace7 = new Date(h2.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -4612,6 +4759,8 @@ function iniciarApp() {
   const sm = document.getElementById('selectorMoneda'); if (sm && cta) sm.value = cta.moneda || 'USD';
   const pa = obtenerPestanaActiva();
   if (!pa || pa !== 'rapido') irAPestana('rapido'); else renderResumenMes();
+  // Inicializar vista productos (tabla/tarjetas)
+  cambiarVistaProductos(_vistaProductos);
   (function () { const el = document.getElementById('bFecha'); if (el && !el.dataset.binded) { el.addEventListener('change', renderBalance); el.dataset.binded = '1'; } })();
   $('#btnVerReporte').onclick = verReporte; $('#btnWord').onclick = compartirReporte;
   const btnRepHtml = document.getElementById('btnReporteHTML'); if (btnRepHtml) btnRepHtml.onclick = compartirReporteHTML;
@@ -4648,7 +4797,6 @@ function iniciarApp() {
   verificarRecordatorioRespaldo(); actualizarBannerTrial(); actualizarBotonesLogo(); actualizarBotonesModoOscuro();
   if (!verificarAcceso()) setTimeout(() => mostrarModalActivacion(true), 400);
   descargarLicenciasGitHub().catch(() => {});
-  // v1.584: sincronizar licencia al iniciar (refresca multinegocio si el admin lo activó)
   if (verificarActivacion()) {
     setTimeout(() => {
       sincronizarLicencia().then(() => { renderSelectorNegocios(); actualizarSeccionLicencia(); }).catch(() => {});
