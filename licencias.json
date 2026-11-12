@@ -54,7 +54,7 @@
     },
     {
       "hash": "d6a16869c3e3b3f6e95b4e5e915f4a5b5743fabaa7642a8887974277bedc208d",
-      "cliente": "CABIN RG ÃÂÃÂ°ÃÂÃÂÃÂÃÂÃÂÃÂ",
+      "cliente": "CABIN RG ÃÂÃÂÃÂÃÂ°ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ",
       "activo": true,
       "multinegocio": true,
       "fecha_emision": "2026-10-30",
@@ -72,7 +72,7 @@
     },
     {
       "hash": "458f84b121b50acb92dc34be07e4b49e42e13c9b3053c0d7708acd23f0ced86b",
-      "cliente": "La bodeguita del CariÃÂÃÂ±o",
+      "cliente": "La bodeguita del CariÃÂÃÂÃÂÃÂ±o",
       "activo": true,
       "tipo": "colectiva",
       "multinegocio": false,
@@ -87,7 +87,7 @@
       "cliente": "Punto - Los Pinos",
       "activo": true,
       "tipo": "colectiva",
-      "multinegocio": false,
+      "multinegocio": true,
       "fecha_emision": "2026-11-03",
       "plan": "1-5",
       "maxDispositivos": 5,
@@ -100,8 +100,7 @@
       "dispositivosUsados": 4,
       "hash_anterior": "990da88760e38f2e79c9d5d7c9067460f084efee04f2484ab4f23997ef464127",
       "fecha_regeneracion": "2026-11-03T17:04:49.386Z",
-      "ultimaActualizacion": "2026-11-12T16:21:09.243Z"
+      "ultimaActualizacion": "2026-11-04T12:03:56.528Z"
     }
-  ],
-  "actualizado": "2026-11-12T16:21:09.243Z"
+  ]
 }
