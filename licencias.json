@@ -94,12 +94,14 @@
       "dispositivos": [
         "DEV-TEST123456",
         "DEV-NPX1PG",
-        "DEV-855ZZ8"
+        "DEV-855ZZ8",
+        "DEV-VB0WDK"
       ],
-      "dispositivosUsados": 3,
+      "dispositivosUsados": 4,
       "hash_anterior": "990da88760e38f2e79c9d5d7c9067460f084efee04f2484ab4f23997ef464127",
       "fecha_regeneracion": "2026-11-03T17:04:49.386Z",
-      "ultimaActualizacion": "2026-11-04T12:03:56.528Z"
+      "ultimaActualizacion": "2026-11-12T16:21:09.243Z"
     }
-  ]
+  ],
+  "actualizado": "2026-11-12T16:21:09.243Z"
 }
