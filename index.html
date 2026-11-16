@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>miNegocito v1.586</title>
+<title>miNegocito v1.58.9</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1a4d80">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -12,9 +12,28 @@
 <meta name="apple-mobile-web-app-title" content="miNegocito">
 <meta name="mobile-web-app-capable" content="yes">
 <style>
+/* === Parcheado v2: Temas, Íconos y Gráficos (fix2) === */
+:root {
+  --primary: #1a4d80;
+  --primary-light: #2d7ac0;
+  --primary-bg: #eaf1f9;
+  --primary-dark: #0b2a4a;
+  --success: #2e9e5b;
+  --success-dark: #217a44;
+  --danger: #c0392b;
+  --danger-dark: #96291d;
+  --warning: #e08a1e;
+  --warning-dark: #b56b0d;
+  --purple: #7b3fa0;
+  --purple-dark: #5d2d7a;
+  --header-grad: linear-gradient(135deg, var(--primary), var(--primary-light));
+}
+
+
+
   * { box-sizing: border-box; }
   body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6fa; color: #222; }
-  header { background: linear-gradient(135deg, #1a4d80, #2d7ac0); color: #fff; padding: 14px 20px 0 20px; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+  header { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #fff; padding: 14px 20px 0 20px; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
   .header-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
   .header-info { display: flex; flex-direction: column; gap: 2px; }
   .header-info .nombre { font-size: 20px; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 6px; }
@@ -28,61 +47,61 @@
   .nav-desktop { display: flex; gap: 4px; flex-wrap: wrap; }
   .nav-desktop button { background: rgba(255,255,255,.15); color: #fff; border: none; padding: 10px 18px; cursor: pointer; border-radius: 8px 8px 0 0; font-size: 14px; font-weight: 600; transition: .2s; }
   .nav-desktop button:hover { background: rgba(255,255,255,.28); }
-  .nav-desktop button.active { background: #f4f6fa; color: #1a4d80; }
-  nav button .badge-alerta { display: inline-block; background: #e08a1e; color: #fff; font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 10px; margin-left: 6px; }
+  .nav-desktop button.active { background: #f4f6fa; color: var(--primary); }
+  nav button .badge-alerta { display: inline-block; background: var(--warning); color: #fff; font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 10px; margin-left: 6px; }
   #sidebarOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 9997; }
   #sidebarOverlay.activo { display: block; }
   #sidebarMovil { position: fixed; top: 0; left: 0; bottom: 0; width: 78%; max-width: 320px; background: #fff; z-index: 9998; transform: translateX(-100%); transition: transform .25s ease; overflow-y: auto; -webkit-overflow-scrolling: touch; box-shadow: 4px 0 20px rgba(0,0,0,.3); display: flex; flex-direction: column; }
   #sidebarMovil.abierto { transform: translateX(0); }
-  #sidebarMovil .side-header { background: linear-gradient(135deg, #1a4d80, #2d7ac0); color: #fff; padding: 16px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; position: sticky; top: 0; z-index: 2; }
+  #sidebarMovil .side-header { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #fff; padding: 16px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; position: sticky; top: 0; z-index: 2; }
   #sidebarMovil .side-header .side-titulo { font-size: 16px; font-weight: 700; }
   #sidebarMovil .side-header button { background: rgba(255,255,255,.2); color: #fff; border: none; width: 36px; height: 36px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 700; }
   #sidebarMovil .side-lista { padding: 8px 0 24px 0; flex: 1; }
-  #sidebarMovil .side-lista button { display: flex; align-items: center; gap: 12px; width: 100%; background: transparent; border: none; text-align: left; padding: 13px 18px; font-size: 15px; font-weight: 600; color: #1a4d80; cursor: pointer; font-family: inherit; border-left: 4px solid transparent; transition: background .15s; }
-  #sidebarMovil .side-lista button:hover, #sidebarMovil .side-lista button.active { background: #eaf1f9; border-left-color: #2d7ac0; }
+  #sidebarMovil .side-lista button { display: flex; align-items: center; gap: 12px; width: 100%; background: transparent; border: none; text-align: left; padding: 13px 18px; font-size: 15px; font-weight: 600; color: var(--primary); cursor: pointer; font-family: inherit; border-left: 4px solid transparent; transition: background .15s; }
+  #sidebarMovil .side-lista button:hover, #sidebarMovil .side-lista button.active { background: var(--primary-bg); border-left-color: var(--primary-light); }
   #sidebarMovil .side-lista .side-emoji { font-size: 18px; width: 26px; text-align: center; }
   #sidebarMovil .side-lista .badge-alerta { margin-left: auto; }
   main { padding: 20px; max-width: 1200px; margin: 0 auto; }
   .tab { display: none; }
   .tab.active { display: block; }
-  h2 { color: #1a4d80; font-size: 19px; margin: 0 0 14px 0; }
+  h2 { color: var(--primary); font-size: 19px; margin: 0 0 14px 0; }
   .card { background: #fff; border-radius: 10px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.08); margin-bottom: 18px; }
   .form-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); align-items: end; }
   label { display: flex; flex-direction: column; font-size: 13px; font-weight: 600; color: #444; gap: 4px; }
   input, select, textarea { padding: 9px 10px; border: 1px solid #c8d2e0; border-radius: 6px; font-size: 14px; font-family: inherit; background: #fff; }
-  input:focus, select:focus, textarea:focus { outline: 2px solid #2d7ac0; border-color: transparent; }
-  button.btn { padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; background: #2d7ac0; color: #fff; transition: .2s; }
-  button.btn:hover { background: #1a4d80; }
-  button.btn.verde { background: #2e9e5b; } button.btn.verde:hover { background: #217a44; }
-  button.btn.rojo { background: #c0392b; } button.btn.rojo:hover { background: #96291d; }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--primary-light); border-color: transparent; }
+  button.btn { padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; background: var(--primary-light); color: #fff; transition: .2s; }
+  button.btn:hover { background: var(--primary); }
+  button.btn.verde { background: var(--success); } button.btn.verde:hover { background: var(--success-dark); }
+  button.btn.rojo { background: var(--danger); } button.btn.rojo:hover { background: var(--danger-dark); }
   button.btn.gris { background: #6b7a90; } button.btn.gris:hover { background: #4e5a6b; }
-  button.btn.morado { background: #7b3fa0; } button.btn.morado:hover { background: #5d2d7a; }
-  button.btn.naranja { background: #e08a1e; } button.btn.naranja:hover { background: #b56b0d; }
-  button.btn.azul { background: #2d7ac0; } button.btn.azul:hover { background: #1a4d80; }
-  .btn-volver-balance { padding: 8px 16px; border: none; border-radius: 8px; background: #eaf1f9; color: #1a4d80; font-weight: 700; font-size: 13px; cursor: pointer; margin-bottom: 14px; display: inline-flex; align-items: center; gap: 6px; transition: background .2s; }
+  button.btn.morado { background: var(--purple); } button.btn.morado:hover { background: var(--purple-dark); }
+  button.btn.naranja { background: var(--warning); } button.btn.naranja:hover { background: var(--warning-dark); }
+  button.btn.azul { background: var(--primary-light); } button.btn.azul:hover { background: var(--primary); }
+  .btn-volver-balance { padding: 8px 16px; border: none; border-radius: 8px; background: var(--primary-bg); color: var(--primary); font-weight: 700; font-size: 13px; cursor: pointer; margin-bottom: 14px; display: inline-flex; align-items: center; gap: 6px; transition: background .2s; }
   .btn-volver-balance:hover { background: #d5e3f0; }
   .tabla-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   table { width: 100%; border-collapse: collapse; font-size: 14px; background: #fff; }
   th, td { padding: 9px 11px; border-bottom: 1px solid #e3e9f2; text-align: left; }
-  th { background: #eaf1f9; color: #1a4d80; font-weight: 700; font-size: 13px; }
+  th { background: var(--primary-bg); color: var(--primary); font-weight: 700; font-size: 13px; }
   tbody tr:hover { background: #f8fbff; }
   td.num, th.num { text-align: center; }
   td.mon, th.mon { text-align: right; }
   .vacio { text-align: center; color: #999; font-style: italic; padding: 18px; }
   .cards { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); margin-bottom: 18px; }
-  .kpi { background: #fff; border-radius: 10px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.08); border-left: 5px solid #2d7ac0; }
+  .kpi { background: #fff; border-radius: 10px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.08); border-left: 5px solid var(--primary-light); }
   .kpi .t { font-size: 12px; text-transform: uppercase; color: #6b7a90; font-weight: 700; letter-spacing: .5px; }
-  .kpi .v { font-size: 24px; font-weight: 700; margin-top: 6px; color: #1a4d80; }
-  .kpi.verde { border-left-color: #2e9e5b; } .kpi.verde .v { color: #217a44; }
-  .kpi.rojo { border-left-color: #c0392b; } .kpi.rojo .v { color: #96291d; }
-  .kpi.naranja { border-left-color: #e08a1e; } .kpi.naranja .v { color: #b56b0d; }
-  .kpi.morado { border-left-color: #7b3fa0; } .kpi.morado .v { color: #5d2d7a; }
+  .kpi .v { font-size: 24px; font-weight: 700; margin-top: 6px; color: var(--primary); }
+  .kpi.verde { border-left-color: var(--success); } .kpi.verde .v { color: var(--success-dark); }
+  .kpi.rojo { border-left-color: var(--danger); } .kpi.rojo .v { color: var(--danger-dark); }
+  .kpi.naranja { border-left-color: var(--warning); } .kpi.naranja .v { color: var(--warning-dark); }
+  .kpi.morado { border-left-color: var(--purple); } .kpi.morado .v { color: var(--purple-dark); }
   .kpi.compacto { padding: 11px 12px; border-left-width: 4px; }
   .kpi.compacto .t { font-size: 10px; letter-spacing: .3px; }
   .kpi.compacto .v { font-size: 17px; margin-top: 3px; }
   #resumenMesCards { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
   .acciones { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
-  .aviso { background: #fff8e1; border-left: 4px solid #e08a1e; padding: 12px 14px; border-radius: 6px; font-size: 13px; margin-bottom: 16px; }
+  .aviso { background: #fff8e1; border-left: 4px solid var(--warning); padding: 12px 14px; border-radius: 6px; font-size: 13px; margin-bottom: 16px; }
   .mini { font-size: 12px; color: #6b7a90; }
   .miniatura-producto { width: 42px; height: 42px; border-radius: 8px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; overflow: hidden; border: 1px solid #d5e3f0; flex-shrink: 0; }
   .miniatura-producto img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
@@ -91,40 +110,40 @@
   .preview-img img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
   #vistaReporte { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #fff; z-index: 9999; overflow-y: auto; padding: 16px; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
   #vistaReporte.activo { display: block; }
-  #vistaReporte .barra-superior { position: sticky; top: 0; background: #1a4d80; color: #fff; padding: 10px 12px; margin: -16px -16px 16px -16px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; z-index: 10; }
+  #vistaReporte .barra-superior { position: sticky; top: 0; background: var(--primary); color: #fff; padding: 10px 12px; margin: -16px -16px 16px -16px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; z-index: 10; }
   #vistaReporte .barra-superior button { padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; }
   .btn-volver { background: #6b7a90; color: #fff; }
-  .btn-compartir { background: #2e9e5b; color: #fff; }
-  .btn-copiar { background: #2d7ac0; color: #fff; }
-  .btn-pdf { background: #c0392b; color: #fff; }
-  .btn-html { background: #7b3fa0; color: #fff; }
+  .btn-compartir { background: var(--success); color: #fff; }
+  .btn-copiar { background: var(--primary-light); color: #fff; }
+  .btn-pdf { background: var(--danger); color: #fff; }
+  .btn-html { background: var(--purple); color: #fff; }
   #vistaManual { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #f4f6fa; z-index: 9999; overflow-y: auto; padding: 16px; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
   #vistaManual.activo { display: block; }
-  #vistaManual .barra-superior { position: sticky; top: 0; background: #1a4d80; color: #fff; padding: 10px 12px; margin: -16px -16px 16px -16px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; z-index: 10; }
+  #vistaManual .barra-superior { position: sticky; top: 0; background: var(--primary); color: #fff; padding: 10px 12px; margin: -16px -16px 16px -16px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; z-index: 10; }
   #vistaManual .barra-superior button { padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; }
   #vistaPOS { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #f4f6fa; z-index: 9998; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
   #vistaPOS.activo { display: block; }
-  #vistaPOS .barra-superior { position: sticky; top: 0; background: #1a4d80; color: #fff; padding: 10px 14px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+  #vistaPOS .barra-superior { position: sticky; top: 0; background: var(--primary); color: #fff; padding: 10px 14px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
   #vistaPOS .barra-superior .titulo-pos { font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-right: auto; }
   #vistaPOS .barra-superior button { padding: 9px 16px; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 700; font-family: inherit; }
   #vistaPOS .btn-cerrar-pos { background: #6b7a90; color: #fff; }
-  #vistaPOS .btn-carrito-pos { background: #2e9e5b; color: #fff; position: relative; font-size: 14px; padding: 9px 18px; }
-  #vistaPOS .btn-carrito-pos.con-items { background: #217a44; }
-  #vistaPOS .contador-carrito { background: #fff; color: #217a44; font-weight: 800; padding: 2px 9px; border-radius: 12px; margin-left: 6px; font-size: 13px; }
+  #vistaPOS .btn-carrito-pos { background: var(--success); color: #fff; position: relative; font-size: 14px; padding: 9px 18px; }
+  #vistaPOS .btn-carrito-pos.con-items { background: var(--success-dark); }
+  #vistaPOS .contador-carrito { background: #fff; color: var(--success-dark); font-weight: 800; padding: 2px 9px; border-radius: 12px; margin-left: 6px; font-size: 13px; }
   #vistaPOS .contenido-pos { padding: 14px; max-width: 1200px; margin: 0 auto; }
   #vistaPOS .buscador-pos { width: 100%; padding: 12px 14px; font-size: 15px; border: 2px solid #c8d2e0; border-radius: 10px; margin-bottom: 14px; font-family: inherit; background: #fff; }
-  #vistaPOS .buscador-pos:focus { outline: none; border-color: #2d7ac0; }
+  #vistaPOS .buscador-pos:focus { outline: none; border-color: var(--primary-light); }
   #vistaPOS .grilla-pos { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
   #vistaPOS .tarjeta-prod { background: #fff; border: 2px solid transparent; border-radius: 12px; padding: 8px; cursor: pointer; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,.07); transition: transform .15s, box-shadow .15s, border-color .15s; display: flex; flex-direction: column; gap: 6px; font-family: inherit; overflow: hidden; }
-  #vistaPOS .tarjeta-prod:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,.12); border-color: #2d7ac0; }
+  #vistaPOS .tarjeta-prod:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,.12); border-color: var(--primary-light); }
   #vistaPOS .tarjeta-prod.agotado { opacity: .55; }
-  #vistaPOS .tarjeta-img { width: 100%; aspect-ratio: 1/1; border-radius: 8px; background: #fff; border: 1px solid #eaf1f9; display: flex; align-items: center; justify-content: center; font-size: 42px; overflow: hidden; }
+  #vistaPOS .tarjeta-img { width: 100%; aspect-ratio: 1/1; border-radius: 8px; background: #fff; border: 1px solid var(--primary-bg); display: flex; align-items: center; justify-content: center; font-size: 42px; overflow: hidden; }
   #vistaPOS .tarjeta-img img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
-  #vistaPOS .tarjeta-nombre { font-size: 13px; font-weight: 700; color: #1a4d80; line-height: 1.25; min-height: 32px; display: flex; align-items: center; justify-content: center; padding: 0 2px; }
-  #vistaPOS .tarjeta-precio { font-size: 15px; font-weight: 800; color: #217a44; }
+  #vistaPOS .tarjeta-nombre { font-size: 13px; font-weight: 700; color: var(--primary); line-height: 1.25; min-height: 32px; display: flex; align-items: center; justify-content: center; padding: 0 2px; }
+  #vistaPOS .tarjeta-precio { font-size: 15px; font-weight: 800; color: var(--success-dark); }
   #vistaPOS .tarjeta-stock { font-size: 11px; color: #6b7a90; font-weight: 600; }
-  #vistaPOS .tarjeta-stock.bajo { color: #e08a1e; }
-  #vistaPOS .tarjeta-stock.agotado-txt { color: #c0392b; }
+  #vistaPOS .tarjeta-stock.bajo { color: var(--warning); }
+  #vistaPOS .tarjeta-stock.agotado-txt { color: var(--danger); }
   #vistaPOS .pos-vacio { text-align: center; padding: 40px 20px; color: #999; font-style: italic; }
   #modalCantidadPOS { display: none; }
   #modalCantidadPOS .caja-cantidad { background: #fff; border-radius: 16px; padding: 20px; max-width: 420px; width: 100%; margin: auto; box-shadow: 0 10px 40px rgba(0,0,0,.35); }
@@ -132,102 +151,102 @@
   #modalCantidadPOS .prod-img { width: 82px; height: 82px; border-radius: 12px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 34px; overflow: hidden; flex-shrink: 0; border: 1px solid #d5e3f0; }
   #modalCantidadPOS .prod-img img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
   #modalCantidadPOS .prod-datos { flex: 1; min-width: 0; }
-  #modalCantidadPOS .prod-datos .nom { font-size: 15px; font-weight: 700; color: #1a4d80; margin-bottom: 4px; line-height: 1.25; }
-  #modalCantidadPOS .prod-datos .pre { font-size: 17px; font-weight: 800; color: #217a44; }
+  #modalCantidadPOS .prod-datos .nom { font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 4px; line-height: 1.25; }
+  #modalCantidadPOS .prod-datos .pre { font-size: 17px; font-weight: 800; color: var(--success-dark); }
   #modalCantidadPOS .prod-datos .stk { font-size: 12px; color: #6b7a90; font-weight: 600; margin-top: 2px; }
-  #modalCantidadPOS .display-cantidad { background: #f4f6fa; border: 2px solid #c8d2e0; border-radius: 10px; padding: 12px; text-align: right; font-size: 26px; font-weight: 800; color: #1a4d80; margin-bottom: 12px; min-height: 56px; font-family: 'Courier New', monospace; letter-spacing: 1px; overflow: hidden; text-overflow: ellipsis; }
+  #modalCantidadPOS .display-cantidad { background: #f4f6fa; border: 2px solid #c8d2e0; border-radius: 10px; padding: 12px; text-align: right; font-size: 26px; font-weight: 800; color: var(--primary); margin-bottom: 12px; min-height: 56px; font-family: 'Courier New', monospace; letter-spacing: 1px; overflow: hidden; text-overflow: ellipsis; }
   #modalCantidadPOS .teclado { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
-  #modalCantidadPOS .tecla { padding: 16px 0; border: none; border-radius: 10px; background: #eaf1f9; color: #1a4d80; font-size: 20px; font-weight: 800; cursor: pointer; font-family: inherit; transition: background .15s; user-select: none; }
+  #modalCantidadPOS .tecla { padding: 16px 0; border: none; border-radius: 10px; background: var(--primary-bg); color: var(--primary); font-size: 20px; font-weight: 800; cursor: pointer; font-family: inherit; transition: background .15s; user-select: none; }
   #modalCantidadPOS .tecla:hover { background: #d5e3f0; }
-  #modalCantidadPOS .tecla.borrar { background: #fdecea; color: #c0392b; }
-  #modalCantidadPOS .tecla.limpiar { background: #fff8e1; color: #b56b0d; }
-  #modalCantidadPOS .tecla.coma { background: #e8f5e9; color: #217a44; }
+  #modalCantidadPOS .tecla.borrar { background: #fdecea; color: var(--danger); }
+  #modalCantidadPOS .tecla.limpiar { background: #fff8e1; color: var(--warning-dark); }
+  #modalCantidadPOS .tecla.coma { background: #e8f5e9; color: var(--success-dark); }
   #modalCantidadPOS .subtotal-info { background: #f0f8f4; border-radius: 10px; padding: 12px; text-align: center; margin-bottom: 14px; }
   #modalCantidadPOS .subtotal-info .lbl { font-size: 11px; color: #6b7a90; font-weight: 700; letter-spacing: .5px; }
-  #modalCantidadPOS .subtotal-info .val { font-size: 24px; font-weight: 800; color: #217a44; margin-top: 2px; }
-  #modalCantidadPOS .error-cantidad { color: #c0392b; font-size: 13px; font-weight: 600; min-height: 18px; margin-bottom: 8px; text-align: center; }
+  #modalCantidadPOS .subtotal-info .val { font-size: 24px; font-weight: 800; color: var(--success-dark); margin-top: 2px; }
+  #modalCantidadPOS .error-cantidad { color: var(--danger); font-size: 13px; font-weight: 600; min-height: 18px; margin-bottom: 8px; text-align: center; }
   #modalCantidadPOS .botones-cantidad { display: flex; gap: 10px; }
   #modalCantidadPOS .botones-cantidad button { flex: 1; padding: 14px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; }
   #modalCantidadPOS .btn-cancelar-cant { background: #6b7a90; color: #fff; }
-  #modalCantidadPOS .btn-agregar-cant { background: #2e9e5b; color: #fff; }
+  #modalCantidadPOS .btn-agregar-cant { background: var(--success); color: #fff; }
   #modalCarritoPOS { display: none; }
   #modalCarritoPOS .caja-carrito { background: #fff; border-radius: 16px; padding: 20px; max-width: 520px; width: 100%; margin: auto; box-shadow: 0 10px 40px rgba(0,0,0,.35); max-height: 90vh; display: flex; flex-direction: column; }
-  #modalCarritoPOS h3 { margin: 0 0 12px 0; color: #1a4d80; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+  #modalCarritoPOS h3 { margin: 0 0 12px 0; color: var(--primary); font-size: 18px; display: flex; align-items: center; gap: 8px; }
   #modalCarritoPOS .lista-carrito { flex: 1; overflow-y: auto; border: 1px solid #e3e9f2; border-radius: 10px; margin-bottom: 12px; max-height: 45vh; }
   #modalCarritoPOS .item-carrito { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-bottom: 1px solid #eef2f8; }
-  #modalCarritoPOS .item-img { width: 44px; height: 44px; border-radius: 8px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 22px; overflow: hidden; flex-shrink: 0; border: 1px solid #eaf1f9; }
+  #modalCarritoPOS .item-img { width: 44px; height: 44px; border-radius: 8px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 22px; overflow: hidden; flex-shrink: 0; border: 1px solid var(--primary-bg); }
   #modalCarritoPOS .item-img img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
   #modalCarritoPOS .item-info { flex: 1; min-width: 0; }
-  #modalCarritoPOS .item-nom { font-size: 14px; font-weight: 700; color: #1a4d80; }
+  #modalCarritoPOS .item-nom { font-size: 14px; font-weight: 700; color: var(--primary); }
   #modalCarritoPOS .item-det { font-size: 12px; color: #6b7a90; margin-top: 2px; }
-  #modalCarritoPOS .item-total { font-size: 15px; font-weight: 800; color: #217a44; white-space: nowrap; }
-  #modalCarritoPOS .item-quitar { background: #fdecea; color: #c0392b; border: none; width: 30px; height: 30px; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 800; flex-shrink: 0; }
+  #modalCarritoPOS .item-total { font-size: 15px; font-weight: 800; color: var(--success-dark); white-space: nowrap; }
+  #modalCarritoPOS .item-quitar { background: #fdecea; color: var(--danger); border: none; width: 30px; height: 30px; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 800; flex-shrink: 0; }
   #modalCarritoPOS .carrito-vacio { padding: 30px; text-align: center; color: #999; font-style: italic; }
   #modalCarritoPOS .total-carrito { background: #f0f8f4; border-radius: 10px; padding: 14px; text-align: center; margin-bottom: 14px; }
   #modalCarritoPOS .total-carrito .lbl { font-size: 12px; color: #6b7a90; font-weight: 700; }
-  #modalCarritoPOS .total-carrito .val { font-size: 28px; font-weight: 800; color: #217a44; margin-top: 4px; }
+  #modalCarritoPOS .total-carrito .val { font-size: 28px; font-weight: 800; color: var(--success-dark); margin-top: 4px; }
   #modalCarritoPOS .botones-carrito { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   #modalCarritoPOS .botones-carrito button { padding: 13px; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
   #modalCarritoPOS .btn-seguir { background: #6b7a90; color: #fff; }
-  #modalCarritoPOS .btn-vaciar { background: #fdecea; color: #c0392b; }
-  #modalCarritoPOS .btn-pagar { background: linear-gradient(135deg, #2e9e5b, #217a44); color: #fff; grid-column: span 2; font-size: 16px; padding: 15px; }
+  #modalCarritoPOS .btn-vaciar { background: #fdecea; color: var(--danger); }
+  #modalCarritoPOS .btn-pagar { background: linear-gradient(135deg, var(--success), var(--success-dark)); color: #fff; grid-column: span 2; font-size: 16px; padding: 15px; }
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 10060; padding: 20px; display: flex; align-items: center; justify-content: center; overflow-y: auto; }
   .modal-caja { background: #fff; border-radius: 12px; padding: 22px; max-width: 520px; width: 100%; margin: auto; box-shadow: 0 10px 40px rgba(0,0,0,.35); }
-  .modal-caja h3 { margin: 0 0 10px 0; color: #1a4d80; font-size: 18px; }
+  .modal-caja h3 { margin: 0 0 10px 0; color: var(--primary); font-size: 18px; }
   .modal-caja p { color: #555; font-size: 14px; margin: 0 0 16px 0; line-height: 1.4; white-space: pre-line; }
   .modal-caja .botones { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; margin-top: 16px; }
   .caja-json { width: 100%; min-height: 180px; font-family: monospace; font-size: 12px; padding: 10px; border: 1px solid #c8d2e0; border-radius: 6px; resize: vertical; }
-  #pantallaCuenta { position: fixed; inset: 0; background: linear-gradient(135deg, #1a4d80, #2d7ac0); z-index: 99999; display: none; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
+  #pantallaCuenta { position: fixed; inset: 0; background: linear-gradient(135deg, var(--primary), var(--primary-light)); z-index: 99999; display: none; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
   #pantallaCuenta .caja { background: #fff; border-radius: 14px; padding: 28px; max-width: 440px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,.4); margin: auto; }
-  #pantallaCuenta h2 { color: #1a4d80; margin: 0 0 6px 0; font-size: 22px; text-align: center; }
+  #pantallaCuenta h2 { color: var(--primary); margin: 0 0 6px 0; font-size: 22px; text-align: center; }
   #pantallaCuenta .subt { color: #666; font-size: 13px; margin: 0 0 20px 0; text-align: center; }
   #pantallaCuenta label { font-size: 13px; color: #333; margin-bottom: 12px; }
   #pantallaCuenta input { width: 100%; padding: 11px; font-size: 15px; border: 2px solid #c8d2e0; border-radius: 8px; margin-bottom: 14px; font-family: inherit; }
-  #pantallaCuenta button { width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; background: #2e9e5b; color: #fff; }
+  #pantallaCuenta button { width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; background: var(--success); color: #fff; }
   #pantallaCuenta .btn-secundario { background: #6b7a90; margin-top: 8px; font-size: 13px; }
-  #pantallaCuenta .error { color: #c0392b; font-size: 13px; margin-top: 10px; text-align: center; min-height: 18px; font-weight: 600; }
-  #modalActivacion { display: none; position: fixed; inset: 0; background: linear-gradient(135deg, #7b3fa0, #2d7ac0); z-index: 10065; overflow-y: auto; padding: 20px; align-items: center; justify-content: center; }
+  #pantallaCuenta .error { color: var(--danger); font-size: 13px; margin-top: 10px; text-align: center; min-height: 18px; font-weight: 600; }
+  #modalActivacion { display: none; position: fixed; inset: 0; background: linear-gradient(135deg, var(--purple), var(--primary-light)); z-index: 10065; overflow-y: auto; padding: 20px; align-items: center; justify-content: center; }
   #modalActivacion.activo { display: flex; }
   #modalActivacion .caja { background: #fff; border-radius: 14px; padding: 28px; max-width: 460px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,.4); margin: auto; text-align: center; }
-  #modalActivacion h2 { color: #1a4d80; margin: 0 0 6px 0; font-size: 22px; }
+  #modalActivacion h2 { color: var(--primary); margin: 0 0 6px 0; font-size: 22px; }
   #modalActivacion p { color: #555; font-size: 14px; margin: 0 0 16px 0; }
-  #modalActivacion .device-id { background: #f4f6fa; border: 2px dashed #7b3fa0; padding: 14px; border-radius: 8px; font-family: monospace; font-size: 16px; font-weight: 700; letter-spacing: 1px; color: #1a4d80; margin: 0 0 8px 0; user-select: all; cursor: pointer; word-break: break-all; }
+  #modalActivacion .device-id { background: #f4f6fa; border: 2px dashed var(--purple); padding: 14px; border-radius: 8px; font-family: monospace; font-size: 16px; font-weight: 700; letter-spacing: 1px; color: var(--primary); margin: 0 0 8px 0; user-select: all; cursor: pointer; word-break: break-all; }
   #modalActivacion .ayuda { font-size: 11px; color: #888; margin: 0 0 18px 0; }
   #modalActivacion input { width: 100%; padding: 12px; font-size: 16px; text-align: center; letter-spacing: 3px; font-family: monospace; text-transform: uppercase; border: 2px solid #c8d2e0; border-radius: 8px; margin-bottom: 12px; }
   #modalActivacion button { width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; margin-bottom: 8px; }
-  #modalActivacion .btn-activar { background: #2e9e5b; color: #fff; }
+  #modalActivacion .btn-activar { background: var(--success); color: #fff; }
   #modalActivacion .btn-whatsapp { background: #25D366; color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; }
   #modalActivacion .btn-cerrar { background: #6b7a90; color: #fff; }
-  #modalActivacion .error { color: #c0392b; font-size: 13px; margin-top: 10px; min-height: 18px; font-weight: 600; }
+  #modalActivacion .error { color: var(--danger); font-size: 13px; margin-top: 10px; min-height: 18px; font-weight: 600; }
   #modalActivacion .separador { display: flex; align-items: center; gap: 10px; color: #999; font-size: 12px; margin: 14px 0 12px 0; }
   #modalActivacion .separador::before, #modalActivacion .separador::after { content: ''; flex: 1; height: 1px; background: #e3e9f2; }
   #modalActivacion .estado-verif { font-size: 12px; margin-top: 8px; min-height: 16px; font-weight: 600; }
-  .licencia-activa { background: linear-gradient(135deg, #2e9e5b, #217a44); color: #fff; border-radius: 14px; padding: 22px; margin-bottom: 18px; box-shadow: 0 6px 20px rgba(46,158,91,.25); }
+  .licencia-activa { background: linear-gradient(135deg, var(--success), var(--success-dark)); color: #fff; border-radius: 14px; padding: 22px; margin-bottom: 18px; box-shadow: 0 6px 20px rgba(46,158,91,.25); }
   .licencia-activa h3 { margin: 0 0 6px 0; font-size: 20px; display: flex; align-items: center; gap: 10px; }
   .licencia-activa .fecha { font-size: 13px; opacity: .9; margin-bottom: 16px; }
   .licencia-activa label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; opacity: .9; margin-bottom: 6px; margin-top: 14px; }
   .licencia-activa .valor { background: rgba(255,255,255,.18); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 14px; font-weight: 700; user-select: all; cursor: pointer; word-break: break-all; border: 1px solid rgba(255,255,255,.25); }
   .licencia-activa .valor.llave { font-size: 16px; letter-spacing: 2px; }
-  .licencia-activa .valor.mi-codigo { background: #fff; color: #217a44; font-size: 18px; letter-spacing: 2px; margin-top: 4px; border: 2px dashed rgba(255,255,255,.5); }
+  .licencia-activa .valor.mi-codigo { background: #fff; color: var(--success-dark); font-size: 18px; letter-spacing: 2px; margin-top: 4px; border: 2px dashed rgba(255,255,255,.5); }
   .licencia-activa .info-extra { font-size: 12px; opacity: .9; margin-top: 10px; line-height: 1.5; }
-  .licencia-invitacion { background: linear-gradient(135deg, #7b3fa0, #2d7ac0); color: #fff; border-radius: 14px; padding: 22px; margin-bottom: 18px; box-shadow: 0 6px 20px rgba(123,63,160,.25); text-align: center; }
+  .licencia-invitacion { background: linear-gradient(135deg, var(--purple), var(--primary-light)); color: #fff; border-radius: 14px; padding: 22px; margin-bottom: 18px; box-shadow: 0 6px 20px rgba(123,63,160,.25); text-align: center; }
   .licencia-invitacion h3 { margin: 0 0 8px 0; font-size: 20px; display: flex; align-items: center; justify-content: center; gap: 10px; }
   .licencia-invitacion p { margin: 0 0 16px 0; font-size: 14px; opacity: .95; }
-  .licencia-invitacion button.btn-blanco { background: #fff; color: #7b3fa0; font-weight: 700; padding: 12px 28px; border: none; border-radius: 10px; cursor: pointer; font-size: 15px; }
+  .licencia-invitacion button.btn-blanco { background: #fff; color: var(--purple); font-weight: 700; padding: 12px 28px; border: none; border-radius: 10px; cursor: pointer; font-size: 15px; }
   .acceso-rapido { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px; }
   .widget { display: flex; align-items: center; gap: 14px; background: #fff; border: none; border-radius: 12px; padding: 16px; cursor: pointer; text-align: left; box-shadow: 0 2px 8px rgba(0,0,0,.08); transition: transform .2s, box-shadow .2s; font-family: inherit; }
   .widget:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,.12); }
   .widget-icono { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; color: #fff; }
   .widget-texto { display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
-  .widget-titulo { font-size: 15px; font-weight: 700; color: #1a4d80; }
+  .widget-titulo { font-size: 15px; font-weight: 700; color: var(--primary); }
   .widget-sub { font-size: 12px; color: #6b7a90; }
   #toastContainer { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 100000; display: flex; flex-direction: column; gap: 10px; align-items: center; pointer-events: none; }
-  .toast { background: #2e9e5b; color: #fff; padding: 12px 22px; border-radius: 8px; font-size: 14px; font-weight: 600; box-shadow: 0 4px 16px rgba(0,0,0,.25); opacity: 0; transition: opacity .3s, transform .3s; transform: translateY(10px); max-width: 90vw; text-align: center; }
+  .toast { background: var(--success); color: #fff; padding: 12px 22px; border-radius: 8px; font-size: 14px; font-weight: 600; box-shadow: 0 4px 16px rgba(0,0,0,.25); opacity: 0; transition: opacity .3s, transform .3s; transform: translateY(10px); max-width: 90vw; text-align: center; }
   .toast.visible { opacity: 1; transform: translateY(0); }
-  .toast.error { background: #c0392b; } .toast.info { background: #2d7ac0; } .toast.warn { background: #e08a1e; }
+  .toast.error { background: var(--danger); } .toast.info { background: var(--primary-light); } .toast.warn { background: var(--warning); }
   .ayuda-contenedor { max-width: 800px; margin: 0 auto; padding: 20px 0; }
   .ayuda-card { background: #fff; border-radius: 16px; padding: 30px 24px; box-shadow: 0 4px 20px rgba(0,0,0,.06); margin-bottom: 24px; text-align: center; }
-  .ayuda-card h3 { color: #1a4d80; font-size: 20px; margin: 0 0 8px 0; }
+  .ayuda-card h3 { color: var(--primary); font-size: 20px; margin: 0 0 8px 0; }
   .ayuda-card p { color: #555; font-size: 15px; line-height: 1.6; margin: 0 0 16px 0; }
   .social-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin: 24px 0; }
   .social-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 24px 12px; border-radius: 14px; text-decoration: none; color: #fff; font-weight: 600; font-size: 14px; transition: transform .2s, box-shadow .2s; border: none; cursor: pointer; }
@@ -237,7 +256,7 @@
   .social-btn.gmail { background: linear-gradient(135deg, #EA4335, #C5221F); }
   .social-btn.blogspot { background: linear-gradient(135deg, #F57C00, #E65100); }
   .social-btn.facebook { background: linear-gradient(135deg, #1877F2, #0D65D9); }
-  .footer { background: #1a4d80; color: #fff; padding: 24px 20px; text-align: center; margin-top: 40px; }
+  .footer { background: var(--primary); color: #fff; padding: 24px 20px; text-align: center; margin-top: 40px; }
   .footer .footer-nombre { font-size: 16px; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; justify-content: center; gap: 8px; }
   .footer .footer-copy { font-size: 12px; color: rgba(255,255,255,.7); margin-bottom: 16px; }
   .footer .footer-social { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
@@ -246,25 +265,25 @@
   .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .selector-negocio-wrap { display: flex; flex-direction: column; font-size: 11px; color: rgba(255,255,255,.85); gap: 2px; }
   .selector-negocio-wrap select { padding: 6px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,.3); background: rgba(255,255,255,.15); color: #fff; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; min-width: 140px; max-width: 220px; }
-  .selector-negocio-wrap select option { background: #1a4d80; color: #fff; }
+  .selector-negocio-wrap select option { background: var(--primary); color: #fff; }
   .negocios-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
   .negocio-card { background: #fff; border-radius: 12px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,.08); border: 2px solid transparent; transition: .2s; }
-  .negocio-card.activo { border-color: #2e9e5b; box-shadow: 0 4px 16px rgba(46,158,91,.25); }
-  .negocio-card h3 { margin: 0 0 4px 0; color: #1a4d80; font-size: 17px; display: flex; align-items: center; gap: 6px; }
+  .negocio-card.activo { border-color: var(--success); box-shadow: 0 4px 16px rgba(46,158,91,.25); }
+  .negocio-card h3 { margin: 0 0 4px 0; color: var(--primary); font-size: 17px; display: flex; align-items: center; gap: 6px; }
   .negocio-card .correo-mini { font-size: 12px; color: #6b7a90; margin-bottom: 12px; word-break: break-word; }
   .negocio-kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
   .negocio-kpi { background: #f4f6fa; border-radius: 8px; padding: 8px 10px; }
   .negocio-kpi .t { font-size: 10px; text-transform: uppercase; color: #6b7a90; font-weight: 700; }
-  .negocio-kpi .v { font-size: 15px; font-weight: 700; color: #1a4d80; margin-top: 2px; }
-  .negocio-kpi.verde .v { color: #217a44; }
+  .negocio-kpi .v { font-size: 15px; font-weight: 700; color: var(--primary); margin-top: 2px; }
+  .negocio-kpi.verde .v { color: var(--success-dark); }
   .negocio-kpi.morado { background: #f4ebf9; }
-  .negocio-kpi.morado .v { color: #5d2d7a; }
-  .negocio-alerta { background: #fff8e1; border-left: 3px solid #e08a1e; color: #7a4a00; font-size: 12px; font-weight: 600; padding: 6px 10px; border-radius: 6px; margin-bottom: 10px; }
+  .negocio-kpi.morado .v { color: var(--purple-dark); }
+  .negocio-alerta { background: #fff8e1; border-left: 3px solid var(--warning); color: #7a4a00; font-size: 12px; font-weight: 600; padding: 6px 10px; border-radius: 6px; margin-bottom: 10px; }
   .negocio-botones { display: flex; gap: 8px; flex-wrap: wrap; }
   .negocio-botones button { flex: 1; padding: 9px; border: none; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
   .cuenta-bancaria-card { background: #f8faff; border: 1px solid #e3e9f2; border-radius: 10px; padding: 12px; margin-bottom: 10px; display: flex; gap: 12px; align-items: center; }
   .cuenta-bancaria-card .cb-info { flex: 1; min-width: 0; }
-  .cuenta-bancaria-card .cb-info .cb-banco { font-size: 13px; font-weight: 700; color: #1a4d80; }
+  .cuenta-bancaria-card .cb-info .cb-banco { font-size: 13px; font-weight: 700; color: var(--primary); }
   .cuenta-bancaria-card .cb-info .cb-num { font-size: 12px; color: #555; font-family: monospace; }
   .cuenta-bancaria-card .cb-info .cb-tit { font-size: 11px; color: #6b7a90; }
   .cuenta-bancaria-card .cb-qr { width: 52px; height: 52px; border-radius: 6px; border: 1px solid #d5e3f0; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; font-size: 22px; }
@@ -274,27 +293,27 @@
   #lectorCodigo { display: none; position: fixed; inset: 0; background: #000; z-index: 10050; flex-direction: column; }
   #lectorCodigo.activo { display: flex; }
   #lectorVideo { flex: 1; width: 100%; object-fit: cover; background: #000; }
-  #lectorBarra { background: #1a4d80; color: #fff; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
+  #lectorBarra { background: var(--primary); color: #fff; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
   #lectorBarra button { padding: 10px 18px; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; }
-  #lectorBarra .btn-cerrar-lector { background: #c0392b; color: #fff; }
-  #lectorBarra .btn-manual-lector { background: #2e9e5b; color: #fff; }
-  #lectorCodigo .lector-guia { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70%; height: 140px; border: 3px solid #2e9e5b; border-radius: 12px; pointer-events: none; box-shadow: 0 0 0 9999px rgba(0,0,0,.35); }
+  #lectorBarra .btn-cerrar-lector { background: var(--danger); color: #fff; }
+  #lectorBarra .btn-manual-lector { background: var(--success); color: #fff; }
+  #lectorCodigo .lector-guia { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70%; height: 140px; border: 3px solid var(--success); border-radius: 12px; pointer-events: none; box-shadow: 0 0 0 9999px rgba(0,0,0,.35); }
   #lectorCodigo .lector-msg { position: absolute; bottom: 80px; left: 0; right: 0; text-align: center; color: #fff; font-size: 14px; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,.7); padding: 0 20px; }
   #fabContainer { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; align-items: flex-end; z-index: 10055; pointer-events: none; }
   .fab { display: none; align-items: center; gap: 8px; padding: 12px 18px; border: none; border-radius: 50px; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,.3); font-family: inherit; transition: transform .15s; position: relative; pointer-events: auto; color: #fff; }
   .fab:active { transform: scale(.95); }
   .fab.visible { display: inline-flex; }
-  #fabCarrito { background: linear-gradient(135deg, #2e9e5b, #217a44); }
-  #fabCarrito .badge { background: #fff; color: #217a44; padding: 2px 9px; border-radius: 12px; font-size: 13px; font-weight: 800; min-width: 24px; text-align: center; }
+  #fabCarrito { background: linear-gradient(135deg, var(--success), var(--success-dark)); }
+  #fabCarrito .badge { background: #fff; color: var(--success-dark); padding: 2px 9px; border-radius: 12px; font-size: 13px; font-weight: 800; min-width: 24px; text-align: center; }
   @keyframes fabPulseCart { 0%, 100% { box-shadow: 0 4px 16px rgba(0,0,0,.3), 0 0 0 0 rgba(46,158,91,.55); } 50% { box-shadow: 0 4px 16px rgba(0,0,0,.3), 0 0 0 12px rgba(46,158,91,0); } }
   #fabCarrito.visible { animation: fabPulseCart 2s infinite; }
-  #fabNotif { background: linear-gradient(135deg, #e08a1e, #b56b0d); width: 52px; height: 52px; padding: 0; justify-content: center; font-size: 22px; border-radius: 50%; }
-  #fabNotif .badge { position: absolute; top: -4px; right: -4px; background: #c0392b; color: #fff; padding: 2px 6px; border-radius: 10px; font-size: 11px; font-weight: 800; min-width: 18px; text-align: center; border: 2px solid #fff; }
+  #fabNotif { background: linear-gradient(135deg, var(--warning), var(--warning-dark)); width: 52px; height: 52px; padding: 0; justify-content: center; font-size: 22px; border-radius: 50%; }
+  #fabNotif .badge { position: absolute; top: -4px; right: -4px; background: var(--danger); color: #fff; padding: 2px 6px; border-radius: 10px; font-size: 11px; font-weight: 800; min-width: 18px; text-align: center; border: 2px solid #fff; }
   #btnInstalarPWA { display: none; }
   .chart-container { position: relative; width: 100%; height: 300px; margin-bottom: 8px; }
   .chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; margin-bottom: 18px; }
   .chart-card { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
-  .chart-card h3 { color: #1a4d80; font-size: 15px; margin: 0 0 12px 0; font-weight: 700; }
+  .chart-card h3 { color: var(--primary); font-size: 15px; margin: 0 0 12px 0; font-weight: 700; }
   @media (max-width: 600px) {
     .chart-container { height: 240px; }
     .chart-grid { grid-template-columns: 1fr; }
@@ -303,13 +322,13 @@
   .resultado-busqueda:hover { background: #f8fbff; }
   .resultado-busqueda .rb-icono { font-size: 22px; width: 32px; text-align: center; flex-shrink: 0; }
   .resultado-busqueda .rb-info { flex: 1; min-width: 0; }
-  .resultado-busqueda .rb-titulo { font-size: 14px; font-weight: 700; color: #1a4d80; line-height: 1.25; }
+  .resultado-busqueda .rb-titulo { font-size: 14px; font-weight: 700; color: var(--primary); line-height: 1.25; }
   .resultado-busqueda .rb-detalle { font-size: 12px; color: #6b7a90; margin-top: 2px; }
   .resultado-busqueda .rb-acciones { display: flex; gap: 4px; flex-shrink: 0; }
   .resultado-busqueda .rb-acciones button { padding: 6px 10px; border: none; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: inherit; }
   .grupo-busqueda-titulo { font-size: 12px; font-weight: 700; color: #6b7a90; text-transform: uppercase; letter-spacing: .5px; padding: 10px 12px 6px; border-bottom: 1px solid #e3e9f2; margin-top: 8px; }
   .colapsable { padding: 0 !important; overflow: hidden; }
-  .colapsable-header { display: flex; justify-content: space-between; align-items: center; width: 100%; background: transparent; border: none; padding: 16px 18px; cursor: pointer; font-family: inherit; font-size: 15px; font-weight: 700; color: #1a4d80; text-align: left; transition: background .15s; gap: 10px; }
+  .colapsable-header { display: flex; justify-content: space-between; align-items: center; width: 100%; background: transparent; border: none; padding: 16px 18px; cursor: pointer; font-family: inherit; font-size: 15px; font-weight: 700; color: var(--primary); text-align: left; transition: background .15s; gap: 10px; }
   .colapsable-header:hover { background: #f8fbff; }
   .colapsable-header > span:first-child { flex: 1; min-width: 0; }
   .colapsable-flecha { font-size: 11px; color: #6b7a90; transition: transform .2s ease; flex-shrink: 0; }
@@ -317,9 +336,9 @@
   .colapsable-contenido { display: none; padding: 0 18px 18px 18px; }
   .colapsable.abierto .colapsable-contenido { display: block; }
   .colapsable-badge { font-weight: 600; font-size: 11px; margin-left: 8px; padding: 2px 8px; border-radius: 10px; background: #f0f4fa; color: #6b7a90; }
-  .colapsable-badge.rojo { background: #fdecea; color: #c0392b; }
-  .colapsable-badge.verde { background: #e3f3ea; color: #217a44; }
-  .colapsable-badge.naranja { background: #fff8e1; color: #b56b0d; }
+  .colapsable-badge.rojo { background: #fdecea; color: var(--danger); }
+  .colapsable-badge.verde { background: #e3f3ea; color: var(--success-dark); }
+  .colapsable-badge.naranja { background: #fff8e1; color: var(--warning-dark); }
   body.modo-oscuro .colapsable-header { color: #9ecbff !important; }
   body.modo-oscuro .colapsable-header:hover { background: #21293a !important; }
   body.modo-oscuro .colapsable-flecha { color: #9aa7bd !important; }
@@ -363,7 +382,7 @@
     .selector-negocio-wrap select { min-width: 110px; font-size: 12px; padding: 5px 8px; }
   }
   body.modo-oscuro { background: #12161d !important; color: #e6e9ef !important; }
-  body.modo-oscuro header { background: linear-gradient(135deg, #0b2a4a, #1a4d80) !important; }
+  body.modo-oscuro header { background: linear-gradient(135deg, var(--primary-dark), var(--primary)) !important; }
   body.modo-oscuro main { background: #12161d !important; }
   body.modo-oscuro .card,
   body.modo-oscuro .kpi,
@@ -388,9 +407,9 @@
   body.modo-oscuro #sidebarMovil { background: #1c2330 !important; }
   body.modo-oscuro #sidebarMovil .side-lista button { color: #9ecbff !important; }
   body.modo-oscuro #sidebarMovil .side-lista button:hover, body.modo-oscuro #sidebarMovil .side-lista button.active { background: #21293a !important; }
-  body.modo-oscuro footer.footer { background: #0b2a4a !important; }
+  body.modo-oscuro footer.footer { background: var(--primary-dark) !important; }
   body.modo-oscuro .modal-overlay { background: rgba(0,0,0,.8) !important; }
-  body.modo-oscuro #pantallaCuenta { background: linear-gradient(135deg,#0b2a4a,#1a4d80) !important; }
+  body.modo-oscuro #pantallaCuenta { background: linear-gradient(135deg,var(--primary-dark),var(--primary)) !important; }
   body.modo-oscuro .resultado-busqueda { border-color: #30363d !important; }
   body.modo-oscuro .resultado-busqueda:hover { background: #21293a !important; }
   body.modo-oscuro .resultado-busqueda .rb-titulo { color: #9ecbff !important; }
@@ -410,7 +429,7 @@
   <div id="sidebarNegocioSelector" style="padding: 12px 18px; border-bottom: 1px solid #e3e9f2; display: none;">
     <label style="display: flex; flex-direction: column; font-size: 11px; color: #6b7a90; font-weight: 700; text-transform: uppercase; gap: 4px;">
       🏢 Negocio
-      <select id="selectorNegocioSidebar" onchange="cambiarNegocioDesdeSelector(this.value); cerrarSidebar();" style="padding: 8px 10px; border-radius: 8px; border: 2px solid #c8d2e0; font-size: 14px; font-family: inherit; font-weight: 600; color: #1a4d80; background: #fff; width: 100%;"></select>
+      <select id="selectorNegocioSidebar" onchange="cambiarNegocioDesdeSelector(this.value); cerrarSidebar();" style="padding: 8px 10px; border-radius: 8px; border: 2px solid #c8d2e0; font-size: 14px; font-family: inherit; font-weight: 600; color: var(--primary); background: #fff; width: 100%;"></select>
     </label>
   </div>
   <div class="side-lista">
@@ -430,13 +449,13 @@
     <button data-tab="ayuda" onclick="irAPestana('ayuda'); cerrarSidebar();"><span class="side-emoji">❓</span> Ayuda</button>
   </div>
   <div style="padding: 12px 18px 0 18px; flex-shrink: 0; border-top: 1px solid #e3e9f2;">
-    <button onclick="alternarModoOscuro()" id="btnModoOscuroSidebar" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: #eaf1f9; color: #1a4d80; border: none; padding: 11px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit;">
+    <button onclick="alternarModoOscuro()" id="btnModoOscuroSidebar" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: var(--primary-bg); color: var(--primary); border: none; padding: 11px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit;">
       <span id="iconoModoOscuroSidebar" style="font-size:16px">🌙</span>
       <span id="textoModoOscuroSidebar">Modo oscuro</span>
     </button>
   </div>
   <div style="padding: 12px 18px 24px 18px; flex-shrink: 0;">
-    <button onclick="cerrarSidebar(); cerrarSesion();" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: #fdecea; color: #c0392b; border: none; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit;">
+    <button onclick="cerrarSidebar(); cerrarSesion();" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: #fdecea; color: var(--danger); border: none; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit;">
       🚪 Cerrar sesión
     </button>
   </div>
@@ -477,7 +496,7 @@
   </nav>
 </header>
 
-<div id="bannerTrial" style="display:none;background:linear-gradient(135deg,#e08a1e,#b56b0d);color:#fff;padding:8px 16px;font-size:13px;font-weight:600;text-align:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.15)" onclick="mostrarModalActivacion()">
+<div id="bannerTrial" style="display:none;background:linear-gradient(135deg,var(--warning),var(--warning-dark));color:#fff;padding:8px 16px;font-size:13px;font-weight:600;text-align:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.15)" onclick="mostrarModalActivacion()">
   🎁 Cargando estado de prueba...
 </div>
 
@@ -485,22 +504,22 @@
   <section id="tab-rapido" class="tab active">
     <h2>⚡ Acceso Rápido</h2>
     <div class="card" style="margin-bottom:18px">
-      <h3 style="color:#1a4d80;margin:0 0 10px 0;font-size:16px">🔍 Búsqueda global</h3>
+      <h3 style="color:var(--primary);margin:0 0 10px 0;font-size:16px">🔍 Búsqueda global</h3>
       <input type="search" id="buscadorGlobal" placeholder="Buscar productos, clientes, proveedores..." style="width:100%;padding:12px 14px;font-size:15px;border:2px solid #c8d2e0;border-radius:10px;font-family:inherit;background:#fff" oninput="buscarGlobalDebounced()">
       <div id="resultadosBusquedaGlobal" style="margin-top:12px"></div>
     </div>
     <div class="acceso-rapido">
-      <button class="widget" onclick="abrirPOS()"><div class="widget-icono" style="background:linear-gradient(135deg,#217a44,#2e9e5b)">🖼️</div><div class="widget-texto"><div class="widget-titulo">Punto de Venta</div><div class="widget-sub">Vende con imágenes</div></div></button>
-      <button class="widget" onclick="abrirLectorCodigo()"><div class="widget-icono" style="background:linear-gradient(135deg,#2d7ac0,#1a4d80)">📷</div><div class="widget-texto"><div class="widget-titulo">Escanear código</div><div class="widget-sub">Lector de barras</div></div></button>
-      <button class="widget" onclick="abrirAltaPorEscaneo()"><div class="widget-icono" style="background:linear-gradient(135deg,#7b3fa0,#5d2d7a)">📷</div><div class="widget-texto"><div class="widget-titulo">Alta por escaneo</div><div class="widget-sub">Crear producto o dar entrada</div></div></button>
-      <button class="widget" onclick="abrirVentaRapida()"><div class="widget-icono" style="background:linear-gradient(135deg,#2e9e5b,#217a44)">🛒</div><div class="widget-texto"><div class="widget-titulo">Registrar venta</div><div class="widget-sub">Venta rápida</div></div></button>
-      <button class="widget" onclick="abrirEntradaRapida()"><div class="widget-icono" style="background:linear-gradient(135deg,#2d7ac0,#1a4d80)">📥</div><div class="widget-texto"><div class="widget-titulo">Registrar entrada</div><div class="widget-sub">Compra de mercancía</div></div></button>
-      <button class="widget" onclick="irAPestana('balance')"><div class="widget-icono" style="background:linear-gradient(135deg,#1a4d80,#2d7ac0)">📊</div><div class="widget-texto"><div class="widget-titulo">Balance del día</div><div class="widget-sub">Ver ganancias</div></div></button>
-      <button class="widget" onclick="exportarDatos()"><div class="widget-icono" style="background:linear-gradient(135deg,#7b3fa0,#5d2d7a)">💾</div><div class="widget-texto"><div class="widget-titulo">Guardar respaldo</div><div class="widget-sub">Copia de seguridad</div></div></button>
-      <button class="widget" onclick="irAPestana('facturacion')"><div class="widget-icono" style="background:linear-gradient(135deg,#7b3fa0,#5d2d7a)">🧾</div><div class="widget-texto"><div class="widget-titulo">Facturar</div><div class="widget-sub">Factura múltiple</div></div></button>
-      <button class="widget" onclick="compartirDatosPago()"><div class="widget-icono" style="background:linear-gradient(135deg,#e08a1e,#b56b0d)">💳</div><div class="widget-texto"><div class="widget-titulo">Datos de pago</div><div class="widget-sub">Cuentas y QR</div></div></button>
+      <button class="widget" onclick="abrirPOS()"><div class="widget-icono" style="background:linear-gradient(135deg,var(--success-dark),var(--success))">🖼️</div><div class="widget-texto"><div class="widget-titulo">Punto de Venta</div><div class="widget-sub">Vende con imágenes</div></div></button>
+      <button class="widget" onclick="abrirLectorCodigo()"><div class="widget-icono" style="background:linear-gradient(135deg,var(--primary-light),var(--primary))">📷</div><div class="widget-texto"><div class="widget-titulo">Escanear código</div><div class="widget-sub">Lector de barras</div></div></button>
+      <button class="widget" onclick="abrirAltaPorEscaneo()"><div class="widget-icono" style="background:linear-gradient(135deg,var(--purple),var(--purple-dark))">📷</div><div class="widget-texto"><div class="widget-titulo">Alta por escaneo</div><div class="widget-sub">Crear producto o dar entrada</div></div></button>
+      <button class="widget" onclick="abrirVentaRapida()"><div class="widget-icono" style="background:linear-gradient(135deg,var(--success),var(--success-dark))">🛒</div><div class="widget-texto"><div class="widget-titulo">Registrar venta</div><div class="widget-sub">Venta rápida</div></div></button>
+      <button class="widget" onclick="abrirEntradaRapida()"><div class="widget-icono" style="background:linear-gradient(135deg,var(--primary-light),var(--primary))">📥</div><div class="widget-texto"><div class="widget-titulo">Registrar entrada</div><div class="widget-sub">Compra de mercancía</div></div></button>
+      <button class="widget" onclick="irAPestana('balance')"><div class="widget-icono" style="background:linear-gradient(135deg,var(--primary),var(--primary-light))">📊</div><div class="widget-texto"><div class="widget-titulo">Balance del día</div><div class="widget-sub">Ver ganancias</div></div></button>
+      <button class="widget" onclick="exportarDatos()"><div class="widget-icono" style="background:linear-gradient(135deg,var(--purple),var(--purple-dark))">💾</div><div class="widget-texto"><div class="widget-titulo">Guardar respaldo</div><div class="widget-sub">Copia de seguridad</div></div></button>
+      <button class="widget" onclick="irAPestana('facturacion')"><div class="widget-icono" style="background:linear-gradient(135deg,var(--purple),var(--purple-dark))">🧾</div><div class="widget-texto"><div class="widget-titulo">Facturar</div><div class="widget-sub">Factura múltiple</div></div></button>
+      <button class="widget" onclick="compartirDatosPago()"><div class="widget-icono" style="background:linear-gradient(135deg,var(--warning),var(--warning-dark))">💳</div><div class="widget-texto"><div class="widget-titulo">Datos de pago</div><div class="widget-sub">Cuentas y QR</div></div></button>
       <button class="widget" onclick="compartirCatalogo()"><div class="widget-icono" style="background:linear-gradient(135deg,#25D366,#128C7E)">📢</div><div class="widget-texto"><div class="widget-titulo">Compartir catálogo</div><div class="widget-sub">Imagen, texto o HTML</div></div></button>
-      <button class="widget" onclick="irAPestana('reportes')"><div class="widget-icono" style="background:linear-gradient(135deg,#1a4d80,#2d7ac0)">📄</div><div class="widget-texto"><div class="widget-titulo">Reportes</div><div class="widget-sub">Generar reportes</div></div></button>
+      <button class="widget" onclick="irAPestana('reportes')"><div class="widget-icono" style="background:linear-gradient(135deg,var(--primary),var(--primary-light))">📄</div><div class="widget-texto"><div class="widget-titulo">Reportes</div><div class="widget-sub">Generar reportes</div></div></button>
     </div>
     <h2 id="tituloResumenMes">📅 Resumen del mes en curso</h2>
     <div class="cards" id="resumenMesCards">
@@ -555,7 +574,7 @@
     <h2 style="margin-top:24px">📊 Balance Consolidado (Todos los Negocios)</h2>
     <div class="card">
       <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">
-        <button class="btn" id="tabConDia" onclick="cambiarTipoConsolidado('dia')" style="background:#2d7ac0;color:#fff">📅 Por día</button>
+        <button class="btn" id="tabConDia" onclick="cambiarTipoConsolidado('dia')" style="background:var(--primary-light);color:#fff">📅 Por día</button>
         <button class="btn" id="tabConRango" onclick="cambiarTipoConsolidado('rango')" style="background:#6b7a90;color:#fff">📆 Por rango</button>
         <button class="btn" id="tabConMes" onclick="cambiarTipoConsolidado('mes')" style="background:#6b7a90;color:#fff">🗓️ Por mes</button>
       </div>
@@ -589,7 +608,7 @@
       <button type="submit" class="btn verde" style="grid-column: 1 / -1;">➕ Agregar producto</button>
     </form>
     <!-- Mejora 5: acordeones para importar y exportar -->
-    <div class="card colapsable" id="secImportarProductos" style="background:#eef4fb;border:2px dashed #2d7ac0">
+    <div class="card colapsable" id="secImportarProductos" style="background:#eef4fb;border:2px dashed var(--primary-light)">
       <button class="colapsable-header" onclick="toggleSeccion('secImportarProductos')" type="button">
         <span>📥 Importar productos por lotes</span>
         <span class="colapsable-flecha">▼</span>
@@ -653,7 +672,8 @@
       <button type="submit" class="btn">📥 Registrar entrada</button>
     </form>
     <div class="aviso" id="avisoCosto" style="display:none"></div>
-    <div class="card tabla-wrap"><table id="tblEntradas"><thead><tr><th>Fecha</th><th>Producto</th><th>Proveedor</th><th class="num">Cantidad</th><th class="mon">Costo Unit.</th><th class="mon">Total</th><th></th></tr></thead><tbody></tbody></table></div>
+    <div class="card" style="margin-bottom:12px;padding:10px"><div class="form-grid" style="gap:8px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))"><label>Desde <input type="date" id="eListaDesde" onchange="renderEntradas()"></label><label>Hasta <input type="date" id="eListaHasta" onchange="renderEntradas()"></label><label style="grid-column:1/-1">Buscar <input id="eListaBuscar" placeholder="Producto o proveedor..." oninput="_renderEntradasDebounced()"></label></div></div>
+    <div class="card tabla-wrap"><table id="tblEntradas"><thead><tr><th>Fecha</th><th>Producto</th><th>Proveedor</th><th class="num">Cantidad</th><th class="mon">Costo Unit.</th><th class="mon">Total</th><th></th></tr></thead><tbody></tbody><tfoot></tfoot></table></div>
   </section>
 
   <section id="tab-ventas" class="tab">
@@ -668,7 +688,8 @@
       <button type="submit" class="btn verde">💰 Registrar venta</button>
     </form>
     <div class="aviso" id="avisoStock" style="display:none"></div>
-    <div class="card tabla-wrap"><table id="tblVentas"><thead><tr><th>Fecha</th><th>Producto</th><th>Cliente</th><th class="num">Cantidad</th><th class="mon">Precio Unit.</th><th class="mon">Total</th><th>Factura</th><th></th></tr></thead><tbody></tbody></table></div>
+    <div class="card" style="margin-bottom:12px;padding:10px"><div class="form-grid" style="gap:8px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))"><label>Desde <input type="date" id="vListaDesde" onchange="renderVentas()"></label><label>Hasta <input type="date" id="vListaHasta" onchange="renderVentas()"></label><label style="grid-column:1/-1">Buscar <input id="vListaBuscar" placeholder="Producto o cliente..." oninput="_renderVentasDebounced()"></label></div></div>
+    <div class="card tabla-wrap"><table id="tblVentas"><thead><tr><th>Fecha</th><th>Producto</th><th>Cliente</th><th class="num">Cantidad</th><th class="mon">Precio Unit.</th><th class="mon">Total</th><th>Factura</th><th></th></tr></thead><tbody></tbody><tfoot></tfoot></table></div>
   </section>
 
   <section id="tab-clientes" class="tab">
@@ -706,7 +727,7 @@
   <section id="tab-devoluciones" class="tab">
     <button class="btn-volver-balance" onclick="irAPestana('rapido')">← Volver a Acceso Rápido</button>
     <h2>↩️ Registrar Devolución</h2>
-    <div class="aviso" style="background:#eaf1f9;border-left-color:#2d7ac0">Devoluciones de <b>ventas</b> o de <b>compras</b>.</div>
+    <div class="aviso" style="background:var(--primary-bg);border-left-color:var(--primary-light)">Devoluciones de <b>ventas</b> o de <b>compras</b>.</div>
     <form id="formDevolucion" class="card form-grid">
       <label>Tipo <select id="devTipo" required><option value="venta">Devolución de venta</option><option value="compra">Devolución de compra</option></select></label>
       <label>Fecha <input type="date" id="devFecha" required></label>
@@ -716,13 +737,14 @@
       <label>Motivo <input id="devMotivo" placeholder="Producto defectuoso, etc." required></label>
       <button type="submit" class="btn morado">↩️ Registrar devolución</button>
     </form>
-    <div class="card tabla-wrap"><table id="tblDevoluciones"><thead><tr><th>Fecha</th><th>Tipo</th><th>Producto</th><th class="num">Cantidad</th><th class="mon">Monto Unit.</th><th class="mon">Total</th><th>Motivo</th><th></th></tr></thead><tbody></tbody></table></div>
+    <div class="card" style="margin-bottom:12px;padding:10px"><div class="form-grid" style="gap:8px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))"><label>Desde <input type="date" id="devListaDesde" onchange="renderDevoluciones()"></label><label>Hasta <input type="date" id="devListaHasta" onchange="renderDevoluciones()"></label><label style="grid-column:1/-1">Buscar <input id="devListaBuscar" placeholder="Producto o motivo..." oninput="_renderDevolucionesDebounced()"></label></div></div>
+    <div class="card tabla-wrap"><table id="tblDevoluciones"><thead><tr><th>Fecha</th><th>Tipo</th><th>Producto</th><th class="num">Cantidad</th><th class="mon">Monto Unit.</th><th class="mon">Total</th><th>Motivo</th><th></th></tr></thead><tbody></tbody><tfoot></tfoot></table></div>
   </section>
 
   <section id="tab-perdidas" class="tab">
     <button class="btn-volver-balance" onclick="irAPestana('rapido')">← Volver a Acceso Rápido</button>
     <h2>📉 Registrar Pérdida</h2>
-    <div class="aviso" style="background:#fdecea;border-left-color:#c0392b">El monto <b>NO</b> se descuenta de la ganancia bruta, pero sí afecta al beneficio neto.</div>
+    <div class="aviso" style="background:#fdecea;border-left-color:var(--danger)">El monto <b>NO</b> se descuenta de la ganancia bruta, pero sí afecta al beneficio neto.</div>
     <form id="formPerdida" class="card form-grid">
       <label>Fecha <input type="date" id="dFecha" required></label>
       <label>Producto <select id="dProducto" required></select></label>
@@ -731,7 +753,8 @@
       <label>Motivo <input id="dMotivo" placeholder="Robo, deterioro, etc." required></label>
       <button type="submit" class="btn rojo">📉 Registrar pérdida</button>
     </form>
-    <div class="card tabla-wrap"><table id="tblPerdidas"><thead><tr><th>Fecha</th><th>Producto</th><th class="num">Cantidad</th><th class="mon">Costo Unit.</th><th class="mon">Total</th><th>Motivo</th><th></th></tr></thead><tbody></tbody></table></div>
+    <div class="card" style="margin-bottom:12px;padding:10px"><div class="form-grid" style="gap:8px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))"><label>Desde <input type="date" id="dListaDesde" onchange="renderPerdidas()"></label><label>Hasta <input type="date" id="dListaHasta" onchange="renderPerdidas()"></label><label style="grid-column:1/-1">Buscar <input id="dListaBuscar" placeholder="Producto o motivo..." oninput="_renderPerdidasDebounced()"></label></div></div>
+    <div class="card tabla-wrap"><table id="tblPerdidas"><thead><tr><th>Fecha</th><th>Producto</th><th class="num">Cantidad</th><th class="mon">Costo Unit.</th><th class="mon">Total</th><th>Motivo</th><th></th></tr></thead><tbody></tbody><tfoot></tfoot></table></div>
   </section>
 
   <section id="tab-gastos" class="tab">
@@ -744,7 +767,8 @@
       <label>Monto <input type="number" id="gMonto" step="0.01" min="0.01" required></label>
       <button type="submit" class="btn rojo">💸 Registrar gasto</button>
     </form>
-    <div class="card tabla-wrap"><table id="tblGastos"><thead><tr><th>Fecha</th><th>Categoría</th><th>Descripción</th><th class="mon">Monto</th><th></th></tr></thead><tbody></tbody></table></div>
+    <div class="card" style="margin-bottom:12px;padding:10px"><div class="form-grid" style="gap:8px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))"><label>Desde <input type="date" id="gListaDesde" onchange="renderGastos()"></label><label>Hasta <input type="date" id="gListaHasta" onchange="renderGastos()"></label><label style="grid-column:1/-1">Buscar <input id="gListaBuscar" placeholder="Categoría o descripción..." oninput="_renderGastosDebounced()"></label></div></div>
+    <div class="card tabla-wrap"><table id="tblGastos"><thead><tr><th>Fecha</th><th>Categoría</th><th>Descripción</th><th class="mon">Monto</th><th></th></tr></thead><tbody></tbody><tfoot></tfoot></table></div>
   </section>
 
   <section id="tab-facturacion" class="tab">
@@ -757,7 +781,7 @@
       <label>Notas <input id="facNotas" placeholder="Opcional" maxlength="80"></label>
     </div>
     <div class="card">
-      <h3 style="color:#1a4d80;margin:0 0 10px 0;font-size:16px">➕ Agregar productos</h3>
+      <h3 style="color:var(--primary);margin:0 0 10px 0;font-size:16px">➕ Agregar productos</h3>
       <div class="form-grid">
         <label>Producto <select id="facProducto"></select></label>
         <label>Cantidad <input type="number" id="facCantidad" min="0.01" step="0.01" value="1"></label>
@@ -775,7 +799,7 @@
     <h2>Generar Reportes</h2>
     <div class="card">
       <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">
-        <button class="btn" id="tabRepDia" onclick="cambiarTipoReporte('dia')" style="background:#2d7ac0;color:#fff">📅 Por día</button>
+        <button class="btn" id="tabRepDia" onclick="cambiarTipoReporte('dia')" style="background:var(--primary-light);color:#fff">📅 Por día</button>
         <button class="btn" id="tabRepRango" onclick="cambiarTipoReporte('rango')" style="background:#6b7a90;color:#fff">📆 Por rango</button>
         <button class="btn" id="tabRepMes" onclick="cambiarTipoReporte('mes')" style="background:#6b7a90;color:#fff">🗓️ Por mes</button>
       </div>
@@ -805,10 +829,10 @@
         <div class="info-extra" id="infoLicenciaModulos" style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.2)"></div>
       </div>
 
-      <div class="ayuda-card" style="background:linear-gradient(135deg,#1a4d80,#2d7ac0);color:#fff;margin-top:24px">
+      <div class="ayuda-card" style="background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;margin-top:24px">
         <h3 style="color:#fff">📖 Manual de Usuario</h3>
         <p style="color:rgba(255,255,255,.9)">Aprende a usar todas las funciones del sistema.</p>
-        <button class="btn" onclick="abrirManual()" style="background:#fff;color:#1a4d80;padding:12px 28px;font-size:15px;border-radius:10px;font-weight:700;cursor:pointer;border:none;margin-top:6px">📖 Ver manual completo</button>
+        <button class="btn" onclick="abrirManual()" style="background:#fff;color:var(--primary);padding:12px 28px;font-size:15px;border-radius:10px;font-weight:700;cursor:pointer;border:none;margin-top:6px">📖 Ver manual completo</button>
       </div>
 
       <div class="card colapsable" id="secConfigCuenta" style="margin-top:24px">
@@ -827,7 +851,7 @@
             <button class="btn gris" onclick="subirLogoNegocio()">🖼️ Logotipo del negocio</button>
             <button class="btn gris" id="btnQuitarLogo" style="display:none" onclick="quitarLogoNegocio()">🗑️ Quitar logotipo</button>
           </div>
-          <p class="mini" id="miniComisionDiaria" style="margin-top:6px;color:#2d7ac0;font-weight:600"></p>
+          <p class="mini" id="miniComisionDiaria" style="margin-top:6px;color:var(--primary-light);font-weight:600"></p>
           <div style="margin-top:14px;padding-top:14px;border-top:1px solid #e3e9f2">
             <label style="display:flex;flex-direction:column;gap:6px">
               <span style="font-size:13px;font-weight:600;color:#444">🎨 Color de la aplicación</span>
@@ -880,20 +904,21 @@
         </button>
         <div class="colapsable-contenido">
           <div class="acciones">
+            <button class="btn verde" id="btnGuardarDirecto" title="Guarda el .txt en el dispositivo sin abrir el menú de compartir ni pedir correo">💾 Guardar directamente (sin enviar)</button>
             <button class="btn gris" id="btnExportar">💾 Guardar respaldo (.txt)</button>
             <button class="btn morado" id="btnEnviarRespaldo">📧 Enviar respaldo por correo</button>
             <button class="btn gris" id="btnImportar">📂 Cargar respaldo</button>
             <button class="btn rojo" id="btnBorrar">🗑️ Borrar datos del negocio activo</button>
           </div>
           <p class="mini" id="miniRespaldo">Guarda o envía un respaldo completo de tus datos.</p>
-          <p class="mini" id="ultimoRespaldo" style="margin-top:8px;color:#e08a1e;font-weight:600"></p>
+          <p class="mini" id="ultimoRespaldo" style="margin-top:8px;color:var(--warning);font-weight:600"></p>
         </div>
       </div>
 
       <div class="ayuda-card" style="margin-top:24px">
         <h3>💙 Gracias por usar miNegocito</h3>
         <p>Cualquier duda, sugerencia o comentario puedes hacerlo llegar a mi WhatsApp.</p>
-        <p style="font-size:16px;font-weight:700;color:#1a4d80;margin-bottom:0">¡Gracias!<br>Soluciones ALROHI</p>
+        <p style="font-size:16px;font-weight:700;color:var(--primary);margin-bottom:0">¡Gracias!<br>Soluciones ALROHI</p>
       </div>
       <div class="ayuda-card">
         <h3>📱 Contáctame o Sígueme</h3>
@@ -962,8 +987,8 @@
   <input type="number" id="vrCantidad" min="0.01" step="0.01" value="1" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:12px">
   <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Precio unitario</label>
   <input type="number" id="vrPrecio" min="0" step="0.01" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:14px">
-  <div style="background:#f0f8f4;border-radius:8px;padding:12px;text-align:center;margin-bottom:14px"><span style="font-size:12px;color:#6b7a90;font-weight:700">TOTAL</span><br><span id="vrTotal" style="font-size:22px;font-weight:800;color:#217a44">$ 0.00</span></div>
-  <div id="vrError" style="color:#c0392b;font-size:13px;min-height:18px;font-weight:600;margin-bottom:8px"></div>
+  <div style="background:#f0f8f4;border-radius:8px;padding:12px;text-align:center;margin-bottom:14px"><span style="font-size:12px;color:#6b7a90;font-weight:700">TOTAL</span><br><span id="vrTotal" style="font-size:22px;font-weight:800;color:var(--success-dark)">$ 0.00</span></div>
+  <div id="vrError" style="color:var(--danger);font-size:13px;min-height:18px;font-weight:600;margin-bottom:8px"></div>
   <div class="botones"><button class="btn gris" onclick="cerrarVentaRapida()">Cancelar</button><button class="btn verde" onclick="confirmarVentaRapida()">✅ Registrar venta</button></div>
 </div></div></div>
 
@@ -976,8 +1001,8 @@
   <input type="number" id="erCantidad" min="0.01" step="0.01" value="1" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:12px">
   <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Costo unitario</label>
   <input type="number" id="erCosto" min="0" step="0.01" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:14px">
-  <div style="background:#eaf1f9;border-radius:8px;padding:12px;text-align:center;margin-bottom:14px"><span style="font-size:12px;color:#6b7a90;font-weight:700">TOTAL COMPRA</span><br><span id="erTotal" style="font-size:22px;font-weight:800;color:#1a4d80">$ 0.00</span></div>
-  <div id="erError" style="color:#c0392b;font-size:13px;min-height:18px;font-weight:600;margin-bottom:8px"></div>
+  <div style="background:var(--primary-bg);border-radius:8px;padding:12px;text-align:center;margin-bottom:14px"><span style="font-size:12px;color:#6b7a90;font-weight:700">TOTAL COMPRA</span><br><span id="erTotal" style="font-size:22px;font-weight:800;color:var(--primary)">$ 0.00</span></div>
+  <div id="erError" style="color:var(--danger);font-size:13px;min-height:18px;font-weight:600;margin-bottom:8px"></div>
   <div class="botones"><button class="btn gris" onclick="cerrarEntradaRapida()">Cancelar</button><button class="btn" onclick="confirmarEntradaRapida()">✅ Registrar entrada</button></div>
 </div></div></div>
 
@@ -1012,7 +1037,7 @@
       <input id="ndcMinimo" type="number" min="0" step="0.01" value="0" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:12px">
       <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Categoría</label>
       <select id="ndcCategoria" onchange="alCambiarCategoria(this)" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:14px"></select>
-      <div id="ndcError" style="color:#c0392b;font-size:13px;min-height:18px;font-weight:600;margin-bottom:8px"></div>
+      <div id="ndcError" style="color:var(--danger);font-size:13px;min-height:18px;font-weight:600;margin-bottom:8px"></div>
       <div class="botones">
         <button class="btn gris" onclick="cerrarNuevoDesdeCodigo()">Cancelar</button>
         <button class="btn verde" onclick="confirmarNuevoDesdeCodigo()">✅ Crear producto</button>
@@ -1025,8 +1050,8 @@
   <div class="modal-overlay" onclick="if(event.target===this) cerrarModalEditarVenta()">
     <div class="modal-caja" style="max-width:480px">
       <h3>✏️ Editar venta</h3>
-      <p id="evProductoMostrado" style="font-weight:700;color:#1a4d80;font-size:15px;margin-bottom:6px"></p>
-      <p id="evInfoFactura" style="font-size:12px;color:#e08a1e;font-weight:600;margin-bottom:12px;display:none"></p>
+      <p id="evProductoMostrado" style="font-weight:700;color:var(--primary);font-size:15px;margin-bottom:6px"></p>
+      <p id="evInfoFactura" style="font-size:12px;color:var(--warning);font-weight:600;margin-bottom:12px;display:none"></p>
       <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Fecha</label>
       <input id="evFecha" type="date" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:12px">
       <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Cantidad</label>
@@ -1035,7 +1060,7 @@
       <input id="evPrecio" type="number" min="0" step="0.01" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:12px">
       <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Cliente</label>
       <select id="evCliente" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:12px"></select>
-      <div id="evError" style="color:#c0392b;font-size:13px;min-height:18px;font-weight:600;margin-bottom:8px"></div>
+      <div id="evError" style="color:var(--danger);font-size:13px;min-height:18px;font-weight:600;margin-bottom:8px"></div>
       <div class="botones">
         <button class="btn gris" onclick="cerrarModalEditarVenta()">Cancelar</button>
         <button class="btn verde" onclick="guardarEdicionVenta()">✅ Guardar cambios</button>
@@ -1058,7 +1083,7 @@
   <select id="epCategoria" onchange="alCambiarCategoria(this)" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:14px"></select>
   <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Características (opcional, máx. 1200)</label>
   <textarea id="epCaracteristicas" rows="3" maxlength="1200" style="width:100%;padding:11px;font-size:14px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:14px"></textarea>
-  <div id="epError" style="color:#c0392b;font-size:13px;min-height:18px;font-weight:600;margin-bottom:8px"></div>
+  <div id="epError" style="color:var(--danger);font-size:13px;min-height:18px;font-weight:600;margin-bottom:8px"></div>
   <div class="botones"><button class="btn gris" onclick="cerrarModalEditarProducto()">Cancelar</button><button class="btn verde" onclick="guardarEdicionProducto()">✅ Guardar cambios</button></div>
 </div></div></div>
 
@@ -1072,7 +1097,7 @@
   <input id="nnDireccion" type="text" maxlength="120" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:12px">
   <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Contraseña</label>
   <input id="nnClave" type="password" maxlength="60" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:12px">
-  <div id="nnError" style="color:#c0392b;font-size:13px;min-height:18px;margin-bottom:8px"></div>
+  <div id="nnError" style="color:var(--danger);font-size:13px;min-height:18px;margin-bottom:8px"></div>
   <div class="botones"><button class="btn gris" onclick="cerrarModalNuevoNegocio()">Cancelar</button><button class="btn verde" onclick="confirmarNuevoNegocio()">✅ Crear negocio</button></div>
 </div></div></div>
 
@@ -1094,7 +1119,7 @@
   <input id="cbTitular" type="text" maxlength="80" placeholder="Nombre del titular" style="width:100%;padding:11px;font-size:15px;border:1px solid #c8d2e0;border-radius:8px;margin-bottom:12px">
   <label style="display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Imagen QR (opcional)</label>
   <div class="preview-img-wrap" style="margin-bottom:14px"><div class="preview-img" id="cbPreviewQR">📷</div><div style="display:flex;flex-direction:column;gap:6px;flex:1"><input type="file" id="cbInputQR" accept="image/*" style="padding:6px;font-size:12px" onchange="procesarQRBancario(event)"><button type="button" class="btn gris" style="padding:6px 12px;font-size:12px;align-self:flex-start" onclick="quitarQRBancario()">🗑️ Quitar QR</button></div></div>
-  <div id="cbError" style="color:#c0392b;font-size:13px;min-height:18px;margin-bottom:8px"></div>
+  <div id="cbError" style="color:var(--danger);font-size:13px;min-height:18px;margin-bottom:8px"></div>
   <div class="botones"><button class="btn gris" onclick="cerrarFormCuentaBancaria()">Cancelar</button><button class="btn verde" onclick="guardarCuentaBancaria()">✅ Guardar</button></div>
 </div></div></div>
 
@@ -1145,7 +1170,7 @@
   <h3 id="promptTitulo">Introducir valor</h3>
   <p id="promptMensaje" style="margin-bottom:10px"></p>
   <input id="promptInput" style="width:100%;padding:11px;font-size:15px;border:2px solid #c8d2e0;border-radius:8px;margin-bottom:8px" onkeydown="if(event.key==='Enter') cerrarPrompt(document.getElementById('promptInput').value); if(event.key==='Escape') cerrarPrompt(null)">
-  <div id="promptError" style="color:#c0392b;font-size:13px;min-height:18px;margin-bottom:8px"></div>
+  <div id="promptError" style="color:var(--danger);font-size:13px;min-height:18px;margin-bottom:8px"></div>
   <div class="botones"><button class="btn gris" onclick="cerrarPrompt(null)">Cancelar</button><button class="btn verde" onclick="cerrarPrompt(document.getElementById('promptInput').value)">Aceptar</button></div>
 </div></div></div>
 
@@ -1165,11 +1190,11 @@
     <div class="error" id="errorSetup"></div>
     <div style="border-top:1px solid #e3e9f2;margin-top:18px;padding-top:16px;text-align:center">
       <p style="font-size:12px;color:#666;margin:0 0 8px 0">¿Ya tienes un respaldo guardado?</p>
-      <button type="button" onclick="importarRespaldoEnSetup()" style="background:#2d7ac0;color:#fff;border:none;padding:11px;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;width:100%">
+      <button type="button" onclick="importarRespaldoEnSetup()" style="background:var(--primary-light);color:#fff;border:none;padding:11px;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;width:100%">
         📂 Cargar respaldo guardado
       </button>
     </div>
-    <div style="margin-top:14px;padding:10px;background:#fff8e1;border-left:3px solid #e08a1e;border-radius:6px;font-size:12px;color:#7a4a00;text-align:center">
+    <div style="margin-top:14px;padding:10px;background:#fff8e1;border-left:3px solid var(--warning);border-radius:6px;font-size:12px;color:#7a4a00;text-align:center">
       🎁 <b>Prueba gratis de 7 días</b> con todas las funciones al crear la cuenta.
     </div>
   </div>
@@ -1306,6 +1331,11 @@ function _debounce(fn, ms) {
 const _renderGrillaPOSDebounced = _debounce(function () { renderGrillaPOS(); }, 140);
 const _renderListaCatalogoDebounced = _debounce(function () { renderListaCatalogoCompartir(); }, 140);
 const _renderProductosDebounced = _debounce(function () { renderProductos(); }, 180);
+const _renderVentasDebounced = _debounce(function () { renderVentas(); }, 180);
+const _renderEntradasDebounced = _debounce(function () { renderEntradas(); }, 180);
+const _renderPerdidasDebounced = _debounce(function () { renderPerdidas(); }, 180);
+const _renderDevolucionesDebounced = _debounce(function () { renderDevoluciones(); }, 180);
+const _renderGastosDebounced = _debounce(function () { renderGastos(); }, 180);
 const buscarGlobalDebounced = _debounce(function () { buscarGlobal(); }, 180);
 
 function _espacioLSDisponible() {
@@ -2837,18 +2867,34 @@ function editarImagenProducto(id) {
   document.body.appendChild(input); input.click(); setTimeout(() => input.remove(), 2000);
 }
 function renderEntradas() {
-  const tb = $('#tblEntradas tbody'); const lista = db.entradas.slice().reverse();
-  if (!lista.length) { tb.innerHTML = '<tr><td colspan="7" class="vacio">Aún no hay entradas.</td></tr>'; return; }
-  tb.innerHTML = lista.map(e => `<tr><td>${fechaBonita(e.fecha)}</td><td>${esc(nombreProducto(e.productoId))}</td><td>${e.proveedorId ? esc(nombreProveedor(e.proveedorId)) : '—'}</td><td class="num">${cant(e.cantidad)}</td><td class="mon">${money(e.costoUnitario)}</td><td class="mon">${money(e.total)}</td><td><button class="btn rojo" style="padding:4px 9px;font-size:12px" onclick="eliminarEntrada(${e.id})">🗑️</button></td></tr>`).join('');
+  const tb = $('#tblEntradas tbody'); const tf = document.querySelector('#tblEntradas tfoot');
+  const _desde = document.getElementById('eListaDesde')?.value || '';
+  const _hasta = document.getElementById('eListaHasta')?.value || '';
+  const _q = (document.getElementById('eListaBuscar')?.value || '').trim().toLowerCase();
+  let lista = db.entradas.slice().reverse();
+  if (_desde) lista = lista.filter(e => e.fecha >= _desde);
+  if (_hasta) lista = lista.filter(e => e.fecha <= _hasta);
+  if (_q) lista = lista.filter(e => nombreProducto(e.productoId).toLowerCase().includes(_q) || (e.proveedorId && nombreProveedor(e.proveedorId).toLowerCase().includes(_q)));
+  if (!lista.length) { tb.innerHTML = '<tr><td colspan="7" class="vacio">Sin entradas en el período.</td></tr>'; if (tf) tf.innerHTML = ''; return; }
+  tb.innerHTML = lista.map(e => `<tr><td>${fechaBonita(e.fecha)}</td><td>${esc(nombreProducto(e.productoId))}</td><td>${e.proveedorId ? esc(nombreProveedor(e.proveedorId)) : '—'}</td><td class="num">${cant(e.cantidad)}</td><td class="mon">${money(e.costoUnitario)}</td><td class="mon">${money(e.total)}</td><td><button class="btn azul" style="padding:4px 9px;font-size:12px" onclick="editarEntrada(${e.id})">✏️</button> <button class="btn rojo" style="padding:4px 9px;font-size:12px" onclick="eliminarEntrada(${e.id})">🗑️</button></td></tr>`).join('');
+  if (tf) { const _tC = lista.reduce((s,e)=>s+e.cantidad,0); const _tT = lista.reduce((s,e)=>s+e.total,0); tf.innerHTML = '<tr style="font-weight:700;background:#f0f4fa"><td colspan="3">'+lista.length+' compra(s)</td><td class="num">'+cant(_tC)+'</td><td></td><td class="mon">'+money(_tT)+'</td><td></td></tr>'; }
 }
 function renderVentas() {
-  const tb = $('#tblVentas tbody'); const lista = db.ventas.slice().reverse();
-  if (!lista.length) { tb.innerHTML = '<tr><td colspan="8" class="vacio">Aún no hay ventas.</td></tr>'; return; }
+  const tb = $('#tblVentas tbody'); const tf = document.querySelector('#tblVentas tfoot');
+  const _desde = document.getElementById('vListaDesde')?.value || '';
+  const _hasta = document.getElementById('vListaHasta')?.value || '';
+  const _q = (document.getElementById('vListaBuscar')?.value || '').trim().toLowerCase();
+  let lista = db.ventas.slice().reverse();
+  if (_desde) lista = lista.filter(v => v.fecha >= _desde);
+  if (_hasta) lista = lista.filter(v => v.fecha <= _hasta);
+  if (_q) lista = lista.filter(v => nombreProducto(v.productoId).toLowerCase().includes(_q) || (v.clienteId && nombreCliente(v.clienteId).toLowerCase().includes(_q)));
+  if (!lista.length) { tb.innerHTML = '<tr><td colspan="8" class="vacio">Sin ventas en el período.</td></tr>'; if (tf) tf.innerHTML = ''; return; }
   tb.innerHTML = lista.map(v => {
     const fac = db.facturasMulti.find(f => f.id === v.facturaId);
     const btnFac = fac ? '<span style="color:#2e9e5b;font-weight:700">🧾 ' + fac.id + '</span>' : '<button class="btn morado" style="padding:4px 9px;font-size:12px" onclick="facturarVentaExistente(' + v.id + ')">🧾 Facturar</button>';
     return `<tr><td>${fechaBonita(v.fecha)}</td><td>${esc(nombreProducto(v.productoId))}</td><td>${v.clienteId ? esc(nombreCliente(v.clienteId)) : 'Consumidor final'}</td><td class="num">${cant(v.cantidad)}</td><td class="mon">${money(v.precioUnitario)}</td><td class="mon">${money(v.total)}</td><td>${btnFac}</td><td><button class="btn azul" style="padding:4px 9px;font-size:12px" onclick="editarVenta(${v.id})">✏️</button> <button class="btn rojo" style="padding:4px 9px;font-size:12px" onclick="eliminarVenta(${v.id})">🗑️</button></td></tr>`;
   }).join('');
+  if (tf) { const _tV = lista.reduce((s,v)=>s+v.total,0); const _tC = lista.reduce((s,v)=>s+v.cantidad,0); tf.innerHTML = '<tr style="font-weight:700;background:#f0f4fa"><td colspan="3">'+lista.length+' venta(s)</td><td class="num">'+cant(_tC)+'</td><td></td><td class="mon">'+money(_tV)+'</td><td colspan="2"></td></tr>'; }
 }
 function editarVenta(id) {
   const v = db.ventas.find(x => x.id === id); if (!v) { mostrarToast('Venta no encontrada.', 'error'); return; }
@@ -2882,19 +2928,43 @@ function guardarEdicionVenta() {
   cerrarModalEditarVenta(); renderTodo(); mostrarToast('✅ Venta actualizada.');
 }
 function renderPerdidas() {
-  const tb = $('#tblPerdidas tbody'); if (!tb) return; const lista = db.perdidas.slice().reverse();
-  if (!lista.length) { tb.innerHTML = '<tr><td colspan="7" class="vacio">Aún no hay pérdidas.</td></tr>'; return; }
-  tb.innerHTML = lista.map(d => `<tr><td>${fechaBonita(d.fecha)}</td><td>${esc(nombreProducto(d.productoId))}</td><td class="num">${cant(d.cantidad)}</td><td class="mon">${money(d.costoUnitario)}</td><td class="mon" style="color:#c0392b;font-weight:700">-${money(d.total)}</td><td>${esc(d.motivo)}</td><td><button class="btn rojo" style="padding:4px 9px;font-size:12px" onclick="eliminarPerdida(${d.id})">🗑️</button></td></tr>`).join('');
+  const tb = $('#tblPerdidas tbody'); const tf = document.querySelector('#tblPerdidas tfoot'); if (!tb) return;
+  const _desde = document.getElementById('dListaDesde')?.value || '';
+  const _hasta = document.getElementById('dListaHasta')?.value || '';
+  const _q = (document.getElementById('dListaBuscar')?.value || '').trim().toLowerCase();
+  let lista = db.perdidas.slice().reverse();
+  if (_desde) lista = lista.filter(d => d.fecha >= _desde);
+  if (_hasta) lista = lista.filter(d => d.fecha <= _hasta);
+  if (_q) lista = lista.filter(d => nombreProducto(d.productoId).toLowerCase().includes(_q) || (d.motivo || '').toLowerCase().includes(_q));
+  if (!lista.length) { tb.innerHTML = '<tr><td colspan="7" class="vacio">Sin pérdidas en el período.</td></tr>'; if (tf) tf.innerHTML = ''; return; }
+  tb.innerHTML = lista.map(d => `<tr><td>${fechaBonita(d.fecha)}</td><td>${esc(nombreProducto(d.productoId))}</td><td class="num">${cant(d.cantidad)}</td><td class="mon">${money(d.costoUnitario)}</td><td class="mon" style="color:#c0392b;font-weight:700">-${money(d.total)}</td><td>${esc(d.motivo)}</td><td><button class="btn azul" style="padding:4px 9px;font-size:12px" onclick="editarPerdida(${d.id})">✏️</button> <button class="btn rojo" style="padding:4px 9px;font-size:12px" onclick="eliminarPerdida(${d.id})">🗑️</button></td></tr>`).join('');
+  if (tf) { const _tP = lista.reduce((s,d)=>s+d.total,0); const _tC = lista.reduce((s,d)=>s+d.cantidad,0); tf.innerHTML = '<tr style="font-weight:700;background:#fdecea"><td colspan="2">'+lista.length+' pérdida(s)</td><td class="num">'+cant(_tC)+'</td><td></td><td class="mon" style="color:#c0392b">-'+money(_tP)+'</td><td colspan="2"></td></tr>'; }
 }
 function renderDevoluciones() {
-  const tb = document.querySelector('#tblDevoluciones tbody'); if (!tb) return; const lista = db.devoluciones.slice().reverse();
-  if (!lista.length) { tb.innerHTML = '<tr><td colspan="8" class="vacio">Aún no hay devoluciones.</td></tr>'; return; }
-  tb.innerHTML = lista.map(d => `<tr><td>${fechaBonita(d.fecha)}</td><td>${d.tipo === 'venta' ? '↩️ Venta' : '↪️ Compra'}</td><td>${esc(nombreProducto(d.productoId))}</td><td class="num">${cant(d.cantidad)}</td><td class="mon">${money(d.montoUnitario)}</td><td class="mon" style="color:#7b3fa0;font-weight:700">${money(d.total)}</td><td>${esc(d.motivo)}</td><td><button class="btn rojo" style="padding:4px 9px;font-size:12px" onclick="eliminarDevolucion(${d.id})">🗑️</button></td></tr>`).join('');
+  const tb = document.querySelector('#tblDevoluciones tbody'); const tf = document.querySelector('#tblDevoluciones tfoot'); if (!tb) return;
+  const _desde = document.getElementById('devListaDesde')?.value || '';
+  const _hasta = document.getElementById('devListaHasta')?.value || '';
+  const _q = (document.getElementById('devListaBuscar')?.value || '').trim().toLowerCase();
+  let lista = db.devoluciones.slice().reverse();
+  if (_desde) lista = lista.filter(d => d.fecha >= _desde);
+  if (_hasta) lista = lista.filter(d => d.fecha <= _hasta);
+  if (_q) lista = lista.filter(d => nombreProducto(d.productoId).toLowerCase().includes(_q) || (d.motivo || '').toLowerCase().includes(_q));
+  if (!lista.length) { tb.innerHTML = '<tr><td colspan="8" class="vacio">Sin devoluciones en el período.</td></tr>'; if (tf) tf.innerHTML = ''; return; }
+  tb.innerHTML = lista.map(d => `<tr><td>${fechaBonita(d.fecha)}</td><td>${d.tipo === 'venta' ? '↩️ Venta' : '↪️ Compra'}</td><td>${esc(nombreProducto(d.productoId))}</td><td class="num">${cant(d.cantidad)}</td><td class="mon">${money(d.montoUnitario)}</td><td class="mon" style="color:#7b3fa0;font-weight:700">${money(d.total)}</td><td>${esc(d.motivo)}</td><td><button class="btn azul" style="padding:4px 9px;font-size:12px" onclick="editarDevolucion(${d.id})">✏️</button> <button class="btn rojo" style="padding:4px 9px;font-size:12px" onclick="eliminarDevolucion(${d.id})">🗑️</button></td></tr>`).join('');
+  if (tf) { const _tD = lista.reduce((s,d)=>s+d.total,0); const _tC = lista.reduce((s,d)=>s+d.cantidad,0); tf.innerHTML = '<tr style="font-weight:700;background:#f4ebf9"><td colspan="3">'+lista.length+' devolución(es)</td><td class="num">'+cant(_tC)+'</td><td></td><td class="mon" style="color:#7b3fa0">'+money(_tD)+'</td><td colspan="2"></td></tr>'; }
 }
 function renderGastos() {
-  const tb = document.querySelector('#tblGastos tbody'); if (!tb) return; const lista = db.gastos.slice().reverse();
-  if (!lista.length) { tb.innerHTML = '<tr><td colspan="5" class="vacio">Aún no hay gastos.</td></tr>'; return; }
-  tb.innerHTML = lista.map(g => `<tr><td>${fechaBonita(g.fecha)}</td><td>${esc(g.categoria)}</td><td>${esc(g.descripcion)}</td><td class="mon" style="color:#c0392b;font-weight:700">-${money(g.monto)}</td><td><button class="btn rojo" style="padding:4px 9px;font-size:12px" onclick="eliminarGasto(${g.id})">🗑️</button></td></tr>`).join('');
+  const tb = document.querySelector('#tblGastos tbody'); const tf = document.querySelector('#tblGastos tfoot'); if (!tb) return;
+  const _desde = document.getElementById('gListaDesde')?.value || '';
+  const _hasta = document.getElementById('gListaHasta')?.value || '';
+  const _q = (document.getElementById('gListaBuscar')?.value || '').trim().toLowerCase();
+  let lista = db.gastos.slice().reverse();
+  if (_desde) lista = lista.filter(g => g.fecha >= _desde);
+  if (_hasta) lista = lista.filter(g => g.fecha <= _hasta);
+  if (_q) lista = lista.filter(g => (g.categoria || '').toLowerCase().includes(_q) || (g.descripcion || '').toLowerCase().includes(_q));
+  if (!lista.length) { tb.innerHTML = '<tr><td colspan="5" class="vacio">Sin gastos en el período.</td></tr>'; if (tf) tf.innerHTML = ''; return; }
+  tb.innerHTML = lista.map(g => `<tr><td>${fechaBonita(g.fecha)}</td><td>${esc(g.categoria)}</td><td>${esc(g.descripcion)}</td><td class="mon" style="color:#c0392b;font-weight:700">-${money(g.monto)}</td><td><button class="btn azul" style="padding:4px 9px;font-size:12px" onclick="editarGasto(${g.id})">✏️</button> <button class="btn rojo" style="padding:4px 9px;font-size:12px" onclick="eliminarGasto(${g.id})">🗑️</button></td></tr>`).join('');
+  if (tf) { const _tG = lista.reduce((s,g)=>s+g.monto,0); tf.innerHTML = '<tr style="font-weight:700;background:#fdecea"><td colspan="3">'+lista.length+' gasto(s)</td><td class="mon" style="color:#c0392b">-'+money(_tG)+'</td><td></td></tr>'; }
 }
 function renderPerdidasForm() { const sel = document.getElementById('dProducto'); if (!sel) return; const v = sel.value; sel.innerHTML = '<option value="">-- Seleccione un producto --</option>' + db.productos.map(p => `<option value="${p.id}">${esc(p.nombre)} (Stock: ${cant(p.stock)})</option>`).join(''); if (v) sel.value = v; const f = document.getElementById('dFecha'); if (f && !f.value) f.value = fechaISO(); }
 function renderDevolucionesForm() { const f = document.getElementById('devFecha'); if (f && !f.value) f.value = fechaISO(); const sel = document.getElementById('devProducto'); if (sel) { const v = sel.value; sel.innerHTML = '<option value="">-- Seleccione un producto --</option>' + db.productos.map(p => `<option value="${p.id}">${esc(p.nombre)} (Stock: ${cant(p.stock)})</option>`).join(''); if (v) sel.value = v; } }
@@ -3532,6 +3602,21 @@ function eliminarProducto(id) {
   }, { textoSi: 'Eliminar', tipo: 'danger' });
 }
 function eliminarEntrada(id) { const e = db.entradas.find(x => x.id === id); if (!e) return; pedirConfirmacion('Eliminar entrada', '¿Eliminar? Se devolverá stock.', (ok) => { if (!ok) return; const p = getProducto(e.productoId); if (p) p.stock -= e.cantidad; db.entradas = db.entradas.filter(x => x.id !== id); saveDB(); renderTodo(); mostrarToast('🗑️ Entrada eliminada.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' }); }
+function editarEntrada(id) {
+  const e = db.entradas.find(x => x.id === id); if (!e) { mostrarToast('Entrada no encontrada.', 'error'); return; }
+  const p = getProducto(e.productoId); const nom = p ? p.nombre : 'ID ' + e.productoId;
+  pedirValor('✏️ Editar entrada — ' + nom, 'Cantidad actual: ' + cant(e.cantidad) + '\\nCosto unit. actual: ' + money(e.costoUnitario) + '\\n\\nNueva cantidad:', String(e.cantidad), (cNueva) => {
+    const nc = parseNumero(cNueva); if (isNaN(nc) || nc <= 0) { mostrarToast('Cantidad inválida.', 'error'); return; }
+    pedirValor('💵 Nuevo costo unitario', 'Costo actual: ' + money(e.costoUnitario), String(e.costoUnitario), (cNuevo) => {
+      const nco = parseNumero(cNuevo); if (isNaN(nco) || nco <= 0) { mostrarToast('Costo inválido.', 'error'); return; }
+      const diff = nc - e.cantidad;
+      if (p) { const ns = p.stock + diff; if (ns < 0) { mostrarToast('Stock quedaría negativo.', 'error'); return; } p.stock = ns; }
+      e.cantidad = nc; e.costoUnitario = nco; e.total = nc * nco;
+      _costosCache = null; _costosCacheVersion = -1;
+      saveDB(); renderTodo(); mostrarToast('✅ Entrada actualizada.');
+    }, (v) => { const n = parseNumero(v); return (isNaN(n) || n <= 0) ? 'Costo > 0.' : null; });
+  }, (v) => { const n = parseNumero(v); return (isNaN(n) || n <= 0) ? 'Cantidad > 0.' : null; });
+}
 function eliminarVenta(id) {
   const v = db.ventas.find(x => x.id === id); if (!v) return;
   const fac = v.facturaId ? db.facturasMulti.find(f => f.id === v.facturaId) : null;
@@ -3539,8 +3624,48 @@ function eliminarVenta(id) {
   pedirConfirmacion('Eliminar venta', msg, (ok) => { if (!ok) return; const p = getProducto(v.productoId); if (p) p.stock += v.cantidad; db.ventas = db.ventas.filter(x => x.id !== id); if (fac) { if (fac.items.length <= 1) db.facturasMulti = db.facturasMulti.filter(f => f.id !== fac.id); else { fac.items = fac.items.filter(it => it.productoId !== v.productoId); fac.total = fac.items.reduce((s, it) => s + it.cantidad * it.precioUnitario, 0); } } saveDB(); renderTodo(); mostrarToast('🗑️ Venta eliminada.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' });
 }
 function eliminarPerdida(id) { const d = db.perdidas.find(x => x.id === id); if (!d) return; pedirConfirmacion('Eliminar pérdida', '¿Eliminar? Stock devuelto.', (ok) => { if (!ok) return; const p = getProducto(d.productoId); if (p) p.stock += d.cantidad; db.perdidas = db.perdidas.filter(x => x.id !== id); saveDB(); renderTodo(); mostrarToast('🗑️ Pérdida eliminada.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' }); }
+function editarPerdida(id) {
+  const d = db.perdidas.find(x => x.id === id); if (!d) { mostrarToast('Pérdida no encontrada.', 'error'); return; }
+  const p = getProducto(d.productoId); const nom = p ? p.nombre : 'ID ' + d.productoId;
+  pedirValor('✏️ Editar pérdida — ' + nom, 'Cantidad actual: ' + cant(d.cantidad) + '\\nMotivo: ' + d.motivo + '\\n\\nNueva cantidad:', String(d.cantidad), (cNueva) => {
+    const nc = parseNumero(cNueva); if (isNaN(nc) || nc <= 0) { mostrarToast('Cantidad inválida.', 'error'); return; }
+    pedirValor('📝 Motivo', 'Motivo:', d.motivo, (motivo) => {
+      if (motivo === null) return;
+      const diff = nc - d.cantidad;
+      if (p) { const ns = p.stock - diff; if (ns < 0) { mostrarToast('Stock quedaría negativo.', 'error'); return; } p.stock = ns; }
+      d.cantidad = nc; d.motivo = (motivo || '').trim() || 'No especificado';
+      saveDB(); renderTodo(); mostrarToast('✅ Pérdida actualizada.');
+    });
+  }, (v) => { const n = parseNumero(v); return (isNaN(n) || n <= 0) ? 'Cantidad > 0.' : null; });
+}
 function eliminarDevolucion(id) { const d = db.devoluciones.find(x => x.id === id); if (!d) return; pedirConfirmacion('Eliminar devolución', '¿Eliminar?', (ok) => { if (!ok) return; const p = getProducto(d.productoId); if (p) { if (d.tipo === 'venta') p.stock -= d.cantidad; else p.stock += d.cantidad; } db.devoluciones = db.devoluciones.filter(x => x.id !== id); saveDB(); renderTodo(); mostrarToast('🗑️ Devolución eliminada.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' }); }
+function editarDevolucion(id) {
+  const d = db.devoluciones.find(x => x.id === id); if (!d) { mostrarToast('Devolución no encontrada.', 'error'); return; }
+  const p = getProducto(d.productoId); const nom = p ? p.nombre : 'ID ' + d.productoId;
+  pedirValor('✏️ Editar devolución — ' + nom, 'Cantidad actual: ' + cant(d.cantidad) + '\\nMonto unit. actual: ' + money(d.montoUnitario) + '\\n\\nNueva cantidad:', String(d.cantidad), (cNueva) => {
+    const nc = parseNumero(cNueva); if (isNaN(nc) || nc <= 0) { mostrarToast('Cantidad inválida.', 'error'); return; }
+    pedirValor('💵 Nuevo monto unitario', 'Monto actual: ' + money(d.montoUnitario), String(d.montoUnitario), (mNuevo) => {
+      const nm = parseNumero(mNuevo); if (isNaN(nm) || nm <= 0) { mostrarToast('Monto inválido.', 'error'); return; }
+      const diff = nc - d.cantidad;
+      if (p) { const ns = d.tipo === 'venta' ? (p.stock + diff) : (p.stock - diff); if (ns < 0) { mostrarToast('Stock quedaría negativo.', 'error'); return; } p.stock = ns; }
+      d.cantidad = nc; d.montoUnitario = nm; d.total = nc * nm;
+      saveDB(); renderTodo(); mostrarToast('✅ Devolución actualizada.');
+    }, (v) => { const n = parseNumero(v); return (isNaN(n) || n <= 0) ? 'Monto > 0.' : null; });
+  }, (v) => { const n = parseNumero(v); return (isNaN(n) || n <= 0) ? 'Cantidad > 0.' : null; });
+}
 function eliminarGasto(id) { pedirConfirmacion('Eliminar gasto', '¿Eliminar?', (ok) => { if (!ok) return; db.gastos = db.gastos.filter(x => x.id !== id); saveDB(); renderTodo(); mostrarToast('🗑️ Gasto eliminado.', 'info'); }, { textoSi: 'Eliminar', tipo: 'danger' }); }
+function editarGasto(id) {
+  const g = db.gastos.find(x => x.id === id); if (!g) { mostrarToast('Gasto no encontrado.', 'error'); return; }
+  pedirValor('✏️ Editar gasto', 'Descripción actual: ' + g.descripcion + '\\n\\nNueva descripción:', g.descripcion, (desc) => {
+    if (desc === null) return;
+    if (!desc.trim()) { mostrarToast('Descripción requerida.', 'error'); return; }
+    pedirValor('💵 Nuevo monto', 'Monto actual: ' + money(g.monto), String(g.monto), (monto) => {
+      const nm = parseNumero(monto); if (isNaN(nm) || nm <= 0) { mostrarToast('Monto inválido.', 'error'); return; }
+      g.descripcion = desc.trim(); g.monto = nm;
+      saveDB(); renderTodo(); mostrarToast('✅ Gasto actualizado.');
+    }, (v) => { const n = parseNumero(v); return (isNaN(n) || n <= 0) ? 'Monto > 0.' : null; });
+  }, (v) => !v || !v.trim() ? 'Descripción requerida.' : null);
+}
 function declararPerdida(id) {
   const p = getProducto(id); if (!p) return;
   if (p.stock <= 0) { mostrarToast('Sin stock.', 'warn'); return; }
@@ -4283,108 +4408,189 @@ async function compartirCatalogoComoImagen() {
 }
 // Catálogo HTML con tarjetas 1,2,3+ columnas, botón Solicitar, tarjeta expandible con descripción
 function generarCatalogoHTML(categoriaFiltro, columnas) {
-  const cuenta = obtenerCuenta();
-  const neg = cuenta ? cuenta.nombre : 'miNegocito';
-  const dir = cuenta && cuenta.direccion ? cuenta.direccion : '';
-  const tel = cuenta ? (cuenta.telefonoPagos || cuenta.correo || '') : '';
-  const logo = cuenta && cuenta.logo ? cuenta.logo : null;
-  const waGestor = String(cuenta && cuenta.telefonoPagos ? cuenta.telefonoPagos : '').replace(/[^\d]/g, '');
-  const negId = cuenta ? cuenta.id : '';
-  let prods = db.productos.filter(p => p.stock > 0);
-  if (categoriaFiltro) prods = prods.filter(p => p.categoria === categoriaFiltro);
-  prods.sort((a, b) => a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' }));
-  const gridCol = columnas === '1' ? 'repeat(auto-fit,minmax(280px,1fr))'
+  var cuenta = obtenerCuenta();
+  var neg = cuenta ? cuenta.nombre : 'miNegocito';
+  var dir = cuenta && cuenta.direccion ? cuenta.direccion : '';
+  var tel = cuenta ? (cuenta.telefonoPagos || cuenta.correo || '') : '';
+  var logo = cuenta && cuenta.logo ? cuenta.logo : null;
+  var waGestor = String(cuenta && cuenta.telefonoPagos ? cuenta.telefonoPagos : '').replace(/[^\d]/g, '');
+  var moneda = _monedaActual;
+
+  var prods = db.productos.filter(function(p) { return p.stock > 0; });
+  if (categoriaFiltro) prods = prods.filter(function(p) { return p.categoria === categoriaFiltro; });
+  prods.sort(function(a, b) { return a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' }); });
+
+  var gridCol = columnas === '1' ? 'repeat(auto-fit,minmax(280px,1fr))'
     : columnas === '2' ? 'repeat(auto-fit,minmax(240px,1fr))'
     : columnas === '3' ? 'repeat(auto-fit,minmax(190px,1fr))'
     : 'repeat(auto-fit,minmax(220px,1fr))';
-  let html = '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + esc(neg) + ' — Catálogo</title>';
-  html += '<style>*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#f4f6fa;color:#222}';
-  html += '.header{background:linear-gradient(135deg,#1a4d80,#2d7ac0);color:#fff;padding:28px 16px;text-align:center}';
-  html += '.header .logo{max-height:70px;max-width:200px;object-fit:contain;display:block;margin:0 auto 8px;background:#fff;padding:4px;border-radius:8px}';
-  html += '.header h1{margin:0 0 8px;font-size:24px;font-weight:700}';
-  html += '.header .meta{font-size:13px;opacity:.92;margin:3px 0}';
-  html += '.header .fecha{font-size:11px;opacity:.75;margin-top:8px}';
-  html += '.container{max-width:1200px;margin:0 auto;padding:20px}';
-  html += '.grid{display:grid;grid-template-columns:' + gridCol + ';gap:16px}';
-  html += '.card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s;cursor:pointer}';
-  html += '.card:hover{transform:translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,.12)}';
-  html += '.card.expandido{cursor:default}';
-  html += '.img{width:100%;aspect-ratio:1/1;background:#f8faff;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:12px;font-size:56px;color:#6b7a90;border:1px solid #eaf1f9}';
-  html += '.img img{width:100%;height:100%;object-fit:contain;background:#fff}';
-  html += '.nom{font-weight:700;color:#1a4d80;font-size:15px;margin:0 0 6px 0;line-height:1.3}';
-  html += '.cat{display:inline-block;background:#eaf1f9;color:#2d7ac0;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;margin-bottom:6px}';
-  html += '.pre{font-weight:800;color:#217a44;font-size:20px;margin:4px 0 6px 0}';
-  html += '.desc{font-size:12px;color:#6b7a90;line-height:1.4;margin-bottom:8px;flex:1;display:none}';
-  html += '.card.expandido .desc{display:block}';
-  html += '.stk{font-size:11px;color:#999;margin-top:auto;padding-top:6px;border-top:1px solid #eef2f8}';
-  html += '.btn-solicitar{display:block;width:100%;padding:12px;margin-top:10px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;text-align:center;font-weight:700;border-radius:8px;text-decoration:none;font-size:14px;border:none;cursor:pointer;font-family:inherit;transition:transform .15s}';
-  html += '.btn-solicitar:active{transform:scale(.97)}';
-  html += '/* .card.expandido .btn-solicitar ya no necesario: botón siempre visible */';
-  html += '.card .toggle-indicador{display:none}';
-  html += '.card.expandido .toggle-indicador{display:inline-block;position:absolute;top:8px;right:8px;background:#fdecea;color:#c0392b;border:none;border-radius:50%;width:28px;height:28px;font-size:14px;font-weight:800;cursor:pointer;line-height:1;padding:0;z-index:2}';
-  html += '.card{position:relative}';
-  html += '.footer{text-align:center;padding:30px 20px;font-size:12px;color:#6b7a90;background:#fff;margin-top:30px}';
-  html += '.footer .wa{color:#25D366;font-weight:700;text-decoration:none;font-size:14px}';
-  html += '.toast-cat{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#2e9e5b;color:#fff;padding:12px 22px;border-radius:10px;font-size:14px;font-weight:700;box-shadow:0 6px 24px rgba(0,0,0,.3);opacity:0;transition:opacity .3s,transform .3s;z-index:9999;max-width:90vw;text-align:center}';
-  html += '.toast-cat.visible{opacity:1;transform:translateX(-50%) translateY(0)}';
-  html += '@media print{.card{break-inside:avoid}.btn-solicitar,.toggle-indicador{display:none!important}}';
-  html += '</style></head><body>';
-  html += '<div class="header">';
-  if (logo) html += '<img src="' + logo + '" class="logo" alt="Logo">';
-  html += '<h1>🏪 ' + esc(neg) + '</h1>';
-  if (dir) html += '<p class="meta">📍 ' + esc(dir) + '</p>';
-  if (tel) html += '<p class="meta">📞 ' + esc(tel) + '</p>';
-  html += '<p class="fecha">Catálogo · ' + fechaBonita(fechaISO()) + ' · ' + prods.length + ' producto' + (prods.length === 1 ? '' : 's') + '</p>';
-  html += '</div>';
-  html += '<div class="container"><div class="grid">';
-  prods.forEach(p => {
-    html += '<div class="card" onclick="toggleTarjetaCatalogo(this, event)">';
-    html += '<button class="toggle-indicador" onclick="cerrarTarjetaCatalogo(event)">✖</button>';
-    html += '<div class="img">' + (p.imagen ? '<img src="' + p.imagen + '" alt="' + esc(p.nombre) + '" loading="lazy">' : '📷') + '</div>';
-    html += '<div class="nom">' + esc(p.nombre) + '</div>';
-    if (p.categoria) html += '<div><span class="cat">🏷️ ' + esc(p.categoria) + '</span></div>';
-    html += '<div class="pre">' + money(p.precioVenta) + '</div>';
-    if (p.caracteristicas) html += '<div class="desc">' + esc(p.caracteristicas) + '</div>';
-    html += '<div class="stk">Stock: ' + cant(p.stock) + '</div>';
-    // Mensaje solicitado: sin descripción
-    const msgWA = 'Hola, me interesa:\n' + p.nombre + '\n\n¿Está disponible?';
-    if (waGestor) {
-      const urlWA = 'https://wa.me/' + waGestor + '?text=' + encodeURIComponent(msgWA);
-      html += '<a class="btn-solicitar" href="' + urlWA + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">💬 Solicitar</a>';
-    } else {
-      const msgJson = JSON.stringify(msgWA);
-      html += '<button class="btn-solicitar" onclick="event.stopPropagation();copiarSolicitudCatalogo(' + msgJson + ')">📋 Copiar solicitud</button>';
-    }
-    html += '</div>';
-  });
-  html += '</div></div>';
-  html += '<div class="footer">';
-  if (tel) html += '<p>📲 <a class="wa" href="https://wa.me/' + waGestor + '">Pedidos por WhatsApp: ' + esc(tel) + '</a></p>';
-  html += '<p style="margin-top:8px">Generado con miNegocito · Soluciones ALROHI<br>📲 +53 5 318 6004</p>';
-  html += '</div>';
-  html += '<script>';
-  html += 'function toggleTarjetaCatalogo(card, ev){';
-  html += '  if(ev.target.closest("a")||ev.target.closest("button"))return;';
-  html += '  var expandido = card.classList.contains("expandido");';
-  html += '  document.querySelectorAll(".card.expandido").forEach(function(c){c.classList.remove("expandido")});';
-  html += '  if(!expandido)card.classList.add("expandido");';
-  html += '}';
-  html += 'function cerrarTarjetaCatalogo(ev){';
-  html += '  ev.stopPropagation();';
-  html += '  ev.target.closest(".card").classList.remove("expandido");';
-  html += '}';
-  html += 'function copiarSolicitudCatalogo(txt){';
-  html += '  if(navigator.clipboard&&navigator.clipboard.writeText){';
-  html += '    navigator.clipboard.writeText(txt).then(function(){mostrarToastCatalogo("📋 Solicitud copiada. Pégala en WhatsApp.")}).catch(function(){prompt("Copia este mensaje:",txt)});';
-  html += '  } else { prompt("Copia este mensaje:",txt); }';
-  html += '}';
-  html += 'function mostrarToastCatalogo(msg){';
-  html += '  var t=document.createElement("div");t.className="toast-cat";t.textContent=msg;document.body.appendChild(t);';
-  html += '  setTimeout(function(){t.classList.add("visible")},30);';
-  html += '  setTimeout(function(){t.classList.remove("visible");setTimeout(function(){t.remove()},400)},2800);';
-  html += '}';
-  html += '<\/script>';
-  html += '</body></html>';
+
+  var css = ''
+    + '*{box-sizing:border-box}'
+    + 'body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#f4f6fa;color:#222}'
+    + '.header{background:linear-gradient(135deg,#1a4d80,#2d7ac0);color:#fff;padding:24px 16px;text-align:center}'
+    + '.header .logo{max-height:60px;max-width:180px;object-fit:contain;display:block;margin:0 auto 8px;background:#fff;padding:4px;border-radius:8px}'
+    + '.header h1{margin:0 0 8px;font-size:22px;font-weight:700}'
+    + '.header .meta{font-size:13px;opacity:.92;margin:3px 0}'
+    + '.header .fecha{font-size:11px;opacity:.75;margin-top:8px}'
+    + '.container{max-width:1200px;margin:0 auto;padding:16px}'
+    + '.grid{display:grid;grid-template-columns:' + gridCol + ';gap:14px}'
+    + '.card{background:#fff;border-radius:14px;padding:10px;box-shadow:0 2px 8px rgba(0,0,0,.08);display:flex;flex-direction:column;cursor:pointer;transition:transform .15s,box-shadow .15s;overflow:hidden;position:relative}'
+    + '.card:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,.12)}'
+    + '.card:active{transform:scale(.99)}'
+    + '.img{width:100%;aspect-ratio:1/1;background:#f8faff;border:1px solid #eaf1f9;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:8px;font-size:44px;color:#6b7a90;position:relative}'
+    + '.img img{width:100%;height:100%;object-fit:cover;display:block;background:#fff}'
+    + '.cat{display:inline-block;background:#eaf1f9;color:#2d7ac0;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px;align-self:flex-start}'
+    + '.nom{font-weight:800;color:#1a4d80;font-size:13px;margin:0 0 4px 0;line-height:1.25}'
+    + '.pre{font-weight:800;color:#217a44;font-size:17px;margin:0 0 2px 0}'
+    + '.desc-mini{font-size:11px;color:#6b7a90;line-height:1.35;margin-bottom:8px;flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}'
+    + '.acciones{display:flex;gap:4px;margin-top:auto}'
+    + '.btn-solicitar,.btn-carrito{flex:1;padding:9px 4px;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:.15s;display:flex;align-items:center;justify-content:center;gap:4px;text-decoration:none}'
+    + '.btn-solicitar{background:linear-gradient(135deg,#25D366,#128C7E);color:#fff}'
+    + '.btn-carrito{background:#f0e9f9;color:#7b3fa0;flex:0 0 40px;font-size:14px}'
+    + '.btn-solicitar:active,.btn-carrito:active{transform:scale(.96)}'
+    + '.footer{text-align:center;padding:30px 20px;font-size:12px;color:#6b7a90;background:#fff;margin-top:30px}'
+    + '.footer .wa{color:#25D366;font-weight:700;text-decoration:none;font-size:14px}'
+    + '.carrito-flotante{position:fixed;bottom:24px;right:16px;z-index:900;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#7b3fa0,#5d2d7a);color:#fff;border:none;font-size:26px;cursor:pointer;box-shadow:0 6px 24px rgba(123,63,160,.5);display:flex;align-items:center;justify-content:center;transition:transform .15s;font-family:inherit}'
+    + '.carrito-flotante:active{transform:scale(.92)}'
+    + '.carrito-flotante.oculto{display:none}'
+    + '.carrito-contador{position:absolute;top:-4px;right:-4px;background:#25D366;color:#fff;font-size:13px;font-weight:800;min-width:24px;height:24px;border-radius:12px;display:flex;align-items:center;justify-content:center;padding:0 6px;border:2px solid #fff;font-family:inherit}'
+    + '.carrito-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:999;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(2px)}'
+    + '.carrito-overlay.open{display:flex}'
+    + '.carrito-panel{background:#fff;width:100%;max-width:520px;border-radius:20px 20px 0 0;padding:20px;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 -8px 40px rgba(0,0,0,.3);animation:subirPanel .25s ease}'
+    + '@keyframes subirPanel{from{transform:translateY(100%)}to{transform:translateY(0)}}'
+    + '.carrito-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid #eaf1f9;flex-shrink:0}'
+    + '.carrito-header h2{margin:0;font-size:18px;color:#1a4d80;font-weight:800}'
+    + '.carrito-cerrar{background:#eaf1f9;border:none;width:36px;height:36px;border-radius:50%;font-size:18px;font-weight:700;color:#1a4d80;cursor:pointer;font-family:inherit}'
+    + '.carrito-lista{flex:1;overflow-y:auto;margin-bottom:12px;-webkit-overflow-scrolling:touch;min-height:100px}'
+    + '.carrito-vacio{text-align:center;padding:40px 20px;color:#999;font-style:italic;font-size:14px}'
+    + '.carrito-vacio .emoji{font-size:56px;display:block;margin-bottom:12px}'
+    + '.carrito-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #f0f4f9;align-items:center}'
+    + '.carrito-item-foto{width:56px;height:56px;border-radius:8px;background:#f8faff;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:26px}'
+    + '.carrito-item-foto img{width:100%;height:100%;object-fit:cover}'
+    + '.carrito-item-info{flex:1;min-width:0}'
+    + '.carrito-item-nombre{font-size:13px;font-weight:700;color:#1a4d80;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'
+    + '.carrito-item-precio{font-size:12px;color:#217a44;font-weight:700;margin-bottom:4px}'
+    + '.carrito-cantidad{display:flex;align-items:center;gap:6px}'
+    + '.carrito-cantidad button{width:26px;height:26px;border:none;border-radius:6px;background:#eaf1f9;color:#1a4d80;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit}'
+    + '.carrito-cantidad button:active{transform:scale(.92)}'
+    + '.carrito-cantidad span{font-size:14px;font-weight:700;color:#1a4d80;min-width:20px;text-align:center}'
+    + '.carrito-item-subtotal{font-size:13px;font-weight:800;color:#217a44;margin-left:6px}'
+    + '.carrito-item-quitar{background:#fdecea;color:#c0392b;border:none;width:32px;height:32px;border-radius:8px;font-size:14px;cursor:pointer;font-family:inherit;flex-shrink:0}'
+    + '.carrito-item-quitar:active{transform:scale(.92)}'
+    + '.carrito-totales{background:#f8faff;border-radius:12px;padding:12px 14px;margin-bottom:12px;flex-shrink:0}'
+    + '.carrito-fila-total{display:flex;justify-content:space-between;font-size:14px;color:#6b7a90;margin-bottom:4px}'
+    + '.carrito-fila-total.gran-total{font-size:17px;font-weight:800;color:#1a4d80;margin-top:8px;padding-top:8px;border-top:2px solid #eaf1f9;margin-bottom:0}'
+    + '.carrito-datos{margin-bottom:12px;flex-shrink:0}'
+    + '.carrito-datos input{width:100%;padding:10px 12px;border:2px solid #c8d2e0;border-radius:8px;font-family:inherit;font-size:14px;margin-bottom:6px;box-sizing:border-box}'
+    + '.carrito-datos input:focus{outline:none;border-color:#2d7ac0}'
+    + '.carrito-btn-enviar{width:100%;padding:14px;border:none;border-radius:10px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:6px;flex-shrink:0}'
+    + '.carrito-btn-enviar:active{transform:scale(.98)}'
+    + '.carrito-btn-enviar:disabled{background:#c8d2e0;cursor:not-allowed}'
+    + '.carrito-btn-vaciar{width:100%;padding:10px;border:none;border-radius:8px;background:#fdecea;color:#c0392b;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:none;flex-shrink:0}'
+    + '@media(max-width:640px){.grid{grid-template-columns:1fr 1fr;gap:10px}.container{padding:10px}.card{padding:8px;border-radius:12px}.nom{font-size:12px}.pre{font-size:15px}.desc-mini{-webkit-line-clamp:2;font-size:10.5px}.cat{font-size:9px;padding:2px 6px}.btn-solicitar{font-size:11px;padding:8px 2px}.btn-carrito{flex:0 0 34px;padding:8px 0;font-size:13px}.header h1{font-size:18px}.header{padding:18px 12px}}';
+
+  // ═══ HELPERS SIMÉTRICOS (money ↔ parsePrecio) ═══
+  function esc_(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+  function money_(n) {
+    n = Number(n) || 0;
+    var m = MONEDAS[moneda] || MONEDAS.USD;
+    var f = n.toFixed(2).replace('.', m.decimal);
+    var p = f.split(m.decimal);
+    if (p[0].length > 3) p[0] = p[0].replace(/\B(?=(\d{3})+(?!\d))/g, m.miles);
+    return m.simbolo + ' ' + p.join(m.decimal);
+  }
+
+  var tarjetasHtml = prods.map(function(p) {
+    var msgWA = 'Hola, me interesa:\n' + p.nombre + '\n\n¿Está disponible?';
+    var urlWA = waGestor ? 'https://wa.me/' + waGestor + '?text=' + encodeURIComponent(msgWA) : 'https://wa.me/?text=' + encodeURIComponent(msgWA);
+    var imgHtml = p.imagen ? '<img src="' + p.imagen + '" alt="' + esc_(p.nombre) + '" loading="lazy">' : '📷';
+    var catHtml = p.categoria ? '<span class="cat">' + esc_(p.categoria) + '</span>' : '';
+    var descHtml = p.caracteristicas ? '<div class="desc-mini">' + esc_(p.caracteristicas) + '</div>' : '';
+    var nomEsc = esc_(p.nombre).replace(/'/g, "\\'");
+    var datosJSON = JSON.stringify({ nombre: p.nombre, descripcion: p.caracteristicas || '', precio: money_(p.precioVenta), imagen: p.imagen || '', categoria: p.categoria || '' }).replace(/"/g, '&quot;');
+    return '<div class="card" onclick="abrirDetalleCatalogo(' + datosJSON + ')">'
+      + '<div class="img">' + imgHtml + '</div>'
+      + catHtml
+      + '<div class="nom">' + esc_(p.nombre) + '</div>'
+      + '<div class="pre">' + money_(p.precioVenta) + '</div>'
+      + descHtml
+      + '<div class="acciones">'
+      +   '<a class="btn-solicitar" href="' + urlWA + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">🛒 Solicitar</a>'
+      +   '<button class="btn-carrito" onclick="event.stopPropagation();agregarAlCarritoCatalogo(' + p.id + ', \'' + nomEsc + '\', ' + Number(p.precioVenta) + ')" title="Agregar al carrito">🛒</button>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+
+  // ═══ SCRIPT INTERNO — PARSER SIMÉTRICO ═══
+  // Enviamos el precio NUMÉRICO directamente (no el string formateado),
+  // así evitamos cualquier ambigüedad de separadores.
+  var scriptInterno = 'var NEGOCIO_CATALOGO={nombre:"' + esc_(neg).replace(/"/g, '\\"') + '",telefono:"' + waGestor + '",moneda:"' + moneda + '",monedas:' + JSON.stringify(MONEDAS) + '};'
+    + 'var WHATSAPP_NEGOCIO=NEGOCIO_CATALOGO.telefono;'
+    + 'function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/\'/g,"&#39;");}'
+    + 'function money(n){'
+    +   'n=Number(n)||0;'
+    +   'var m=NEGOCIO_CATALOGO.monedas[NEGOCIO_CATALOGO.moneda]||{simbolo:"$",decimal:".",miles:","};'
+    +   'var f=n.toFixed(2).replace(".",m.decimal);'
+    +   'var p=f.split(m.decimal);'
+    +   'if(p[0].length>3)p[0]=p[0].replace(/\\B(?=(\\d{3})+(?!\\d))/g,m.miles);'
+    +   'return m.simbolo+" "+p.join(m.decimal);'
+    + '}'
+    + 'var CARRITO=[];var CARRITO_KEY="catalogo_alrohi_carrito_v1";'
+    + 'function cargarCarrito(){try{var raw=localStorage.getItem(CARRITO_KEY);if(raw)CARRITO=JSON.parse(raw)||[];}catch(e){CARRITO=[];}CARRITO=CARRITO.filter(function(item){return item&&typeof item.idx==="number"&&typeof item.precioNum==="number"&&item.precioNum>0&&typeof item.cantidad==="number"&&item.cantidad>0;});actualizarContadorCarrito();}'
+    + 'function guardarCarrito(){try{localStorage.setItem(CARRITO_KEY,JSON.stringify(CARRITO));}catch(e){}actualizarContadorCarrito();}'
+    + 'function agregarAlCarritoCatalogo(idx,nombre,precioNum){'
+    +   'precioNum=Number(precioNum)||0;'
+    +   'var existe=CARRITO.find(function(item){return item.idx===idx;});'
+    +   'if(existe){existe.cantidad++;}else{CARRITO.push({idx:idx,nombre:nombre,precioNum:precioNum,foto:"",cantidad:1});}'
+    +   'guardarCarrito();'
+    +   'mostrarToastCarrito("🛒 Agregado: "+nombre);'
+    + '}'
+    + 'function cambiarCantidadCarrito(idx,delta){var item=CARRITO.find(function(i){return i.idx===idx;});if(!item)return;item.cantidad+=delta;if(item.cantidad<=0){quitarDelCarrito(idx);return;}guardarCarrito();renderizarCarrito();}'
+    + 'function quitarDelCarrito(idx){CARRITO=CARRITO.filter(function(i){return i.idx!==idx;});guardarCarrito();renderizarCarrito();}'
+    + 'function vaciarCarritoCatalogo(){if(!CARRITO.length)return;if(!confirm("¿Vaciar el carrito?"))return;CARRITO=[];guardarCarrito();renderizarCarrito();}'
+    + 'function cantidadTotalCarrito(){return CARRITO.reduce(function(sum,i){return sum+i.cantidad;},0);}'
+    + 'function totalCarrito(){return CARRITO.reduce(function(sum,i){return sum+i.precioNum*i.cantidad;},0);}'
+    + 'function actualizarContadorCarrito(){var btn=document.getElementById("carritoFlotante");var cont=document.getElementById("carritoContador");if(!btn||!cont)return;var n=cantidadTotalCarrito();if(n>0){btn.classList.remove("oculto");cont.textContent=n>99?"99+":String(n);cont.style.display="flex";}else{btn.classList.add("oculto");cont.style.display="none";}}'
+    + 'function abrirCarritoCatalogo(){renderizarCarrito();document.getElementById("carritoOverlay").classList.add("open");document.body.style.overflow="hidden";}'
+    + 'function cerrarCarritoCatalogo(){document.getElementById("carritoOverlay").classList.remove("open");document.body.style.overflow="";}'
+    + 'function renderizarCarrito(){var lista=document.getElementById("carritoLista");var totalEl=document.getElementById("carritoTotal");var subtotalEl=document.getElementById("carritoSubtotal");var articulosEl=document.getElementById("carritoArticulos");var btnEnviar=document.getElementById("carritoBtnEnviar");var btnVaciar=document.getElementById("carritoBtnVaciar");if(!lista)return;if(!CARRITO.length){lista.innerHTML=\'<div class="carrito-vacio"><span class="emoji">🛒</span>Tu carrito está vacío.<br><br>Toca el botón 🛒 en un producto para agregarlo.</div>\';if(totalEl)totalEl.textContent=money(0);if(subtotalEl)subtotalEl.textContent=money(0);if(articulosEl)articulosEl.textContent="0 productos";if(btnEnviar)btnEnviar.disabled=true;if(btnVaciar)btnVaciar.style.display="none";return;}var html="";CARRITO.forEach(function(item){var subtotal=item.precioNum*item.cantidad;html+=\'<div class="carrito-item"><div class="carrito-item-foto">\'+(item.foto?\'<img src="\'+item.foto+\'">\':"📷")+\'</div><div class="carrito-item-info"><div class="carrito-item-nombre">\'+esc(item.nombre)+\'</div><div class="carrito-item-precio">\'+money(item.precioNum)+\' c/u</div><div class="carrito-cantidad"><button onclick="cambiarCantidadCarrito(\'+item.idx+\', -1)">−</button><span>\'+item.cantidad+\'</span><button onclick="cambiarCantidadCarrito(\'+item.idx+\', 1)">+</button><span class="carrito-item-subtotal">= \'+money(subtotal)+\'</span></div></div><button class="carrito-item-quitar" onclick="quitarDelCarrito(\'+item.idx+\')">🗑️</button></div>\';});lista.innerHTML=html;var total=totalCarrito();var cantTotal=cantidadTotalCarrito();if(totalEl)totalEl.textContent=money(total);if(subtotalEl)subtotalEl.textContent=money(total);if(articulosEl)articulosEl.textContent=cantTotal+" producto"+(cantTotal===1?"":"s");if(btnEnviar)btnEnviar.disabled=false;if(btnVaciar)btnVaciar.style.display="block";}'
+    + 'function mostrarToastCarrito(msg){var t=document.getElementById("carritoToast");if(!t){t=document.createElement("div");t.id="carritoToast";t.style.cssText="position:fixed;bottom:160px;left:50%;transform:translateX(-50%);background:#25D366;color:#fff;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:700;z-index:2000;box-shadow:0 4px 16px rgba(0,0,0,.3);opacity:0;transition:opacity .3s;pointer-events:none;font-family:inherit;max-width:90vw;text-align:center";document.body.appendChild(t);}t.textContent=msg;t.style.opacity="1";clearTimeout(t._timer);t._timer=setTimeout(function(){t.style.opacity="0";},2000);}'
+    + 'function enviarPedidoWhatsAppCatalogo(){if(!CARRITO.length)return;var nombreCliente=(document.getElementById("carritoClienteNombre")||{}).value||"";var telCliente=(document.getElementById("carritoClienteTelefono")||{}).value||"";var notas=(document.getElementById("carritoClienteNotas")||{}).value||"";var lineas=[];lineas.push("🛒 *NUEVO PEDIDO*");lineas.push("🏪 *"+NEGOCIO_CATALOGO.nombre+"*");lineas.push("");lineas.push("📋 *Detalle del pedido:*");lineas.push("");var total=0;var n=1;CARRITO.forEach(function(item){var subtotal=item.precioNum*item.cantidad;total+=subtotal;lineas.push("*"+n+". "+item.nombre+"*");lineas.push("   "+item.cantidad+" × "+money(item.precioNum)+" = "+money(subtotal));n++;});lineas.push("");lineas.push("─────────────────────");lineas.push("📦 *Artículos:* "+cantidadTotalCarrito());lineas.push("💰 *TOTAL A PAGAR:* "+money(total));lineas.push("─────────────────────");if(nombreCliente.trim()||telCliente.trim()||notas.trim()){lineas.push("");if(nombreCliente.trim())lineas.push("👤 *Cliente:* "+nombreCliente.trim());if(telCliente.trim())lineas.push("📱 *Contacto:* "+telCliente.trim());if(notas.trim())lineas.push("📝 *Notas:* "+notas.trim());}lineas.push("");lineas.push("📅 "+new Date().toLocaleString("es-ES"));lineas.push("_Enviado desde el catálogo online_ 🛍️");var mensaje=lineas.join("\\n");var url="https://wa.me/"+WHATSAPP_NEGOCIO+"?text="+encodeURIComponent(mensaje);window.open(url,"_blank");mostrarToastCarrito("📲 Abriendo WhatsApp...");}'
+    + 'function abrirDetalleCatalogo(producto){var modal=document.getElementById("modalDetalleCatalogo");var img=document.getElementById("detalleImg");img.innerHTML=producto.imagen?\'<img src="\'+producto.imagen+\'" style="width:100%;height:100%;object-fit:cover;background:#fff">\':"📷";document.getElementById("detalleCat").textContent=producto.categoria||"";document.getElementById("detalleNom").textContent=producto.nombre||"";document.getElementById("detallePre").textContent=producto.precio||"";document.getElementById("detalleDesc").textContent=producto.descripcion||"(Sin descripción)";modal.style.display="flex";document.body.style.overflow="hidden";}'
+    + 'function cerrarDetalleCatalogo(){document.getElementById("modalDetalleCatalogo").style.display="none";document.body.style.overflow="";}'
+    + 'cargarCarrito();'
+    + 'document.addEventListener("keydown",function(e){if(e.key==="Escape"){cerrarDetalleCatalogo();cerrarCarritoCatalogo();}});';
+
+  var html = '<!DOCTYPE html>\n<html lang="es">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>' + esc_(neg) + ' — Catálogo</title>\n<style>' + css + '</style>\n</head>\n<body>'
+    + '<div class="header">'
+    + (logo ? '<img src="' + logo + '" class="logo" alt="Logo">' : '')
+    + '<h1>🏪 ' + esc_(neg) + '</h1>'
+    + (dir ? '<p class="meta">📍 ' + esc_(dir) + '</p>' : '')
+    + (tel ? '<p class="meta">📞 ' + esc_(tel) + '</p>' : '')
+    + '<p class="fecha">Catálogo · ' + fechaBonita(fechaISO()) + ' · ' + prods.length + ' productos</p>'
+    + '</div>'
+    + '<div class="container"><div class="grid" id="gridCatalogo">' + tarjetasHtml + '</div></div>'
+    + '<div class="footer"><p>📲 <a class="wa" href="https://wa.me/' + waGestor + '">Pedidos por WhatsApp: ' + esc_(tel) + '</a></p><p style="margin-top:8px">Generado con miNegocito · Soluciones ALROHI<br>📲 +53 5 318 6004</p></div>'
+    + '<button id="carritoFlotante" class="carrito-flotante oculto" onclick="abrirCarritoCatalogo()" title="Ver carrito">🛒<span id="carritoContador" class="carrito-contador" style="display:none;">0</span></button>'
+    + '<div id="carritoOverlay" class="carrito-overlay" onclick="if(event.target===this)cerrarCarritoCatalogo()"><div class="carrito-panel">'
+    + '<div class="carrito-header"><h2>🛒 Mi pedido</h2><button class="carrito-cerrar" onclick="cerrarCarritoCatalogo()">✕</button></div>'
+    + '<div class="carrito-lista" id="carritoLista"></div>'
+    + '<div class="carrito-totales"><div class="carrito-fila-total"><span id="carritoArticulos">0 productos</span><span id="carritoSubtotal">' + money_(0) + '</span></div><div class="carrito-fila-total gran-total"><span>💰 Total:</span><span id="carritoTotal">' + money_(0) + '</span></div></div>'
+    + '<div class="carrito-datos"><input type="text" id="carritoClienteNombre" placeholder="Tu nombre (opcional)" maxlength="60"><input type="tel" id="carritoClienteTelefono" placeholder="Tu teléfono (opcional)" maxlength="30"><input type="text" id="carritoClienteNotas" placeholder="Notas para el pedido (opcional)" maxlength="200"></div>'
+    + '<button class="carrito-btn-enviar" id="carritoBtnEnviar" onclick="enviarPedidoWhatsAppCatalogo()">💬 Enviar pedido por WhatsApp</button>'
+    + '<button class="carrito-btn-vaciar" id="carritoBtnVaciar" onclick="vaciarCarritoCatalogo()">🗑️ Vaciar carrito</button>'
+    + '</div></div>'
+    + '<div id="modalDetalleCatalogo" style="position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:999;display:none;align-items:flex-start;justify-content:center;padding:14px;overflow-y:auto;backdrop-filter:blur(2px)" onclick="if(event.target===this)cerrarDetalleCatalogo()">'
+    + '<div style="background:#fff;border-radius:16px;max-width:480px;width:100%;margin:auto;box-shadow:0 12px 48px rgba(0,0,0,.4);overflow:hidden;position:relative">'
+    + '<button onclick="cerrarDetalleCatalogo()" style="position:absolute;top:10px;right:10px;background:rgba(0,0,0,.55);color:#fff;border:none;width:36px;height:36px;border-radius:50%;font-size:18px;font-weight:700;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center;font-family:inherit">✕</button>'
+    + '<div id="detalleImg" style="width:100%;aspect-ratio:1/1;background:#f8faff;display:flex;align-items:center;justify-content:center;overflow:hidden;border-bottom:1px solid #eaf1f9;font-size:80px;color:#6b7a90"></div>'
+    + '<div style="padding:16px"><span id="detalleCat" style="display:inline-block;background:#eaf1f9;color:#2d7ac0;font-size:11px;font-weight:800;padding:3px 9px;border-radius:10px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.3px"></span><h2 id="detalleNom" style="font-size:20px;font-weight:800;color:#1a4d80;margin:0 0 6px 0;line-height:1.2"></h2><div id="detallePre" style="font-size:24px;font-weight:800;color:#217a44;margin:0 0 14px 0"></div><div id="detalleDesc" style="font-size:14px;color:#555;line-height:1.55;white-space:pre-wrap;word-wrap:break-word;margin-bottom:14px"></div></div>'
+    + '<div style="padding:0 16px 16px;font-size:11px;color:#888;text-align:center">Soluciones ALROHI</div>'
+    + '</div></div>'
+    + '<script>' + scriptInterno + '<\/script>'
+    + '</body></html>';
+
   return html;
 }
 function compartirCatalogoHTML() {
@@ -4527,6 +4733,54 @@ function copiarTextoFallback(t) { const ta = document.createElement('textarea');
 // RESPALDO
 // ═══════════════════════════════════════════════════════════
 const ULTIMO_RESPALDO_KEY = 'ultimo_respaldo_v1';
+async function guardarRespaldoDirecto() {
+  const data = generarRespaldoJSON();
+  const cuenta = obtenerCuenta();
+  const nb = cuenta ? _limpiarNombreArchivo(cuenta.nombre.replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '_')) : 'Negocio';
+  const nf = 'Respaldo - ' + nb + ' - ' + fechaArchivo(fechaISO()) + '.txt';
+
+  // Intento 1: File System Access API (Chrome/Edge escritorio y Android 86+)
+  // Abre un diálogo nativo "Guardar como" → el usuario elige carpeta y guarda.
+  if (window.showSaveFilePicker) {
+    try {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: nf,
+        types: [{ description: 'Archivo de texto', accept: { 'text/plain': ['.txt'] } }]
+      });
+      const writable = await handle.createWritable();
+      await writable.write(data);
+      await writable.close();
+      registrarRespaldoHecho();
+      mostrarToast('💾 Respaldo guardado: ' + (handle.name || nf), 'info');
+      return;
+    } catch (e) {
+      if (e && e.name === 'AbortError') { mostrarToast('Guardado cancelado.', 'info'); return; }
+      // Cualquier otro error → probamos fallback universal
+    }
+  }
+
+  // Intento 2: descarga directa con blob (Firefox, iOS Safari, navegadores antiguos)
+  try {
+    const blob = new Blob([data], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = nf;
+    a.rel = 'noopener';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+    registrarRespaldoHecho();
+    mostrarToast('💾 Respaldo guardado: ' + nf, 'info');
+    if (esIOS()) {
+      setTimeout(() => mostrarToast('📱 iPhone: si se abrió en pestaña, toca Compartir → "Guardar en Archivos".', 'info'), 1400);
+    }
+  } catch (e) {
+    mostrarToast('❌ No se pudo guardar: ' + (e && e.message ? e.message : 'error'), 'error');
+  }
+}
 function obtenerUltimoRespaldo() { try { return parseInt(localStorage.getItem(ULTIMO_RESPALDO_KEY), 10) || 0; } catch (e) { return 0; } }
 function registrarRespaldoHecho() { try { localStorage.setItem(ULTIMO_RESPALDO_KEY, String(Date.now())); } catch (e) {} actualizarAvisoRespaldo(); notificaciones = notificaciones.filter(n => n.tipo !== 'respaldo'); guardarNotificaciones(); actualizarFAB(); }
 function diasSinRespaldo() { const u = obtenerUltimoRespaldo(); if (!u) return null; return Math.floor((Date.now() - u) / (24 * 60 * 60 * 1000)); }
@@ -4764,6 +5018,7 @@ function iniciarApp() {
   (function () { const el = document.getElementById('bFecha'); if (el && !el.dataset.binded) { el.addEventListener('change', renderBalance); el.dataset.binded = '1'; } })();
   $('#btnVerReporte').onclick = verReporte; $('#btnWord').onclick = compartirReporte;
   const btnRepHtml = document.getElementById('btnReporteHTML'); if (btnRepHtml) btnRepHtml.onclick = compartirReporteHTML;
+  { const _b = document.getElementById('btnGuardarDirecto'); if (_b) _b.onclick = guardarRespaldoDirecto; }
   $('#btnExportar').onclick = exportarDatos; $('#btnEnviarRespaldo').onclick = enviarRespaldoPorCorreo; $('#btnImportar').onclick = importarDatos;
   $('#btnBorrar').onclick = () => { pedirConfirmacion('Borrar datos', '⚠️ Se borrarán TODOS los datos del negocio actual.\n\n¿Seguro?', (ok) => { if (!ok) return; pedirConfirmacion('Última confirmación', '¿Borrar definitivamente?', (ok2) => { if (!ok2) return; db = { productos: [], entradas: [], ventas: [], perdidas: [], devoluciones: [], gastos: [], facturas: [], clientes: [], proveedores: [], facturasMulti: [], seq: { p: 1, e: 1, v: 1, d: 1, dev: 1, g: 1, f: 1, c: 1, pv: 1, fm: 1 } }; carritoPOS = []; saveDB(); renderTodo(); mostrarToast('🗑️ Datos borrados.', 'info'); }, { textoSi: 'Sí, borrar todo', tipo: 'danger' }); }, { textoSi: 'Continuar', tipo: 'danger' }); };
   if (!window.__mnL1) { window.__mnL1 = true;
@@ -4850,6 +5105,521 @@ function instalarPWA() {
 }
 window.addEventListener('appinstalled', () => { const btn = document.getElementById('btnInstalarPWA'); if (btn) btn.style.display = 'none'; });
 (function () { const yaInstalada = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true; const btn = document.getElementById('btnInstalarPWA'); if (!btn) return; if (!yaInstalada) btn.style.display = 'inline-flex'; else btn.style.display = 'none'; })();
+</script>
+<script>
+(function() {
+  'use strict';
+
+  var TEMAS = {
+    azul:    { primary:'#1a4d80', light:'#2d7ac0', bg:'#eaf1f9' },
+    verde:   { primary:'#1b5e20', light:'#2e9e5b', bg:'#e8f5e9' },
+    rojo:    { primary:'#7f1d1d', light:'#c0392b', bg:'#fdecea' },
+    morado:  { primary:'#4a148c', light:'#7b3fa0', bg:'#f3e5f5' },
+    naranja: { primary:'#b45309', light:'#e08a1e', bg:'#fff4e0' },
+    teal:    { primary:'#004d40', light:'#14a3ad', bg:'#e0f2f1' },
+    rosa:    { primary:'#880e4f', light:'#e0447a', bg:'#fce4ec' },
+    gris:    { primary:'#2c3e50', light:'#6b7a90', bg:'#eceff1' },
+    ocean:   { primary:'#01579b', light:'#0288d1', bg:'#e1f5fe' },
+    sunset:  { primary:'#bf360c', light:'#f57c00', bg:'#fff3e0' },
+    forest:  { primary:'#1b5e20', light:'#43a047', bg:'#e8f5e9' }
+  };
+
+  function _k(sufijo) {
+    try {
+      var id = (typeof negocios !== 'undefined' && negocios && negocios[negocioActivo] && negocios[negocioActivo].id) || 'default';
+      return sufijo + '_' + id;
+    } catch(e) { return sufijo + '_default'; }
+  }
+
+  window.cambiarTema = function(nombre) {
+    var t = TEMAS[nombre] || TEMAS.azul;
+    var r = document.documentElement.style;
+    r.setProperty('--primary', t.primary);
+    r.setProperty('--primary-light', t.light);
+    r.setProperty('--primary-bg', t.bg);
+    r.setProperty('--header-grad', 'linear-gradient(135deg, ' + t.primary + ', ' + t.light + ')');
+    try { localStorage.setItem(_k('tema'), nombre); } catch(e) {}
+    var sel = document.getElementById('selectorTema');
+    if (sel && sel.value !== nombre) sel.value = nombre;
+  };
+
+  var ICONOS = {
+    clasico: { rapido:'⚡', balance:'📊', negocios:'🏢', productos:'📦', entradas:'📥', ventas:'💰', facturacion:'🧾', clientes:'👥', proveedores:'🚚', devoluciones:'↩️', perdidas:'📉', gastos:'💸', reportes:'📄', ayuda:'❓', logo:'🏪' },
+    minimal: { rapido:'🚀', balance:'📈', negocios:'🏬', productos:'🗃️', entradas:'⬇️', ventas:'💵', facturacion:'📃', clientes:'👤', proveedores:'🚛', devoluciones:'↻', perdidas:'⚠️', gastos:'🧮', reportes:'📋', ayuda:'💬', logo:'🏪' },
+    tech:    { rapido:'⚡', balance:'💹', negocios:'⚙️', productos:'🖥️', entradas:'📲', ventas:'💳', facturacion:'🧮', clientes:'🧑‍💼', proveedores:'🏭', devoluciones:'🔁', perdidas:'⛔', gastos:'📑', reportes:'📊', ayuda:'🤖', logo:'🏪' },
+    emojis2: { rapido:'⭐', balance:'💰', negocios:'🏛️', productos:'🎁', entradas:'📦', ventas:'🤑', facturacion:'💳', clientes:'🙋', proveedores:'🚚', devoluciones:'🔄', perdidas:'🚫', gastos:'💵', reportes:'📈', ayuda:'❔', logo:'🏪' }
+  };
+
+  var EMOJI_RE = /^([\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{1F1E6}-\u{1F1FF}\u{FE0F}\u{200D}]+)\s*/u;
+
+  window.aplicarIconos = function(packName) {
+    var pack = ICONOS[packName] || ICONOS.clasico;
+    try {
+      document.querySelectorAll('.side-lista button[data-tab]').forEach(function(btn) {
+        var tab = btn.dataset.tab;
+        var span = btn.querySelector('.side-emoji');
+        if (span && pack[tab]) span.textContent = pack[tab];
+      });
+      document.querySelectorAll('.nav-desktop button[data-tab]').forEach(function(btn) {
+        var tab = btn.dataset.tab;
+        if (!pack[tab]) return;
+        var iconSpan = btn.querySelector('.nav-emoji');
+        if (!iconSpan) {
+          var first = btn.firstChild;
+          if (first && first.nodeType === 3) {
+            var m = first.textContent.match(EMOJI_RE);
+            if (m) {
+              var newSpan = document.createElement('span');
+              newSpan.className = 'nav-emoji';
+              newSpan.textContent = m[1];
+              btn.insertBefore(newSpan, first);
+              first.textContent = ' ' + first.textContent.slice(m[0].length);
+              iconSpan = newSpan;
+            }
+          }
+        }
+        if (iconSpan) iconSpan.textContent = pack[tab];
+      });
+      var hLogo = document.getElementById('hNegocioIcon');
+      if (hLogo && pack.logo) hLogo.textContent = pack.logo;
+    } catch(e) { console.warn('aplicarIconos:', e); }
+    try { localStorage.setItem(_k('iconos'), packName); } catch(e) {}
+    var sel = document.getElementById('selectorIconos');
+    if (sel && sel.value !== packName) sel.value = packName;
+  };
+
+  function init() {
+    var savedTheme = 'azul';
+    try { savedTheme = localStorage.getItem(_k('tema')) || 'azul'; } catch(e) {}
+    window.cambiarTema(savedTheme);
+
+    var savedIcons = 'clasico';
+    try { savedIcons = localStorage.getItem(_k('iconos')) || 'clasico'; } catch(e) {}
+
+    var selTema = document.getElementById('selectorTema');
+    if (selTema) {
+      var nuevas = [['ocean','🌊 Océano'],['sunset','🌅 Atardecer'],['forest','🌲 Bosque']];
+      nuevas.forEach(function(p) {
+        if (!selTema.querySelector('option[value="' + p[0] + '"]')) {
+          var o = document.createElement('option');
+          o.value = p[0]; o.textContent = p[1];
+          selTema.appendChild(o);
+        }
+      });
+    }
+
+    if (!document.getElementById('selectorIconos') && selTema) {
+      var wrap = selTema.closest('label');
+      if (wrap && wrap.parentNode) {
+        var lbl = document.createElement('label');
+        lbl.style.cssText = 'display:flex;flex-direction:column;gap:6px;margin-top:14px';
+        lbl.innerHTML = '<span style="font-size:13px;font-weight:600;color:#444">🎭 Estilo de íconos</span>' +
+          '<select id="selectorIconos" onchange="aplicarIconos(this.value)" style="padding:10px;border:1px solid #c8d2e0;border-radius:8px;font-size:14px;font-family:inherit">' +
+          '<option value="clasico">Clásico (actuales)</option>' +
+          '<option value="minimal">Minimalista</option>' +
+          '<option value="tech">Tech / Moderno</option>' +
+          '<option value="emojis2">Alternativo</option>' +
+          '</select>';
+        wrap.parentNode.insertBefore(lbl, wrap.nextSibling);
+      }
+    }
+
+    window.aplicarIconos(savedIcons);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    setTimeout(init, 50);
+  }
+})();
+
+</script>
+
+<script>
+/* === Parcheado v2: Temas, Íconos y Gráficos (fix2) === */
+(function() {
+  'use strict';
+
+  var TEMAS = {
+    azul:    { primary:'#1a4d80', light:'#2d7ac0', bg:'#eaf1f9' },
+    verde:   { primary:'#1b5e20', light:'#2e9e5b', bg:'#e8f5e9' },
+    rojo:    { primary:'#7f1d1d', light:'#c0392b', bg:'#fdecea' },
+    morado:  { primary:'#4a148c', light:'#7b3fa0', bg:'#f3e5f5' },
+    naranja: { primary:'#b45309', light:'#e08a1e', bg:'#fff4e0' },
+    teal:    { primary:'#004d40', light:'#14a3ad', bg:'#e0f2f1' },
+    rosa:    { primary:'#880e4f', light:'#e0447a', bg:'#fce4ec' },
+    gris:    { primary:'#2c3e50', light:'#6b7a90', bg:'#eceff1' },
+    ocean:   { primary:'#01579b', light:'#0288d1', bg:'#e1f5fe' },
+    sunset:  { primary:'#bf360c', light:'#f57c00', bg:'#fff3e0' },
+    forest:  { primary:'#1b5e20', light:'#43a047', bg:'#e8f5e9' }
+  };
+
+  var ALL_PRIMARY = { '#1a4d80': true };
+  var ALL_LIGHT   = { '#2d7ac0': true };
+  Object.keys(TEMAS).forEach(function(k) {
+    ALL_PRIMARY[TEMAS[k].primary.toLowerCase()] = true;
+    ALL_LIGHT[TEMAS[k].light.toLowerCase()]     = true;
+  });
+
+  function _k(sufijo) {
+    try {
+      var id = (typeof negocios !== 'undefined' && negocios && negocios[negocioActivo] && negocios[negocioActivo].id) || 'default';
+      return sufijo + '_' + id;
+    } catch(e) { return sufijo + '_default'; }
+  }
+
+  function cssVar(name, fallback) {
+    var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return v || fallback;
+  }
+
+  function darkenHex(hex, amount) {
+    var h = String(hex || '#000').replace('#','');
+    if (h.length === 3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+    if (h.length !== 6) return hex;
+    var r = Math.round(parseInt(h.substr(0,2),16) * (1-amount));
+    var g = Math.round(parseInt(h.substr(2,2),16) * (1-amount));
+    var b = Math.round(parseInt(h.substr(4,2),16) * (1-amount));
+    return '#' + [r,g,b].map(function(c){return Math.max(0,Math.min(255,c)).toString(16).padStart(2,'0');}).join('');
+  }
+
+  /* Actualiza meta theme-color según tema + modo oscuro */
+  function actualizarMetaThemeColor() {
+    var isDark = document.body.classList.contains('modo-oscuro');
+    var color = isDark ? cssVar('--primary-dark', '#0b2a4a') : cssVar('--primary', '#1a4d80');
+    var metas = document.querySelectorAll('meta[name="theme-color"]');
+    if (!metas.length) {
+      var m = document.createElement('meta');
+      m.setAttribute('name', 'theme-color');
+      m.setAttribute('content', color);
+      document.head.appendChild(m);
+      return;
+    }
+    metas.forEach(function(tag) { tag.setAttribute('content', color); });
+  }
+
+  /* ---- Gráficos ---- */
+  function remapChartColor(color, newPrimary, newLight) {
+    if (typeof color !== 'string') return color;
+    var lower = color.trim().toLowerCase();
+    var hex, suffix;
+    if (/^#[0-9a-f]{6}/i.test(lower.substring(0,7))) {
+      hex = lower.substring(0,7); suffix = lower.substring(7);
+    } else if (/^#[0-9a-f]{3}(?!\w)/i.test(lower)) {
+      hex = '#'+lower[1]+lower[1]+lower[2]+lower[2]+lower[3]+lower[3];
+      suffix = lower.substring(4);
+    } else {
+      return color;
+    }
+    if (ALL_PRIMARY[hex]) return newPrimary + suffix;
+    if (ALL_LIGHT[hex])   return newLight + suffix;
+    return color;
+  }
+
+  function updateChartTheme(chart) {
+    if (!chart || !chart.options) return;
+    var isDark = document.body.classList.contains('modo-oscuro');
+    var textColor   = isDark ? '#e6e9ef' : '#555';
+    var gridColor   = isDark ? '#30363d' : '#e3e9f2';
+    var newPrimary  = cssVar('--primary', '#1a4d80');
+    var newLight    = cssVar('--primary-light', '#2d7ac0');
+    var legendColor = isDark ? '#9ecbff' : newPrimary;
+    if (chart.options.scales) {
+      Object.keys(chart.options.scales).forEach(function(k) {
+        var s = chart.options.scales[k]; if (!s) return;
+        if (s.ticks) s.ticks.color = textColor;
+        if (s.grid)  s.grid.color  = gridColor;
+        if (s.title) s.title.color = textColor;
+      });
+    }
+    if (chart.options.plugins) {
+      if (chart.options.plugins.legend && chart.options.plugins.legend.labels) chart.options.plugins.legend.labels.color = legendColor;
+      if (chart.options.plugins.title) chart.options.plugins.title.color = legendColor;
+    }
+    if (chart.data && chart.data.datasets) {
+      chart.data.datasets.forEach(function(ds) {
+        ['backgroundColor','borderColor','pointBackgroundColor','pointBorderColor','hoverBackgroundColor','hoverBorderColor'].forEach(function(prop) {
+          var v = ds[prop];
+          if (Array.isArray(v)) ds[prop] = v.map(function(c){ return remapChartColor(c, newPrimary, newLight); });
+          else if (typeof v === 'string') ds[prop] = remapChartColor(v, newPrimary, newLight);
+        });
+      });
+    }
+  }
+
+  function refrescarGraficos() {
+    if (typeof Chart === 'undefined') return;
+    var isDark = document.body.classList.contains('modo-oscuro');
+    Chart.defaults.color = isDark ? '#e6e9ef' : '#555';
+    Chart.defaults.borderColor = isDark ? '#30363d' : '#e3e9f2';
+    if (Chart.defaults.plugins && Chart.defaults.plugins.legend && Chart.defaults.plugins.legend.labels) {
+      Chart.defaults.plugins.legend.labels.color = isDark ? '#9ecbff' : cssVar('--primary', '#1a4d80');
+    }
+    document.querySelectorAll('canvas').forEach(function(c) {
+      try { var ch = Chart.getChart(c); if (ch) { ch.__themed = false; updateChartTheme(ch); ch.update(); } } catch(e) {}
+    });
+  }
+
+  function patchChartProto() {
+    if (typeof Chart === 'undefined' || Chart.prototype.__patchedMN) return;
+    Chart.prototype.__patchedMN = true;
+    var _orig = Chart.prototype.update;
+    Chart.prototype.update = function() {
+      if (!this.__themed) { this.__themed = true; try { updateChartTheme(this); } catch(e) {} }
+      return _orig.apply(this, arguments);
+    };
+  }
+
+  /* ---- Temas ---- */
+  window.cambiarTema = function(nombre) {
+    var t = TEMAS[nombre] || TEMAS.azul;
+    var r = document.documentElement.style;
+    r.setProperty('--primary', t.primary);
+    r.setProperty('--primary-light', t.light);
+    r.setProperty('--primary-bg', t.bg);
+    r.setProperty('--primary-dark', darkenHex(t.primary, 0.55));
+    r.setProperty('--header-grad', 'linear-gradient(135deg, ' + t.primary + ', ' + t.light + ')');
+    try { localStorage.setItem(_k('tema'), nombre); } catch(e) {}
+    var sel = document.getElementById('selectorTema');
+    if (sel && sel.value !== nombre) sel.value = nombre;
+    setTimeout(function() { actualizarMetaThemeColor(); refrescarGraficos(); }, 30);
+    actualizarMetaThemeColor();
+  };
+
+  /* ---- Íconos ---- */
+  var ICONOS = {
+    clasico: {
+      rapido:'⚡', balance:'📊', negocios:'🏢', productos:'📦', entradas:'📥', ventas:'💰',
+      facturacion:'🧾', clientes:'👥', proveedores:'🚚', devoluciones:'↩️', perdidas:'📉',
+      gastos:'💸', reportes:'📄', ayuda:'❓', logo:'🏪',
+      widgetPOS:'🖼️', widgetScanner:'📷', widgetAlta:'📷', widgetVenta:'🛒', widgetEntrada:'📥',
+      widgetBalance:'📊', widgetFacturacion:'🧾', widgetRespaldo:'💾', widgetPago:'💳',
+      widgetCatalogo:'📢', widgetReportes:'📄',
+      agregarProducto:'➕', registrarEntrada:'📥', registrarVenta:'💰', agregarCliente:'➕',
+      agregarProveedor:'➕', registrarDevolucion:'↩️', registrarPerdida:'📉', registrarGasto:'💸',
+      emitirFactura:'🧾', generar:'🎲', quitarImagen:'🗑️', limpiar:'🗑️',
+      agregarNegocio:'➕', refrescarKpis:'🔄', verReporte:'👁️', word:'📄', pdf:'🖨️',
+      html:'🌐', compartir:'📤', cargarCSV:'📂', descargarPlantilla:'📄', verFormato:'❓',
+      verInactivos:'👁️', guardarDirecto:'💾', guardarRespaldo:'💾', enviarRespaldo:'📧',
+      cargarRespaldo:'📂', borrarDatos:'🗑️', editarPerfil:'✏️', cuentasBancarias:'🏦',
+      cambiarClave:'🔑', comision:'💰', tasaCambio:'💱', camposPromo:'📢', subirLogo:'🖼️', quitarLogo:'🗑️'
+    },
+    minimal: {
+      rapido:'🚀', balance:'📈', negocios:'🏬', productos:'🗃️', entradas:'⬇️', ventas:'💵',
+      facturacion:'📃', clientes:'👤', proveedores:'🚛', devoluciones:'↻', perdidas:'⚠️',
+      gastos:'🧮', reportes:'📋', ayuda:'💬', logo:'🏪',
+      widgetPOS:'💳', widgetScanner:'🔍', widgetAlta:'📸', widgetVenta:'🛍️', widgetEntrada:'📦',
+      widgetBalance:'📈', widgetFacturacion:'📃', widgetRespaldo:'💾', widgetPago:'💰',
+      widgetCatalogo:'📋', widgetReportes:'📊',
+      agregarProducto:'➕', registrarEntrada:'⬇️', registrarVenta:'💵', agregarCliente:'👤',
+      agregarProveedor:'🚛', registrarDevolucion:'↻', registrarPerdida:'⚠️', registrarGasto:'🧮',
+      emitirFactura:'📃', generar:'🔢', quitarImagen:'🗑️', limpiar:'🗑️',
+      agregarNegocio:'➕', refrescarKpis:'🔄', verReporte:'🔍', word:'📃', pdf:'🖨️',
+      html:'🌐', compartir:'↗️', cargarCSV:'📁', descargarPlantilla:'📃', verFormato:'💬',
+      verInactivos:'👤', guardarDirecto:'💾', guardarRespaldo:'💾', enviarRespaldo:'✉️',
+      cargarRespaldo:'📁', borrarDatos:'🗑️', editarPerfil:'✏️', cuentasBancarias:'🏦',
+      cambiarClave:'🔒', comision:'💰', tasaCambio:'💱', camposPromo:'📢', subirLogo:'🖼️', quitarLogo:'🗑️'
+    },
+    tech: {
+      rapido:'⚡', balance:'💹', negocios:'⚙️', productos:'🖥️', entradas:'📲', ventas:'💳',
+      facturacion:'🧮', clientes:'🧑‍💼', proveedores:'🏭', devoluciones:'🔁', perdidas:'⛔',
+      gastos:'📑', reportes:'📊', ayuda:'🤖', logo:'⚙️',
+      widgetPOS:'💳', widgetScanner:'📡', widgetAlta:'🛰️', widgetVenta:'💳', widgetEntrada:'📡',
+      widgetBalance:'💹', widgetFacturacion:'🧮', widgetRespaldo:'💾', widgetPago:'💳',
+      widgetCatalogo:'🌐', widgetReportes:'📊',
+      agregarProducto:'➕', registrarEntrada:'📡', registrarVenta:'💳', agregarCliente:'👤',
+      agregarProveedor:'🏭', registrarDevolucion:'🔁', registrarPerdida:'⛔', registrarGasto:'📑',
+      emitirFactura:'🧮', generar:'🔢', quitarImagen:'❌', limpiar:'❌',
+      agregarNegocio:'➕', refrescarKpis:'🔄', verReporte:'🔍', word:'📃', pdf:'🖨️',
+      html:'🌐', compartir:'📡', cargarCSV:'📥', descargarPlantilla:'📃', verFormato:'💬',
+      verInactivos:'👤', guardarDirecto:'💾', guardarRespaldo:'💾', enviarRespaldo:'📧',
+      cargarRespaldo:'📥', borrarDatos:'❌', editarPerfil:'✏️', cuentasBancarias:'🏦',
+      cambiarClave:'🔒', comision:'💰', tasaCambio:'💱', camposPromo:'📡', subirLogo:'🖼️', quitarLogo:'❌'
+    },
+    emojis2: {
+      rapido:'⭐', balance:'💰', negocios:'🏛️', productos:'🎁', entradas:'📦', ventas:'🤑',
+      facturacion:'💳', clientes:'🙋', proveedores:'🚚', devoluciones:'🔄', perdidas:'🚫',
+      gastos:'💵', reportes:'📈', ayuda:'❔', logo:'🏪',
+      widgetPOS:'💳', widgetScanner:'📸', widgetAlta:'📲', widgetVenta:'🛍️', widgetEntrada:'📦',
+      widgetBalance:'💰', widgetFacturacion:'💳', widgetRespaldo:'💾', widgetPago:'💰',
+      widgetCatalogo:'📢', widgetReportes:'📈',
+      agregarProducto:'✅', registrarEntrada:'📦', registrarVenta:'💰', agregarCliente:'🙋',
+      agregarProveedor:'🚚', registrarDevolucion:'🔄', registrarPerdida:'🚫', registrarGasto:'💵',
+      emitirFactura:'💳', generar:'🎯', quitarImagen:'❌', limpiar:'🧹',
+      agregarNegocio:'✅', refrescarKpis:'🔄', verReporte:'👀', word:'📄', pdf:'🖨️',
+      html:'🌐', compartir:'📢', cargarCSV:'📂', descargarPlantilla:'📄', verFormato:'❔',
+      verInactivos:'👀', guardarDirecto:'💾', guardarRespaldo:'💾', enviarRespaldo:'📧',
+      cargarRespaldo:'📂', borrarDatos:'🗑️', editarPerfil:'✏️', cuentasBancarias:'🏦',
+      cambiarClave:'🔑', comision:'💰', tasaCambio:'💱', camposPromo:'📢', subirLogo:'🖼️', quitarLogo:'🗑️'
+    }
+  };
+
+  var WIDGETS_MAP = {
+    'abrirPOS()':'widgetPOS', 'abrirLectorCodigo()':'widgetScanner',
+    'abrirAltaPorEscaneo()':'widgetAlta', 'abrirVentaRapida()':'widgetVenta',
+    'abrirEntradaRapida()':'widgetEntrada', 'exportarDatos()':'widgetRespaldo',
+    'compartirDatosPago()':'widgetPago', 'compartirCatalogo()':'widgetCatalogo'
+  };
+
+  var BTN_MAP = {
+    'Agregar producto':'agregarProducto','Registrar entrada':'registrarEntrada',
+    'Registrar venta':'registrarVenta','Agregar cliente':'agregarCliente',
+    'Agregar proveedor':'agregarProveedor','Registrar devolución':'registrarDevolucion',
+    'Registrar pérdida':'registrarPerdida','Registrar gasto':'registrarGasto',
+    'Emitir Factura':'emitirFactura','Generar':'generar','Quitar imagen':'quitarImagen',
+    'Limpiar':'limpiar','Agregar negocio':'agregarNegocio','Refrescar KPIs':'refrescarKpis',
+    'Ver reporte':'verReporte','Word':'word','PDF':'pdf','HTML':'html',
+    'Compartir':'compartir','Compartir catálogo':'compartir','Ver formato':'verFormato',
+    'Cargar archivo CSV/TXT':'cargarCSV','Descargar plantilla':'descargarPlantilla',
+    'Ver inactivos':'verInactivos','Guardar directamente (sin enviar)':'guardarDirecto',
+    'Guardar respaldo (.txt)':'guardarRespaldo','Enviar respaldo por correo':'enviarRespaldo',
+    'Cargar respaldo':'cargarRespaldo','Borrar datos del negocio activo':'borrarDatos',
+    'Editar datos del negocio':'editarPerfil','Cuentas bancarias y QR':'cuentasBancarias',
+    'Cambiar contraseña':'cambiarClave','Comisión / Pago fijo':'comision',
+    'Tasa de cambio (%)':'tasaCambio','Campos en promociones':'camposPromo',
+    'Logotipo del negocio':'subirLogo','Quitar logotipo':'quitarLogo'
+  };
+
+  var EMOJI_RE = /^(?:[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{1F1E6}-\u{1F1FF}\u{2190}-\u{21FF}\u{2300}-\u{23FF}\u{25A0}-\u{25FF}\u{FE0F}\u{200D}\u{1F3FB}-\u{1F3FF}\u{1F900}-\u{1F9FF}]|\u200D)+/u;
+
+  function packIcon(pack, key) {
+    if (pack[key]) return pack[key];
+    if (ICONOS.clasico[key]) return ICONOS.clasico[key];
+    return null;
+  }
+
+  function updateWidgetIcons(pack) {
+    document.querySelectorAll('.widget').forEach(function(widget) {
+      var onclick = (widget.getAttribute('onclick') || '').trim();
+      var key = WIDGETS_MAP[onclick];
+      if (!key) {
+        var m = onclick.match(/irAPestana\(['"]([^'"]+)['"]\)/);
+        if (m) key = 'widget' + m[1].charAt(0).toUpperCase() + m[1].slice(1);
+      }
+      if (key) {
+        var icon = packIcon(pack, key);
+        var div = widget.querySelector('.widget-icono');
+        if (div && icon) div.textContent = icon;
+      }
+    });
+  }
+
+  function updateFormButtons(pack) {
+    document.querySelectorAll('button').forEach(function(btn) {
+      if (btn.classList.contains('widget') || btn.classList.contains('swatch')) return;
+      var text = btn.textContent.trim();
+      if (!text) return;
+      var m = text.match(EMOJI_RE);
+      var stripped = m ? text.slice(m[0].length).trim() : text;
+      var key = BTN_MAP[stripped];
+      if (!key) return;
+      var icon = packIcon(pack, key);
+      if (icon) btn.textContent = icon + ' ' + stripped;
+    });
+  }
+
+  window.aplicarIconos = function(packName) {
+    var pack = ICONOS[packName] || ICONOS.clasico;
+    document.querySelectorAll('.side-lista button[data-tab]').forEach(function(btn) {
+      var tab = btn.dataset.tab;
+      var span = btn.querySelector('.side-emoji');
+      if (span && pack[tab]) span.textContent = pack[tab];
+    });
+    document.querySelectorAll('.nav-desktop button[data-tab]').forEach(function(btn) {
+      var tab = btn.dataset.tab;
+      if (!pack[tab]) return;
+      var iconSpan = btn.querySelector('.nav-emoji');
+      if (!iconSpan) {
+        var first = btn.firstChild;
+        if (first && first.nodeType === 3) {
+          var m = first.textContent.match(EMOJI_RE);
+          if (m) {
+            var sp = document.createElement('span');
+            sp.className = 'nav-emoji';
+            sp.textContent = m[0].trim();
+            btn.insertBefore(sp, first);
+            first.textContent = ' ' + first.textContent.slice(m[0].length);
+            iconSpan = sp;
+          }
+        }
+      }
+      if (iconSpan) iconSpan.textContent = pack[tab];
+    });
+    var hLogo = document.getElementById('hNegocioIcon');
+    if (hLogo && pack.logo) hLogo.textContent = pack.logo;
+    updateWidgetIcons(pack);
+    updateFormButtons(pack);
+    try { localStorage.setItem(_k('iconos'), packName); } catch(e) {}
+    var sel = document.getElementById('selectorIconos');
+    if (sel && sel.value !== packName) sel.value = packName;
+  };
+
+  function init() {
+    patchChartProto();
+    var savedTheme = 'azul';
+    try { savedTheme = localStorage.getItem(_k('tema')) || 'azul'; } catch(e) {}
+    window.cambiarTema(savedTheme);
+    var savedIcons = 'clasico';
+    try { savedIcons = localStorage.getItem(_k('iconos')) || 'clasico'; } catch(e) {}
+
+    var selTema = document.getElementById('selectorTema');
+    if (selTema) {
+      [['ocean','🌊 Océano'],['sunset','🌅 Atardecer'],['forest','🌲 Bosque']].forEach(function(p) {
+        if (!selTema.querySelector('option[value="' + p[0] + '"]')) {
+          var o = document.createElement('option');
+          o.value = p[0]; o.textContent = p[1];
+          selTema.appendChild(o);
+        }
+      });
+    }
+    if (!document.getElementById('selectorIconos') && selTema) {
+      var wrap = selTema.closest('label');
+      if (wrap && wrap.parentNode) {
+        var lbl = document.createElement('label');
+        lbl.style.cssText = 'display:flex;flex-direction:column;gap:6px;margin-top:14px';
+        lbl.innerHTML = '<span style="font-size:13px;font-weight:600;color:#444">🎭 Estilo de íconos</span>' +
+          '<select id="selectorIconos" onchange="aplicarIconos(this.value)" style="padding:10px;border:1px solid #c8d2e0;border-radius:8px;font-size:14px;font-family:inherit">' +
+          '<option value="clasico">Clásico (actuales)</option>' +
+          '<option value="minimal">Minimalista</option>' +
+          '<option value="tech">Tech / Moderno</option>' +
+          '<option value="emojis2">Alternativo</option></select>';
+        wrap.parentNode.insertBefore(lbl, wrap.nextSibling);
+      }
+    }
+    window.aplicarIconos(savedIcons);
+    setTimeout(function(){ actualizarMetaThemeColor(); refrescarGraficos(); }, 300);
+
+    if (typeof window.alternarModoOscuro === 'function' && !window.alternarModoOscuro.__wrappedMN) {
+      var _origDark = window.alternarModoOscuro;
+      window.alternarModoOscuro = function() {
+        var r = _origDark.apply(this, arguments);
+        setTimeout(function(){ actualizarMetaThemeColor(); refrescarGraficos(); }, 60);
+        actualizarMetaThemeColor();
+        return r;
+      };
+      window.alternarModoOscuro.__wrappedMN = true;
+    }
+
+    var observer = new MutationObserver(function() {
+      if (window.__iconRefreshTimer) clearTimeout(window.__iconRefreshTimer);
+      window.__iconRefreshTimer = setTimeout(function() {
+        var sel = document.getElementById('selectorIconos');
+        var packName = sel ? sel.value : null;
+        if (packName && packName !== 'clasico') {
+          var pack = ICONOS[packName] || ICONOS.clasico;
+          updateWidgetIcons(pack);
+          updateFormButtons(pack);
+        }
+      }, 250);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else setTimeout(init, 50);
+})();
+
 </script>
 </body>
 </html>
